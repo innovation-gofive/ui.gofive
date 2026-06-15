@@ -67,4 +67,55 @@ function Spinner({
   )
 }
 
-export { Spinner }
+// ── Bouncing dots loader ───────────────────────────────────────────
+const DOTS_CSS = `
+  .gf-dots{display:inline-flex;align-items:center;}
+  .gf-dots span{border-radius:9999px;background:currentColor;animation:gf-dots-bounce 1.3s infinite ease-in-out both;}
+  .gf-dots span:nth-child(2){animation-delay:.15s;}
+  .gf-dots span:nth-child(3){animation-delay:.3s;}
+  @keyframes gf-dots-bounce{0%,80%,100%{transform:scale(.5);opacity:.5;}40%{transform:scale(1);opacity:1;}}
+`
+
+const DOT_SIZE: Record<SpinnerSize, { dot: string; gap: string }> = {
+  sm: { dot: "4px", gap: "3px" },
+  md: { dot: "6px", gap: "4px" },
+  lg: { dot: "9px", gap: "6px" },
+}
+
+export interface LoadingDotsProps extends React.HTMLAttributes<HTMLSpanElement> {
+  color?: SpinnerColor
+  size?: SpinnerSize
+  label?: string
+}
+
+function LoadingDots({
+  color = "primary",
+  size = "md",
+  label = "Loading",
+  className,
+  style,
+  ...props
+}: LoadingDotsProps) {
+  const d = DOT_SIZE[size]
+  const fill = SPINNER_COLOR[color]
+
+  return (
+    <>
+      <style href="gf-loading-dots" precedence="low">{DOTS_CSS}</style>
+      <span
+        data-slot="loading-dots"
+        role="status"
+        aria-label={label}
+        className={cn("gf-dots", className)}
+        style={{ color: fill, gap: d.gap, ...style }}
+        {...props}
+      >
+        <span style={{ width: d.dot, height: d.dot }} />
+        <span style={{ width: d.dot, height: d.dot }} />
+        <span style={{ width: d.dot, height: d.dot }} />
+      </span>
+    </>
+  )
+}
+
+export { Spinner, LoadingDots }

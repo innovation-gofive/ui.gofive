@@ -111,7 +111,7 @@
       "name": "progress",
       "type": "registry:ui",
       "title": "Progress",
-      "description": "A linear progress bar built on Radix Progress with GoFive semantic colors and three track sizes.",
+      "description": "A linear progress bar built on Radix Progress plus a circular ProgressRing, both with GoFive semantic colors; the bar offers three track sizes and the ring takes a custom diameter and center content.",
       "dependencies": ["radix-ui"],
       "files": [
         {
@@ -124,7 +124,7 @@
       "name": "spinner",
       "type": "registry:ui",
       "title": "Spinner",
-      "description": "A circular loading indicator with size and semantic color props using the React 19 hoisted-keyframe pattern.",
+      "description": "A circular loading indicator plus a bouncing LoadingDots loader, both with size and semantic color props using the React 19 hoisted-keyframe pattern.",
       "files": [
         {
           "path": "registry/new-york/ui/spinner.tsx",
@@ -185,10 +185,36 @@
       ]
     },
     {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "A panel that slides in from any edge of the screen, built on the Radix dialog primitive, with header, body, and footer slots for secondary panes and detail views.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "description": "A bottom sheet with a drag handle and drag-to-dismiss interaction built on Vaul, for mobile-style action menus and contextual options.",
+      "dependencies": ["vaul"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/drawer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "filter",
       "type": "registry:ui",
       "title": "Filter",
-      "description": "Toggleable filter chips, a dropdown-driven filter bar, an add-filter affordance, and a segmented control with a GoFive accent for active and has-value states.",
+      "description": "Toggleable filter chips, a dropdown-driven filter bar, an advanced AND/OR condition builder, saved views, an applied-result summary, and a segmented control with a GoFive accent for active and has-value states.",
       "dependencies": ["lucide-react"],
       "files": [
         {
@@ -298,6 +324,196 @@
       "files": [
         {
           "path": "registry/new-york/ui/context-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "title": "Stepper",
+      "description": "A horizontal and vertical step indicator with done, active, and upcoming states, numbered circles, completion checks, connectors, and optional per-step descriptions.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/stepper.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "A loading placeholder with shimmer or pulse animation and a circle option, using the React 19 hoisted-keyframe pattern.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "title": "Empty State",
+      "description": "A centered empty, error, or zero-data state with a tinted illustration tile, title, description, and action slot, in five semantic tones.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/empty-state.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "An inline info bar / banner with a left accent border, status icon, optional dismiss button, and info, success, warn, and danger variants.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/alert.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "validation",
+      "type": "registry:ui",
+      "title": "Validation",
+      "description": "Inline field validation messages in error, warn, success, and info states, plus a pass/fail rule checklist for password and form requirements.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/validation.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scale",
+      "type": "registry:ui",
+      "title": "Scale",
+      "description": "Feedback survey scales — an NPS 0–10 numeric selector and a CSAT emoji selector, both controllable and uncontrolled.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/scale.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "A GoFive text field with default, error, success, disabled, and read-only states, xs–lg sizes, filled and underline variants, leading/trailing icons, prefix/suffix affixes, a clear button, plus PasswordInput reveal toggle and NumberInput stepper.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "A multi-line text field with focus, error, and success states, an optional character counter, and auto-resize.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "otp-input",
+      "type": "registry:ui",
+      "title": "OTP Input",
+      "description": "A one-time-code input rendered as individual digit cells with full keyboard, paste, and autofill support, configurable length, and an optional masked display.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/otp-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "A range slider built on Radix with a GoFive primary fill, single or two-thumb selection, steps, vertical orientation, and an optional value label.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "segmented",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "An inline tab-style switch with a white active segment, sm/md/lg sizes, optional icons, and a full-width option, driven by controlled or uncontrolled state.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/segmented.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "A popover-based single Select and MultiSelect with searchable combobox filtering, grouped and rich rows, status dots, disabled options, an empty state, and a multi-select chips trigger with select-all and an apply footer.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:ui",
+      "title": "Tag Input",
+      "description": "A free-form tag entry field with removable chips, Enter/comma to add, Backspace to remove, max-tags and duplicate guards.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/tag-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tree-select",
+      "type": "registry:ui",
+      "title": "Tree Select",
+      "description": "A hierarchical TreeSelect for single category picks with a breadcrumb trigger, plus a TreeMultiSelect with cascading parent/child checkboxes, indeterminate state, chips, and an apply footer.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/tree-select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "person-picker",
+      "type": "registry:ui",
+      "title": "Person Picker",
+      "description": "Single and multi person pickers with avatars, presence dots, grouped search, removable assignee chips, an invite-by-email fallback, and a ReviewerStack with stacked avatars and per-person review status.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/person-picker.tsx",
           "type": "registry:ui"
         }
       ]

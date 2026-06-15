@@ -1,7 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { Trash2, UserPlus } from "lucide-react"
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Info,
+  Trash2,
+  UserPlus,
+} from "lucide-react"
 import {
   Dialog,
   DialogTrigger,
@@ -16,6 +23,7 @@ import { Button } from "@/registry/new-york/ui/button"
 import { Input } from "@/registry/new-york/ui/input"
 import { Label } from "@/registry/new-york/ui/label"
 import { Textarea } from "@/registry/new-york/ui/textarea"
+import { cn } from "@/lib/utils"
 import { DocPage, DocH2, DocH3 } from "@/components/docs/doc-page"
 import { InstallTabs } from "@/components/docs/install-tabs"
 import { CodeBlock } from "@/components/docs/code-block"
@@ -26,9 +34,10 @@ const toc = [
   { title: "Installation", href: "#installation" },
   { title: "Usage", href: "#usage" },
   { title: "Examples", href: "#examples" },
-  { title: "Basic", href: "#basic", depth: 1 },
+  { title: "Success confirm", href: "#success", depth: 1 },
   { title: "Destructive confirm", href: "#confirm", depth: 1 },
   { title: "Form dialog", href: "#form", depth: 1 },
+  { title: "Multi-step wizard", href: "#wizard", depth: 1 },
   { title: "API Reference", href: "#api-reference" },
 ]
 
@@ -79,12 +88,13 @@ export default function DialogPage() {
 
       <DocH2 id="examples">Examples</DocH2>
 
-      <DocH3 id="basic">Basic</DocH3>
+      <DocH3 id="success">Success confirm</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">
-        A standard modal with a header, description, and a footer action.
+        An acknowledgement modal with a success icon and a spread footer — a
+        secondary text action on the left, the primary action on the right.
       </p>
       <ComponentPreview className="min-h-[140px]">
-        <BasicExample />
+        <SuccessExample />
       </ComponentPreview>
 
       <DocH3 id="confirm">Destructive confirm</DocH3>
@@ -101,6 +111,16 @@ export default function DialogPage() {
       </p>
       <ComponentPreview className="min-h-[140px]">
         <FormExample />
+      </ComponentPreview>
+
+      <DocH3 id="wizard">Multi-step wizard</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        A wider modal with a step indicator. The current step is highlighted,
+        completed steps show a check, and the footer carries the Back / Skip /
+        Continue navigation.
+      </p>
+      <ComponentPreview className="min-h-[140px]">
+        <WizardExample />
       </ComponentPreview>
 
       <DocH2 id="api-reference">API Reference</DocH2>
@@ -143,22 +163,31 @@ export default function DialogPage() {
   )
 }
 
-function BasicExample() {
+function SuccessExample() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Open dialog</Button>
+        <Button variant="outline">Submit payroll</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>Payroll submitted for March</DialogTitle>
-          <DialogDescription>
-            248 employees · ฿18.4M total. Approvers will be notified and payments are scheduled for March 28th.
-          </DialogDescription>
+          <div className="flex items-start gap-3.5">
+            <span className="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-success-soft text-success-soft-foreground">
+              <Check className="size-5" strokeWidth={2.2} />
+            </span>
+            <div className="space-y-1 text-left">
+              <DialogTitle>Payroll submitted for March</DialogTitle>
+              <DialogDescription>
+                248 employees · ฿18.4M total. Approvers will be notified and payments are scheduled for March 28th.
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="sm:justify-between">
           <DialogClose asChild>
-            <Button variant="ghost">View receipt</Button>
+            <Button variant="ghost" className="text-muted-foreground">
+              View receipt
+            </Button>
           </DialogClose>
           <DialogClose asChild>
             <Button>Done</Button>
@@ -182,14 +211,11 @@ function ConfirmExample() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <div className="flex items-start gap-3">
-            <span
-              className="flex size-10 shrink-0 items-center justify-center rounded-lg"
-              style={{ backgroundColor: "#FDE0D6", color: "#D93A1A" }}
-            >
+          <div className="flex items-start gap-3.5">
+            <span className="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-danger-soft text-danger-soft-foreground">
               <Trash2 className="size-5" />
             </span>
-            <div className="space-y-1.5 text-left">
+            <div className="space-y-1 text-left">
               <DialogTitle>Delete 3 employees?</DialogTitle>
               <DialogDescription>
                 Their profiles, payroll records, and pending time-off requests will be permanently removed. This action cannot be undone.
@@ -201,10 +227,7 @@ function ConfirmExample() {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button
-            style={{ backgroundColor: "#D93A1A", color: "#ffffff" }}
-            onClick={() => setOpen(false)}
-          >
+          <Button variant="destructive" onClick={() => setOpen(false)}>
             Delete permanently
           </Button>
         </DialogFooter>
@@ -229,12 +252,19 @@ function FormExample() {
           Invite employee
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle>Invite a new employee</DialogTitle>
-          <DialogDescription>
-            Send an onboarding email with account setup instructions.
-          </DialogDescription>
+          <div className="flex items-start gap-3.5">
+            <span className="flex size-9.5 shrink-0 items-center justify-center rounded-[10px] bg-info-soft text-info-soft-foreground">
+              <Info className="size-5" />
+            </span>
+            <div className="space-y-1 text-left">
+              <DialogTitle>Invite a new employee</DialogTitle>
+              <DialogDescription>
+                Send an onboarding email with account setup instructions.
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4">
           <div className="grid grid-cols-2 gap-3">
@@ -251,6 +281,16 @@ function FormExample() {
             <Label htmlFor="email">Work email</Label>
             <Input id="email" type="email" defaultValue="ploy.k@gofive.co.th" />
           </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label htmlFor="role">Role</Label>
+              <Input id="role" defaultValue="Member" />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="department">Department</Label>
+              <Input id="department" defaultValue="People Ops" />
+            </div>
+          </div>
           <div className="grid gap-2">
             <Label htmlFor="note">Personal note (optional)</Label>
             <Textarea id="note" placeholder="Welcome to the team…" />
@@ -258,15 +298,164 @@ function FormExample() {
               They will see this message in their welcome email.
             </p>
           </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button type="button" variant="outline">
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button type="submit">Send invite</Button>
+          <DialogFooter className="sm:items-center sm:justify-between">
+            <span className="text-xs text-muted-foreground">
+              <kbd className="rounded-[5px] border bg-muted px-1.5 py-0.5 font-mono text-[11px]">
+                ⏎
+              </kbd>{" "}
+              Send invite
+            </span>
+            <div className="flex gap-2">
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit">Send invite</Button>
+            </div>
           </DialogFooter>
         </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+const WIZARD_STEPS = ["Workspace", "Team", "Integrations", "Review"]
+
+const INTEGRATIONS = [
+  { name: "Slack", desc: "Team messaging" },
+  { name: "Google", desc: "Drive, Calendar" },
+  { name: "LINE", desc: "Notifications" },
+]
+
+function WizardExample() {
+  const [open, setOpen] = useState(false)
+  const [step, setStep] = useState(2)
+  const [selected, setSelected] = useState("Slack")
+
+  const isLast = step === WIZARD_STEPS.length - 1
+
+  function reset(next: boolean) {
+    setOpen(next)
+    if (!next) setStep(2)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={reset}>
+      <DialogTrigger asChild>
+        <Button variant="outline">New workspace</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[560px]">
+        <DialogHeader>
+          <DialogTitle>New workspace</DialogTitle>
+          <DialogDescription>
+            Step {step + 1} of {WIZARD_STEPS.length} — {WIZARD_STEPS[step]}
+          </DialogDescription>
+        </DialogHeader>
+
+        <ol className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          {WIZARD_STEPS.map((label, i) => {
+            const done = i < step
+            const active = i === step
+            return (
+              <li key={label} className="flex items-center gap-1.5">
+                <span
+                  className={cn(
+                    "flex items-center gap-1.5",
+                    active && "font-semibold text-foreground"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "flex size-[22px] items-center justify-center rounded-full text-[11.5px] font-semibold",
+                      done && "bg-success text-success-foreground",
+                      active && "bg-primary text-primary-foreground",
+                      !done && !active && "bg-muted text-muted-foreground"
+                    )}
+                  >
+                    {done ? <Check className="size-2.5" strokeWidth={3} /> : i + 1}
+                  </span>
+                  {label}
+                </span>
+                {i < WIZARD_STEPS.length - 1 && (
+                  <span
+                    className={cn(
+                      "h-px w-4",
+                      done ? "bg-success" : "bg-border"
+                    )}
+                  />
+                )}
+              </li>
+            )
+          })}
+        </ol>
+
+        {step === 2 ? (
+          <div className="grid gap-3">
+            <div className="grid grid-cols-3 gap-2.5">
+              {INTEGRATIONS.map((it) => {
+                const on = selected === it.name
+                return (
+                  <button
+                    key={it.name}
+                    type="button"
+                    onClick={() => setSelected(it.name)}
+                    className={cn(
+                      "rounded-[10px] border p-3 text-left transition-colors",
+                      on
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:bg-accent"
+                    )}
+                  >
+                    <div className="text-sm font-bold">{it.name}</div>
+                    <div className="mt-0.5 text-[11.5px] text-muted-foreground">
+                      {it.desc}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              You can add or change integrations anytime in workspace settings.
+            </p>
+          </div>
+        ) : (
+          <p className="py-4 text-sm text-muted-foreground">
+            {isLast
+              ? "Review your selections and create the workspace."
+              : `Configure your ${WIZARD_STEPS[step].toLowerCase()} to continue.`}
+          </p>
+        )}
+
+        <DialogFooter className="sm:items-center sm:justify-between">
+          <Button
+            variant="ghost"
+            className="text-muted-foreground"
+            disabled={step === 0}
+            onClick={() => setStep((s) => Math.max(0, s - 1))}
+          >
+            <ArrowLeft />
+            Back
+          </Button>
+          <div className="flex gap-2">
+            {!isLast && (
+              <Button
+                variant="outline"
+                onClick={() => setStep((s) => Math.min(WIZARD_STEPS.length - 1, s + 1))}
+              >
+                Skip
+              </Button>
+            )}
+            {isLast ? (
+              <Button onClick={() => reset(false)}>Create workspace</Button>
+            ) : (
+              <Button onClick={() => setStep((s) => s + 1)}>
+                Continue
+                <ArrowRight />
+              </Button>
+            )}
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
