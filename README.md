@@ -7,13 +7,19 @@ Custom [shadcn](https://ui.shadcn.com) component registry by GoFive — plug-and
 Register the GoFive registry once in your project:
 
 ```bash
-npx shadcn@latest registry add @gofive=https://registry.gofive.co.th
+npx shadcn@latest registry add @gofive=https://ui.coolify.tks.co.th/r/{name}.json
 ```
 
 After that, install any component with:
 
 ```bash
 npx shadcn@latest add @gofive/<component-name>
+```
+
+Or install **every** component, theme, and font at once:
+
+```bash
+npx shadcn@latest add @gofive/all
 ```
 
 ---

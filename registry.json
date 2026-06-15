@@ -33,8 +33,13 @@
       "type": "registry:ui",
       "title": "Typography",
       "description": "GoFive type scale — Display, H1–H3, Body Lg, Body, Small, and Caption with 400/500/600/700 weight overrides, rendered through a single variant-driven component.",
-      "registryDependencies": ["https://registry.gofive.co.th/r/fonts.json"],
-      "dependencies": ["class-variance-authority", "@radix-ui/react-slot"],
+      "registryDependencies": [
+        "https://registry.gofive.co.th/r/fonts.json"
+      ],
+      "dependencies": [
+        "class-variance-authority",
+        "@radix-ui/react-slot"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/typography.tsx",
@@ -60,7 +65,9 @@
       "type": "registry:ui",
       "title": "Avatar",
       "description": "User avatars built on Radix with image fallback, five sizes, semantic status dots, solid/gradient fallback backgrounds, and an overlapping group with +N overflow.",
-      "dependencies": ["radix-ui"],
+      "dependencies": [
+        "radix-ui"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/avatar.tsx",
@@ -73,7 +80,10 @@
       "type": "registry:ui",
       "title": "Checkbox",
       "description": "A Radix-based checkbox supporting checked, unchecked, and indeterminate states with primary-themed active styling and sm/md/lg sizes.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/checkbox.tsx",
@@ -86,7 +96,10 @@
       "type": "registry:ui",
       "title": "Radio Group",
       "description": "A Radix-based set of mutually exclusive options with primary-themed selection, hover, focus, and disabled states.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/radio-group.tsx",
@@ -99,7 +112,9 @@
       "type": "registry:ui",
       "title": "Switch",
       "description": "A Radix-based on/off toggle with a primary-themed track, sliding thumb, and sm/md/lg sizes.",
-      "dependencies": ["radix-ui"],
+      "dependencies": [
+        "radix-ui"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/switch.tsx",
@@ -112,7 +127,9 @@
       "type": "registry:ui",
       "title": "Progress",
       "description": "A linear progress bar built on Radix Progress plus a circular ProgressRing, both with GoFive semantic colors; the bar offers three track sizes and the ring takes a custom diameter and center content.",
-      "dependencies": ["radix-ui"],
+      "dependencies": [
+        "radix-ui"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/progress.tsx",
@@ -137,7 +154,9 @@
       "type": "registry:ui",
       "title": "Rating",
       "description": "A star rating input supporting controlled and uncontrolled use, hover preview, read-only display, and three sizes.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/rating.tsx",
@@ -150,7 +169,9 @@
       "type": "registry:ui",
       "title": "Tooltip",
       "description": "A popup that shows information on hover or focus, built on Radix Tooltip with provider, trigger, and content parts.",
-      "dependencies": ["radix-ui"],
+      "dependencies": [
+        "radix-ui"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/tooltip.tsx",
@@ -163,7 +184,10 @@
       "type": "registry:ui",
       "title": "Toast",
       "description": "Primary-tinted status notifications with icon, title, description, optional action, close, and an auto-dismiss progress bar, driven by an imperative toast() store.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/toast.tsx",
@@ -176,7 +200,10 @@
       "type": "registry:ui",
       "title": "Dialog",
       "description": "A composable modal dialog rendered over the page with header, body, and footer slots for confirm prompts, input-heavy forms, and multi-step wizards.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/dialog.tsx",
@@ -189,7 +216,10 @@
       "type": "registry:ui",
       "title": "Sheet",
       "description": "A panel that slides in from any edge of the screen, built on the Radix dialog primitive, with header, body, and footer slots for secondary panes and detail views.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/sheet.tsx",
@@ -202,7 +232,9 @@
       "type": "registry:ui",
       "title": "Drawer",
       "description": "A bottom sheet with a drag handle and drag-to-dismiss interaction built on Vaul, for mobile-style action menus and contextual options.",
-      "dependencies": ["vaul"],
+      "dependencies": [
+        "vaul"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/drawer.tsx",
@@ -215,7 +247,9 @@
       "type": "registry:ui",
       "title": "Filter",
       "description": "Toggleable filter chips, a dropdown-driven filter bar, an advanced AND/OR condition builder, saved views, an applied-result summary, and a segmented control with a GoFive accent for active and has-value states.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/filter.tsx",
@@ -228,7 +262,9 @@
       "type": "registry:ui",
       "title": "Search",
       "description": "A styled search input with leading icon, command-K hint and clear button, a scope toggle and recent-search pills, a grouped results dropdown with highlighting, avatars, colored icon tiles and keyboard hints, loading-skeleton and no-results states, plus a controlled command palette with keyboard-navigable results.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/search.tsx",
@@ -241,7 +277,9 @@
       "type": "registry:ui",
       "title": "Attachment & Link",
       "description": "A file dropzone, uploaded-file rows with type icon, size, upload progress, and remove, plus rich link preview cards for upload UIs.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/attachment.tsx",
@@ -254,7 +292,10 @@
       "type": "registry:ui",
       "title": "Calendar",
       "description": "A self-contained month calendar with single-date and range selection, today highlighting, and out-of-month muted days, built on plain JS dates.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/calendar.tsx",
@@ -267,7 +308,9 @@
       "type": "registry:ui",
       "title": "Scheduler",
       "description": "An event calendar with Month, Week, and Day/Agenda views, a segmented view switcher, Today navigation, and color-coded events, built on plain JS dates with no external date library.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/scheduler.tsx",
@@ -280,8 +323,13 @@
       "type": "registry:ui",
       "title": "DateTime Picker",
       "description": "Popover-based date, time, and combined date-time pickers built on the GoFive Calendar, with controlled state and no external date library.",
-      "registryDependencies": ["https://registry.gofive.co.th/r/calendar.json"],
-      "dependencies": ["radix-ui", "lucide-react"],
+      "registryDependencies": [
+        "https://registry.gofive.co.th/r/calendar.json"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/datetime-picker.tsx",
@@ -294,7 +342,10 @@
       "type": "registry:ui",
       "title": "Picker",
       "description": "Composable color, emoji, and icon pickers that each pair a trigger with a Radix Popover panel — the color picker adds hue/alpha sliders, a hex field and recent swatches, the emoji picker adds category tabs and a name/shortcode/unicode preview, and the icon picker adds outline/solid/duotone style variants — with raw grids exported for inline use.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/picker.tsx",
@@ -307,7 +358,10 @@
       "type": "registry:ui",
       "title": "Media Picker",
       "description": "A file & media picker with Library, Upload, From URL, and Unsplash tabs — a searchable thumbnail grid with single-select check, a drag-and-drop upload zone, a URL field with live preview, and a Cancel / Insert footer, available as a popover or a standalone panel.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/media-picker.tsx",
@@ -320,7 +374,10 @@
       "type": "registry:ui",
       "title": "Menubar",
       "description": "A horizontal application menu bar with dropdown menus, items, shortcuts, separators, checkbox and radio items, and nested submenus.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/menubar.tsx",
@@ -333,7 +390,10 @@
       "type": "registry:ui",
       "title": "Context Menu",
       "description": "A right-click menu surfaced at the pointer with items, shortcuts, separators, checkbox and radio items, and nested submenus for contextual actions.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/context-menu.tsx",
@@ -346,7 +406,9 @@
       "type": "registry:ui",
       "title": "Stepper",
       "description": "A horizontal and vertical step indicator with done, active, and upcoming states, numbered circles, completion checks, connectors, and optional per-step descriptions.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/stepper.tsx",
@@ -383,7 +445,9 @@
       "type": "registry:ui",
       "title": "Alert",
       "description": "An inline info bar / banner with a left accent border, status icon, optional dismiss button, and info, success, warn, and danger variants.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/alert.tsx",
@@ -396,7 +460,9 @@
       "type": "registry:ui",
       "title": "Validation",
       "description": "Inline field validation messages in error, warn, success, and info states, plus a pass/fail rule checklist for password and form requirements.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/validation.tsx",
@@ -421,7 +487,9 @@
       "type": "registry:ui",
       "title": "Input",
       "description": "A GoFive text field with default, error, success, disabled, and read-only states, xs–lg sizes, filled and underline variants, leading/trailing icons, prefix/suffix affixes, a clear button, plus PasswordInput reveal toggle and NumberInput stepper.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/input.tsx",
@@ -458,7 +526,9 @@
       "type": "registry:ui",
       "title": "Slider",
       "description": "A range slider built on Radix with a GoFive primary fill, single or two-thumb selection, steps, vertical orientation, and an optional value label.",
-      "dependencies": ["radix-ui"],
+      "dependencies": [
+        "radix-ui"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/slider.tsx",
@@ -471,7 +541,9 @@
       "type": "registry:ui",
       "title": "Segmented Control",
       "description": "An inline tab-style switch with a white active segment, sm/md/lg sizes, optional icons, and a full-width option, driven by controlled or uncontrolled state.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/segmented.tsx",
@@ -484,7 +556,10 @@
       "type": "registry:ui",
       "title": "Select",
       "description": "A popover-based single Select and MultiSelect with searchable combobox filtering, grouped and rich rows, status dots, disabled options, an empty state, and a multi-select chips trigger with select-all and an apply footer.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/select.tsx",
@@ -497,7 +572,9 @@
       "type": "registry:ui",
       "title": "Tag Input",
       "description": "A free-form tag entry field with removable chips, Enter/comma to add, Backspace to remove, max-tags and duplicate guards.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/tag-input.tsx",
@@ -510,7 +587,10 @@
       "type": "registry:ui",
       "title": "Tree Select",
       "description": "A hierarchical TreeSelect for single category picks with a breadcrumb trigger, plus a TreeMultiSelect with cascading parent/child checkboxes, indeterminate state, chips, and an apply footer.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/tree-select.tsx",
@@ -523,7 +603,10 @@
       "type": "registry:ui",
       "title": "Person Picker",
       "description": "Single and multi person pickers with avatars, presence dots, grouped search, removable assignee chips, an invite-by-email fallback, and a ReviewerStack with stacked avatars and per-person review status.",
-      "dependencies": ["radix-ui", "lucide-react"],
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/person-picker.tsx",
@@ -578,6 +661,60 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "all",
+      "type": "registry:ui",
+      "title": "GoFive — All Components",
+      "description": "Installs every GoFive component, theme, and font in one command via npx shadcn add @gofive/all.",
+      "registryDependencies": [
+        "https://registry.gofive.co.th/r/theme.json",
+        "https://registry.gofive.co.th/r/badge.json",
+        "https://registry.gofive.co.th/r/typography.json",
+        "https://registry.gofive.co.th/r/fonts.json",
+        "https://registry.gofive.co.th/r/avatar.json",
+        "https://registry.gofive.co.th/r/checkbox.json",
+        "https://registry.gofive.co.th/r/radio-group.json",
+        "https://registry.gofive.co.th/r/switch.json",
+        "https://registry.gofive.co.th/r/progress.json",
+        "https://registry.gofive.co.th/r/spinner.json",
+        "https://registry.gofive.co.th/r/rating.json",
+        "https://registry.gofive.co.th/r/tooltip.json",
+        "https://registry.gofive.co.th/r/toast.json",
+        "https://registry.gofive.co.th/r/dialog.json",
+        "https://registry.gofive.co.th/r/sheet.json",
+        "https://registry.gofive.co.th/r/drawer.json",
+        "https://registry.gofive.co.th/r/filter.json",
+        "https://registry.gofive.co.th/r/search.json",
+        "https://registry.gofive.co.th/r/attachment.json",
+        "https://registry.gofive.co.th/r/calendar.json",
+        "https://registry.gofive.co.th/r/scheduler.json",
+        "https://registry.gofive.co.th/r/datetime-picker.json",
+        "https://registry.gofive.co.th/r/picker.json",
+        "https://registry.gofive.co.th/r/media-picker.json",
+        "https://registry.gofive.co.th/r/menubar.json",
+        "https://registry.gofive.co.th/r/context-menu.json",
+        "https://registry.gofive.co.th/r/stepper.json",
+        "https://registry.gofive.co.th/r/skeleton.json",
+        "https://registry.gofive.co.th/r/empty-state.json",
+        "https://registry.gofive.co.th/r/alert.json",
+        "https://registry.gofive.co.th/r/validation.json",
+        "https://registry.gofive.co.th/r/scale.json",
+        "https://registry.gofive.co.th/r/input.json",
+        "https://registry.gofive.co.th/r/textarea.json",
+        "https://registry.gofive.co.th/r/otp-input.json",
+        "https://registry.gofive.co.th/r/slider.json",
+        "https://registry.gofive.co.th/r/segmented.json",
+        "https://registry.gofive.co.th/r/select.json",
+        "https://registry.gofive.co.th/r/tag-input.json",
+        "https://registry.gofive.co.th/r/tree-select.json",
+        "https://registry.gofive.co.th/r/person-picker.json",
+        "https://registry.gofive.co.th/r/tabs.json",
+        "https://registry.gofive.co.th/r/navbar.json",
+        "https://registry.gofive.co.th/r/bottom-nav.json",
+        "https://registry.gofive.co.th/r/sidebar.json"
+      ],
+      "files": []
     }
   ]
 }
