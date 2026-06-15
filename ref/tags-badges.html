@@ -1,0 +1,248 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Tags & Badges" subtitle="Tags · with icons · animations (pulse/spin/shimmer/pop/typing)" viewport="900x1350" -->
+<html><head><meta charset="utf-8"><title>Gofive — Tags & Badges</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; background:#F6F6F8; color:#1A1A1F;
+    font-family:"Gofive","Inter",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  .wrap { padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
+  .card { background:#fff; border:1px solid #ECECF0; border-radius:14px; }
+  .hdr  { padding:11px 16px; border-bottom:1px solid #F2F2F5; font-weight:700; font-size:13px; letter-spacing:-.01em; display:flex; justify-content:space-between; align-items:center; }
+  .hdr .sub { font-weight:500; font-size:10.5px; color:#6E6E7A; font-family: var(--gf-font-mono); }
+  .body { padding:14px 16px 18px; display:flex; flex-direction:column; gap:12px; }
+  .row  { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .lbl  { font-size:9.5px; font-weight:700; color:#8A8A96; min-width:110px; text-transform:uppercase; letter-spacing:.08em; }
+
+  /* Tag base */
+  .tag {
+    display:inline-flex; align-items:center; gap:5px;
+    height:22px; padding:0 9px; border-radius:999px;
+    font-size:11.5px; font-weight:700; line-height:1; letter-spacing:-.003em;
+  }
+  .tag .dot { width:6px; height:6px; border-radius:50%; background: currentColor; }
+  .tag .ic  { width:12px; height:12px; flex:0 0 12px; background:currentColor;
+    -webkit-mask-size:contain; mask-size:contain;
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+    -webkit-mask-position:center; mask-position:center; }
+  .tag.sm { height:18px; padding:0 7px; font-size:10.5px; gap:4px; }
+  .tag.lg { height:26px; padding:0 11px; font-size:12.5px; }
+  .tag.square { border-radius:5px; }
+  .tag.outline { background:transparent !important; border:1px solid currentColor; }
+
+  /* semantic soft tints via currentColor bg mix */
+  .tag.soft { background: color-mix(in oklab, currentColor 18%, #fff); }
+  .tag.solid { background: currentColor; color:#fff !important; }
+  .tag.solid .dot { background:#fff; }
+  .tag.solid .ic { background:#fff; }
+
+  /* icon shapes */
+  .ic.check  { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/></svg>"); }
+  .ic.clock  { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v5.2l4 2.4-1 1.7-5-3V7h2z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v5.2l4 2.4-1 1.7-5-3V7h2z'/></svg>"); }
+  .ic.warn   { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z'/></svg>"); }
+  .ic.x      { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3 10.6 10.6 16.9 4.3z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3 10.6 10.6 16.9 4.3z'/></svg>"); }
+  .ic.spark  { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='m12 2 2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='m12 2 2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z'/></svg>"); }
+  .ic.play   { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M8 5v14l11-7z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M8 5v14l11-7z'/></svg>"); }
+  .ic.arrow  { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M5 12h12l-4-4 1.4-1.4L20.8 12l-6.4 5.4L13 16l4-4H5z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M5 12h12l-4-4 1.4-1.4L20.8 12l-6.4 5.4L13 16l4-4H5z'/></svg>"); }
+  .ic.star   { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='m12 2 3.1 6.3 7 1-5 4.9 1.2 7L12 18l-6.3 3.2 1.2-7-5-4.9 7-1z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='m12 2 3.1 6.3 7 1-5 4.9 1.2 7L12 18l-6.3 3.2 1.2-7-5-4.9 7-1z'/></svg>"); }
+
+  /* Semantic color anchors */
+  .c-success { color:#0D6A4B; }    .c-success.solid{ color:#fff !important; background:#1DA577; }
+  .c-warn    { color:#7A5800; }    .c-warn.solid   { color:#212121 !important; background:#F9D423; } .c-warn.solid .ic, .c-warn.solid .dot { background:#212121; }
+  .c-danger  { color:#8A1F0A; }    .c-danger.solid { background:#D93A1A; }
+  .c-info    { color:#063F89; }    .c-info.solid   { background:#0A66E0; }
+  .c-neutral { color:#3B3B44; }    .c-neutral.solid{ background:#3B3B44; }
+
+  /* soft backgrounds explicit (color-mix fallback is fine but we also hard-code for contrast) */
+  .c-success.soft { background:#DBF3E8; }
+  .c-warn.soft    { background:#FFF4BF; }
+  .c-danger.soft  { background:#FDE0D6; }
+  .c-info.soft    { background:#DDEAFC; }
+  .c-neutral.soft { background:#ECECF0; color:#52525F; }
+
+  /* ===== Animations ===== */
+
+  /* Pulse dot (live/online) */
+  .pulse-dot { position:relative; }
+  .pulse-dot::after {
+    content:""; position:absolute; inset:-2px; border-radius:50%;
+    box-shadow: 0 0 0 0 currentColor; opacity:.6;
+    animation: pulse 1.6s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { transform: scale(.8); opacity:.7; }
+    70%  { transform: scale(2.2); opacity:0; }
+    100% { transform: scale(2.2); opacity:0; }
+  }
+
+  /* Spinning loader tag */
+  .spin .ic { animation: rot 1s linear infinite; }
+  @keyframes rot { to { transform: rotate(360deg); } }
+
+  /* Shimmer/sheen on NEW tag */
+  .shimmer { position:relative; overflow:hidden; isolation:isolate; }
+  .shimmer::after {
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%);
+    transform: translateX(-120%);
+    animation: shim 2.4s ease-in-out infinite;
+  }
+  @keyframes shim { 0% { transform: translateX(-120%);} 60%,100% { transform: translateX(140%);} }
+
+  /* Appear / bounce */
+  .pop-in { animation: popin .5s cubic-bezier(.2,.9,.3,1.4) both; }
+  @keyframes popin { 0% { transform: scale(.4); opacity:0; } 100% { transform: scale(1); opacity:1; } }
+
+  .typing .dot { animation: typ 1.2s infinite; }
+  .typing .dot:nth-child(2){ animation-delay:.15s; }
+  .typing .dot:nth-child(3){ animation-delay:.3s; }
+  @keyframes typ { 0%,60%,100% { transform: translateY(0); opacity:.4;} 30% { transform: translateY(-3px); opacity:1;} }
+
+  /* Counter badge */
+  .count {
+    display:inline-flex; min-width:20px; height:20px; padding:0 6px;
+    align-items:center; justify-content:center; border-radius:999px;
+    background:#D93A1A; color:#fff; font-size:11px; font-weight:700; font-variant-numeric: tabular-nums;
+  }
+  .count.sm { min-width:16px; height:16px; font-size:9.5px; padding:0 5px; }
+  .count.dot { min-width:8px; width:8px; height:8px; padding:0; }
+
+  /* Notification pill w/ bell */
+  .notif {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#F4F4F6; border-radius:999px; padding:4px 10px 4px 6px; font-size:11.5px; font-weight:600; color:#1A1A1F;
+  }
+  .notif .av { width:20px; height:20px; border-radius:50%; background:#F88411; color:#fff; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+
+  /* Chip with avatar */
+  .chip {
+    display:inline-flex; align-items:center; gap:6px;
+    height:26px; padding: 0 10px 0 2px; border-radius:999px;
+    background:#FFE9CC; color:#7A3A00; font-size:11.5px; font-weight:700;
+  }
+  .chip .av { width:22px; height:22px; border-radius:50%; background:#F88411; color:#fff; font-size:9.5px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .chip .ic.x { margin-left:4px; cursor:pointer; opacity:.7; }
+  .chip .ic.x:hover { opacity:1; }
+
+  /* Progress bar inside tag */
+  .bar-tag { background:#F4F4F6; color:#3B3B44; position:relative; overflow:hidden; }
+  .bar-tag::before {
+    content:""; position:absolute; left:0; top:0; bottom:0; width:65%;
+    background: color-mix(in oklab, #1DA577 20%, #fff);
+  }
+  .bar-tag > * { position:relative; z-index:1; }
+</style></head>
+<body>
+<div class="wrap">
+
+  <!-- 1. Semantic · SOFT -->
+  <div class="card">
+    <div class="hdr">Semantic tags · soft <span class="sub">default status pills</span></div>
+    <div class="body">
+      <div class="row"><span class="lbl">With icon</span>
+        <span class="tag soft c-success"><span class="ic check"></span>Active</span>
+        <span class="tag soft c-warn"><span class="ic clock"></span>Pending</span>
+        <span class="tag soft c-info"><span class="ic clock"></span>In progress</span>
+        <span class="tag soft c-danger"><span class="ic x"></span>Rejected</span>
+        <span class="tag soft c-neutral"><span class="ic clock"></span>Draft</span>
+      </div>
+      <div class="row"><span class="lbl">With dot</span>
+        <span class="tag soft c-success"><span class="dot"></span>Online</span>
+        <span class="tag soft c-warn"><span class="dot"></span>Away</span>
+        <span class="tag soft c-danger"><span class="dot"></span>Busy</span>
+        <span class="tag soft c-neutral"><span class="dot"></span>Offline</span>
+      </div>
+      <div class="row"><span class="lbl">Sizes</span>
+        <span class="tag sm soft c-success"><span class="ic check"></span>SM</span>
+        <span class="tag soft c-success"><span class="ic check"></span>Default</span>
+        <span class="tag lg soft c-success"><span class="ic check"></span>Large</span>
+        <span class="tag soft c-info square"><span class="ic clock"></span>Square</span>
+        <span class="tag outline c-danger"><span class="ic warn"></span>Outline</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Semantic · SOLID -->
+  <div class="card">
+    <div class="hdr">Semantic tags · solid <span class="sub">high-emphasis</span></div>
+    <div class="body">
+      <div class="row"><span class="lbl">Filled</span>
+        <span class="tag solid c-success"><span class="ic check"></span>Approved</span>
+        <span class="tag solid c-warn"><span class="ic warn"></span>Warning</span>
+        <span class="tag solid c-danger"><span class="ic x"></span>Error</span>
+        <span class="tag solid c-info"><span class="ic spark"></span>New</span>
+        <span class="tag solid c-neutral"><span class="ic clock"></span>Archived</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Animated -->
+  <div class="card">
+    <div class="hdr">Animated tags <span class="sub">pulse · spin · shimmer · pop · typing</span></div>
+    <div class="body">
+      <div class="row"><span class="lbl">Live / pulse</span>
+        <span class="tag soft c-danger"><span class="dot pulse-dot"></span>Live</span>
+        <span class="tag soft c-success"><span class="dot pulse-dot"></span>Online</span>
+        <span class="tag solid c-danger"><span class="dot pulse-dot" style="background:#fff"></span>Recording</span>
+      </div>
+      <div class="row"><span class="lbl">Loading / spin</span>
+        <span class="tag soft c-info spin"><span class="ic clock"></span>Syncing…</span>
+        <span class="tag outline c-neutral spin"><span class="ic clock"></span>Processing</span>
+        <span class="tag solid c-success spin"><span class="ic check"></span>Saving</span>
+      </div>
+      <div class="row"><span class="lbl">Shimmer</span>
+        <span class="tag solid c-info shimmer"><span class="ic spark"></span>NEW</span>
+        <span class="tag solid c-warn shimmer"><span class="ic star"></span>Featured</span>
+        <span class="tag solid c-danger shimmer"><span class="ic play"></span>Live now</span>
+      </div>
+      <div class="row"><span class="lbl">Pop-in</span>
+        <span class="tag solid c-success pop-in"><span class="ic check"></span>Just saved</span>
+        <span class="tag soft c-warn pop-in"><span class="ic warn"></span>Updated</span>
+      </div>
+      <div class="row"><span class="lbl">Typing</span>
+        <span class="tag soft c-info typing" style="gap:3px;"><span class="dot"></span><span class="dot"></span><span class="dot"></span> Somchai is typing</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Counts -->
+  <div class="card">
+    <div class="hdr">Counts &amp; notification badges</div>
+    <div class="body">
+      <div class="row"><span class="lbl">Number</span>
+        <span class="count dot"></span>
+        <span class="count sm">3</span>
+        <span class="count">12</span>
+        <span class="count" style="background:#1DA577">42</span>
+        <span class="count" style="background:#0A66E0">99+</span>
+        <span class="count" style="background:#F88411; width:auto;">NEW</span>
+      </div>
+      <div class="row"><span class="lbl">With bell</span>
+        <span class="notif"><span class="av">AS</span> Anong · 3 new</span>
+        <span class="notif" style="background:#FFE9CC; color:#7A3A00;">🔔 5 alerts pending</span>
+      </div>
+      <div class="row"><span class="lbl">Avatar chip</span>
+        <span class="chip"><span class="av">AS</span>Anong Srisuk<span class="ic x"></span></span>
+        <span class="chip" style="background:#DDEAFC; color:#063F89;"><span class="av" style="background:#0A66E0">NK</span>Nirut K.<span class="ic x"></span></span>
+        <span class="chip" style="background:#DBF3E8; color:#0D6A4B;"><span class="av" style="background:#1DA577">PC</span>Prapa C.<span class="ic x"></span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Special -->
+  <div class="card">
+    <div class="hdr">Progress &amp; interactive</div>
+    <div class="body">
+      <div class="row"><span class="lbl">Progress tag</span>
+        <span class="tag bar-tag"><span class="ic check" style="color:#0D6A4B"></span>65% complete</span>
+      </div>
+      <div class="row"><span class="lbl">Action tag</span>
+        <span class="tag outline c-info">Continue <span class="ic arrow"></span></span>
+        <span class="tag solid c-success">Mark done <span class="ic check"></span></span>
+        <span class="tag soft c-danger">Undo <span class="ic arrow" style="transform:scaleX(-1)"></span></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>

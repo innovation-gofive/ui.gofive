@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "fonts",
+  "title": "GoFive Font",
+  "description": "GoFive custom font family — Text (400), Medium (500), SemiBold (600), Bold (700)",
+  "files": [
+    {
+      "path": "registry/new-york/lib/gofive-font.css",
+      "content": "@font-face {\n  font-family: \"GoFive\";\n  src: url(\"https://registry.gofive.co.th/fonts/gofive-text.woff2\") format(\"woff2\"),\n    url(\"https://registry.gofive.co.th/fonts/gofive-text.woff\") format(\"woff\");\n  font-weight: 400;\n  font-style: normal;\n  font-display: swap;\n}\n\n@font-face {\n  font-family: \"GoFive\";\n  src: url(\"https://registry.gofive.co.th/fonts/gofive-medium.woff2\") format(\"woff2\"),\n    url(\"https://registry.gofive.co.th/fonts/gofive-medium.woff\") format(\"woff\");\n  font-weight: 500;\n  font-style: normal;\n  font-display: swap;\n}\n\n@font-face {\n  font-family: \"GoFive\";\n  src: url(\"https://registry.gofive.co.th/fonts/gofive-semi_bold.woff2\") format(\"woff2\"),\n    url(\"https://registry.gofive.co.th/fonts/gofive-semi_bold.woff\") format(\"woff\");\n  font-weight: 600;\n  font-style: normal;\n  font-display: swap;\n}\n\n@font-face {\n  font-family: \"GoFive\";\n  src: url(\"https://registry.gofive.co.th/fonts/gofive-bold.woff2\") format(\"woff2\"),\n    url(\"https://registry.gofive.co.th/fonts/gofive-bold.woff\") format(\"woff\");\n  font-weight: 700;\n  font-style: normal;\n  font-display: swap;\n}\n",
+      "type": "registry:file",
+      "target": "lib/gofive-font.css"
+    }
+  ],
+  "type": "registry:lib"
+}

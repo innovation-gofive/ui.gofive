@@ -1,0 +1,308 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Table" subtitle="Data, financial, empty" -->
+<html lang="en"><head><meta charset="utf-8"><title>Gofive — Table</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:var(--gf-bg-2);color:var(--gf-fg-1);font-family:var(--gf-font-family)}
+.wrap{padding:22px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:14px;overflow:hidden}
+.hdr{padding:12px 16px;border-bottom:1px solid var(--gf-line-5);display:flex;justify-content:space-between;align-items:center}
+.ttl{font-size:13px;font-weight:600}
+.tag{font-size:10.5px;color:var(--gf-fg-4);font-family:var(--gf-font-mono)}
+.body{padding:0}
+
+/* Toolbar */
+.tb{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--gf-line-5);background:var(--gf-bg-1)}
+.tb .sr{display:flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:8px;background:var(--gf-bg-2);color:var(--gf-fg-3);font-size:12.5px;min-width:220px}
+.tb .sr input{border:0;background:transparent;outline:none;font-size:12.5px;font-family:inherit;color:var(--gf-fg-1);flex:1}
+.tb .sp{flex:1}
+.tb .btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:7px;border:1px solid var(--gf-line-2);background:var(--gf-bg-1);font-size:12.5px;color:var(--gf-fg-2);cursor:pointer;font-family:inherit;font-weight:500}
+.tb .btn:hover{background:var(--gf-bg-2)}
+.tb .btn.p{background:var(--gf-primary);color:#fff;border-color:var(--gf-primary);font-weight:600}
+.sel-bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--gf-primary-wash);border-bottom:1px solid var(--gf-line-5);font-size:12.5px;color:var(--gf-fg-1)}
+.sel-bar b{color:var(--gf-primary)}
+.sel-bar .act{display:flex;gap:6px;margin-left:auto}
+.sel-bar .act .btn{background:transparent;border-color:color-mix(in oklab,var(--gf-primary) 30%,transparent);color:var(--gf-primary);font-weight:600}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--gf-bg-2);padding:10px 14px;text-align:left;font-size:11.5px;font-weight:600;color:var(--gf-fg-4);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--gf-line-5);white-space:nowrap}
+thead th.so{color:var(--gf-fg-1)}
+thead th .sok{display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+thead th .chev{color:var(--gf-primary)}
+tbody td{padding:12px 14px;border-bottom:1px solid var(--gf-line-5);vertical-align:middle}
+tbody tr:hover{background:var(--gf-bg-2)}
+tbody tr.sel{background:color-mix(in oklab, var(--gf-primary) 12%, var(--gf-bg-1))}
+tbody tr.sel td{color:var(--gf-fg-1)}
+tbody tr.sel .muted{color:var(--gf-fg-3)}
+tbody tr.sel .user .nm{color:var(--gf-fg-1)}
+tbody tr.sel .user .em{color:var(--gf-fg-3)}
+tbody tr.sel .num{color:var(--gf-fg-1)}
+tbody tr.sel:hover{background:color-mix(in oklab, var(--gf-primary) 16%, var(--gf-bg-1))}
+tbody tr:last-child td{border-bottom:0}
+.ck{width:16px;height:16px;border:1.5px solid var(--gf-line-1);border-radius:4px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.ck.on{background:var(--gf-primary);border-color:var(--gf-primary);color:#fff}
+.ck.on svg{display:block}
+.ck svg{display:none}
+.av{width:24px;height:24px;border-radius:999px;background:linear-gradient(135deg,#7B88E8,#E677B7);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;flex:0 0 24px}
+.user{display:flex;align-items:center;gap:8px}
+.user .nm{font-weight:600;color:var(--gf-fg-1);font-size:13px}
+.user .em{color:var(--gf-fg-4);font-size:11.5px}
+.user .col{display:flex;flex-direction:column;line-height:1.25}
+.st{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:999px;font-size:11px;font-weight:600}
+.st .dot{width:6px;height:6px;border-radius:999px;background:currentColor}
+.st.ok{background:var(--gf-success-soft);color:#00875F}
+.st.wn{background:var(--gf-warning-soft);color:#8A6200}
+.st.er{background:var(--gf-danger-soft);color:#B01E32}
+.st.in{background:var(--gf-info-soft);color:var(--gf-info)}
+.st.gy{background:var(--gf-bg-3);color:var(--gf-fg-3)}
+.num{font-variant-numeric:tabular-nums;font-weight:600}
+.num.pos{color:#00875F}
+.num.neg{color:var(--gf-danger)}
+.muted{color:var(--gf-fg-4)}
+.bar{width:80px;height:6px;border-radius:999px;background:var(--gf-bg-3);overflow:hidden;display:inline-block;vertical-align:middle;margin-right:8px}
+.bar > span{display:block;height:100%;background:var(--gf-primary);border-radius:inherit}
+.more{width:28px;height:28px;border-radius:6px;border:0;background:transparent;color:var(--gf-fg-4);cursor:pointer}
+.more:hover{background:var(--gf-bg-3);color:var(--gf-fg-1)}
+
+/* Compact variant */
+.dense thead th{padding:7px 12px}
+.dense tbody td{padding:7px 12px;font-size:12.5px}
+.dense .av{width:20px;height:20px;font-size:9.5px}
+
+/* Striped */
+.striped tbody tr:nth-child(even){background:var(--gf-bg-2)}
+.striped tbody tr:hover{background:color-mix(in oklab,var(--gf-primary) 8%,#fff)}
+
+/* Footer */
+.ft{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--gf-line-5);font-size:12.5px;color:var(--gf-fg-3)}
+.pg{display:flex;align-items:center;gap:4px}
+.pg .pn{min-width:28px;height:28px;padding:0 8px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12.5px;color:var(--gf-fg-2);cursor:pointer}
+.pg .pn:hover{background:var(--gf-bg-2)}
+.pg .pn.a{background:var(--gf-primary);color:#fff;font-weight:600}
+.pg .pn.d{color:var(--gf-fg-6);cursor:default}
+.rows{display:flex;align-items:center;gap:6px}
+.rows select{height:28px;padding:0 8px;border-radius:6px;border:1px solid var(--gf-line-2);background:var(--gf-bg-1);font-family:inherit;font-size:12.5px}
+
+/* Empty */
+.empty{padding:48px;text-align:center;color:var(--gf-fg-4);font-size:13px}
+.empty .ill{width:44px;height:44px;border-radius:50%;background:var(--gf-bg-2);display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px;color:var(--gf-fg-5)}
+</style>
+</head><body>
+<div class="wrap">
+  <!-- Full-featured table -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Data table</div><div class="tag">With selection, sort, actions</div></div>
+    <div class="body">
+      <div class="tb">
+        <div class="sr">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input placeholder="Search people by name, email, role…">
+        </div>
+        <div class="sp"></div>
+        <button class="btn">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Filter
+        </button>
+        <button class="btn">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 5h10M3 8h10M3 11h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Columns
+        </button>
+        <button class="btn">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M3 13h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Export
+        </button>
+        <button class="btn p">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Invite
+        </button>
+      </div>
+
+      <div class="sel-bar">
+        <b>3 of 248 selected</b>
+        <span>on this page</span>
+        <div class="act">
+          <button class="btn">Change role</button>
+          <button class="btn">Deactivate</button>
+          <button class="btn">Delete</button>
+        </div>
+      </div>
+
+      <table>
+        <thead><tr>
+          <th style="width:36px"><div class="ck on"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div></th>
+          <th class="so"><span class="sok">Name <span class="chev">↑</span></span></th>
+          <th>Role</th>
+          <th>Department</th>
+          <th>Status</th>
+          <th style="text-align:right">Utilization</th>
+          <th>Last active</th>
+          <th style="width:40px"></th>
+        </tr></thead>
+        <tbody>
+          <tr class="sel">
+            <td><div class="ck on"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div></td>
+            <td><div class="user"><div class="av">PK</div><div class="col"><div class="nm">Ploy Kittisak</div><div class="em">ploy.k@gofive.co.th</div></div></div></td>
+            <td>Admin</td>
+            <td>People Ops</td>
+            <td><span class="st ok"><span class="dot"></span>Active</span></td>
+            <td style="text-align:right"><span class="bar"><span style="width:86%"></span></span><span class="num">86%</span></td>
+            <td class="muted">2 min ago</td>
+            <td><button class="more">⋯</button></td>
+          </tr>
+          <tr class="sel">
+            <td><div class="ck on"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div></td>
+            <td><div class="user"><div class="av" style="background:linear-gradient(135deg,#5AC8FA,#2DAE4B)">NT</div><div class="col"><div class="nm">Nattapong T.</div><div class="em">nattapong@gofive.co.th</div></div></div></td>
+            <td>Manager</td>
+            <td>Engineering</td>
+            <td><span class="st ok"><span class="dot"></span>Active</span></td>
+            <td style="text-align:right"><span class="bar"><span style="width:72%"></span></span><span class="num">72%</span></td>
+            <td class="muted">12 min ago</td>
+            <td><button class="more">⋯</button></td>
+          </tr>
+          <tr class="sel">
+            <td><div class="ck on"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div></td>
+            <td><div class="user"><div class="av" style="background:linear-gradient(135deg,#FFB057,#F05B2F)">CR</div><div class="col"><div class="nm">Chayaphon R.</div><div class="em">chayaphon.r@gofive.co.th</div></div></div></td>
+            <td>Member</td>
+            <td>Design</td>
+            <td><span class="st wn"><span class="dot"></span>Invited</span></td>
+            <td style="text-align:right"><span class="bar"><span style="width:0%"></span></span><span class="num muted">—</span></td>
+            <td class="muted">Never</td>
+            <td><button class="more">⋯</button></td>
+          </tr>
+          <tr>
+            <td><div class="ck"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div></td>
+            <td><div class="user"><div class="av" style="background:linear-gradient(135deg,#C471ED,#F64F95)">AW</div><div class="col"><div class="nm">Arisa Wongsuk</div><div class="em">arisa.w@gofive.co.th</div></div></div></td>
+            <td>Member</td>
+            <td>Marketing</td>
+            <td><span class="st ok"><span class="dot"></span>Active</span></td>
+            <td style="text-align:right"><span class="bar"><span style="width:54%"></span></span><span class="num">54%</span></td>
+            <td class="muted">1 hr ago</td>
+            <td><button class="more">⋯</button></td>
+          </tr>
+          <tr>
+            <td><div class="ck"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div></td>
+            <td><div class="user"><div class="av" style="background:linear-gradient(135deg,#43D8B8,#1E8E8C)">SP</div><div class="col"><div class="nm">Siriporn P.</div><div class="em">siriporn.p@gofive.co.th</div></div></div></td>
+            <td>Member</td>
+            <td>Finance</td>
+            <td><span class="st gy"><span class="dot"></span>On leave</span></td>
+            <td style="text-align:right"><span class="bar"><span style="width:18%"></span></span><span class="num">18%</span></td>
+            <td class="muted">4 days ago</td>
+            <td><button class="more">⋯</button></td>
+          </tr>
+          <tr>
+            <td><div class="ck"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div></td>
+            <td><div class="user"><div class="av" style="background:linear-gradient(135deg,#6E6E82,#3A3A46)">KC</div><div class="col"><div class="nm">Kittichai C.</div><div class="em">kittichai.c@gofive.co.th</div></div></div></td>
+            <td>Owner</td>
+            <td>Executive</td>
+            <td><span class="st er"><span class="dot"></span>Suspended</span></td>
+            <td style="text-align:right"><span class="bar"><span style="width:0%"></span></span><span class="num muted">—</span></td>
+            <td class="muted">2 weeks ago</td>
+            <td><button class="more">⋯</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="ft">
+        <div>Showing <b>1–6</b> of <b>248</b> people</div>
+        <div class="pg">
+          <span class="pn d">‹</span>
+          <span class="pn a">1</span>
+          <span class="pn">2</span>
+          <span class="pn">3</span>
+          <span class="pn">4</span>
+          <span class="pn d">…</span>
+          <span class="pn">42</span>
+          <span class="pn">›</span>
+        </div>
+        <div class="rows">Rows per page <select><option>25</option><option>50</option><option>100</option></select></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Financial table -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Financial table</div><div class="tag">Dense · numeric · striped</div></div>
+    <div class="body">
+      <table class="dense striped">
+        <thead><tr>
+          <th>Invoice</th>
+          <th>Client</th>
+          <th>Issued</th>
+          <th>Due</th>
+          <th style="text-align:right">Subtotal</th>
+          <th style="text-align:right">Tax (7%)</th>
+          <th style="text-align:right">Total</th>
+          <th>Status</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="num">INV-2024-0412</span></td><td>Siam Cement Group</td>
+            <td class="muted">Mar 12</td><td>Apr 11</td>
+            <td style="text-align:right" class="num">฿ 128,400</td>
+            <td style="text-align:right" class="num muted">฿ 8,988</td>
+            <td style="text-align:right" class="num">฿ 137,388</td>
+            <td><span class="st ok"><span class="dot"></span>Paid</span></td>
+          </tr>
+          <tr>
+            <td><span class="num">INV-2024-0411</span></td><td>True Digital Park</td>
+            <td class="muted">Mar 10</td><td>Apr 09</td>
+            <td style="text-align:right" class="num">฿ 92,500</td>
+            <td style="text-align:right" class="num muted">฿ 6,475</td>
+            <td style="text-align:right" class="num">฿ 98,975</td>
+            <td><span class="st in"><span class="dot"></span>Sent</span></td>
+          </tr>
+          <tr>
+            <td><span class="num">INV-2024-0410</span></td><td>Central Pattana</td>
+            <td class="muted">Mar 05</td><td>Apr 04</td>
+            <td style="text-align:right" class="num">฿ 340,000</td>
+            <td style="text-align:right" class="num muted">฿ 23,800</td>
+            <td style="text-align:right" class="num">฿ 363,800</td>
+            <td><span class="st wn"><span class="dot"></span>Due soon</span></td>
+          </tr>
+          <tr>
+            <td><span class="num">INV-2024-0409</span></td><td>PTT Exploration</td>
+            <td class="muted">Feb 22</td><td>Mar 22</td>
+            <td style="text-align:right" class="num">฿ 58,200</td>
+            <td style="text-align:right" class="num muted">฿ 4,074</td>
+            <td style="text-align:right" class="num">฿ 62,274</td>
+            <td><span class="st er"><span class="dot"></span>Overdue 18d</span></td>
+          </tr>
+          <tr>
+            <td><span class="num">INV-2024-0408</span></td><td>Bangkok Bank</td>
+            <td class="muted">Feb 18</td><td>Mar 18</td>
+            <td style="text-align:right" class="num">฿ 215,000</td>
+            <td style="text-align:right" class="num muted">฿ 15,050</td>
+            <td style="text-align:right" class="num">฿ 230,050</td>
+            <td><span class="st ok"><span class="dot"></span>Paid</span></td>
+          </tr>
+          <tr style="background:var(--gf-bg-2);font-weight:600">
+            <td colspan="4">Totals (5 invoices)</td>
+            <td style="text-align:right" class="num">฿ 834,100</td>
+            <td style="text-align:right" class="num">฿ 58,387</td>
+            <td style="text-align:right" class="num">฿ 892,487</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Empty table</div><div class="tag">No-results state</div></div>
+    <div class="body">
+      <table>
+        <thead><tr><th>Name</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+      </table>
+      <div class="empty">
+        <div class="ill">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 10h17" stroke="currentColor" stroke-width="1.5"/><path d="M8 14h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div style="color:var(--gf-fg-2);font-weight:600;font-size:13.5px;margin-bottom:4px">No transactions match your filter</div>
+        <div>Try adjusting the date range or clearing filters.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

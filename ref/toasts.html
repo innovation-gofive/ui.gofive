@@ -1,0 +1,294 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Toasts" subtitle="Primary-tinted statuses — each product's toasts stay in its hue family" viewport="900x1800" -->
+<html><head><meta charset="utf-8"><title>Gofive — Toasts per product</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body { margin:0; background:#F6F6F8; color:#1A1A1F;
+    font-family:"Gofive","Inter",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased; }
+  .wrap { padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
+  .card { background:#fff; border:1px solid #ECECF0; border-radius:14px; overflow:hidden; }
+  .hdr  { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid #F2F2F5; }
+  .chip { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:13px; }
+  .chip.onlight { color:#212121; }
+  .tname { font-weight:700; font-size:13px; }
+  .ttag  { font-size:10.5px; color:#6E6E7A; font-family: var(--gf-font-mono); }
+  .stack { padding:14px 16px 16px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; }
+
+  /* ============================================================
+     PRIMARY-TINTED TOASTS — each product uses its --p primary
+     and the four statuses are lightness/saturation shifts of it.
+     --p    = primary hue (product's signature color)
+     --p-on = fg to use on filled primary (usually #fff, yellow=dark)
+     ============================================================ */
+
+  .toast {
+    --level: var(--p);                  /* by default, filled with primary */
+    display:flex; align-items:flex-start; gap:10px;
+    background:#fff; border:1px solid color-mix(in oklab, var(--level) 22%, #ECECF0);
+    border-left:3px solid var(--level);
+    border-radius:10px; padding:10px 12px;
+    box-shadow: 0 4px 14px color-mix(in oklab, var(--level) 18%, rgba(0,0,0,.06));
+    position:relative; overflow:hidden;
+    animation: slidein .32s cubic-bezier(.2,.9,.25,1) both;
+  }
+  /* Soft tint of the primary for card background */
+  .toast { background: color-mix(in oklab, var(--level) 7%, #fff); }
+
+  @keyframes slidein { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform:none; } }
+
+  .toast .ic {
+    width:24px; height:24px; border-radius:999px; flex:0 0 24px;
+    display:flex; align-items:center; justify-content:center;
+    color: var(--p-on, #fff);
+    background: var(--level);
+    font-weight:800; font-size:13px;
+    animation: pop .35s cubic-bezier(.2,.9,.35,1.4) both .05s;
+  }
+  @keyframes pop { 0% { transform: scale(.4); opacity:0; } 100% { transform: scale(1); opacity:1; } }
+
+  .toast .bd { flex:1; min-width:0; }
+  .toast .ttl{ font-size:13px; font-weight:700; color:#1A1A1F; letter-spacing:-.005em; }
+  .toast .msg{ font-size:12px; color:#52525F; margin-top:1px; line-height:1.45; }
+  .toast .close {
+    width:20px; height:20px; border-radius:6px; border:0; background:transparent; cursor:pointer;
+    color:#8A8A96; display:flex; align-items:center; justify-content:center;
+  }
+  .toast .close:hover { background: color-mix(in oklab, var(--level) 14%, #fff); color:#1A1A1F; }
+  .toast .close::before { content:"✕"; font-size:11px; }
+
+  /* progress timer — always primary-tinted */
+  .toast::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2px;
+    background: var(--level); opacity:.45;
+    transform-origin: left; animation: drain 5s linear forwards;
+  }
+  @keyframes drain { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+  /* Status = different TINT of the primary
+     - success: darken + shift toward green-of-primary (use primary dark)
+     - warn:    lighten toward warm accent
+     - err:     darken + saturate
+     - info:    primary itself (neutral/brand)
+  */
+  .success { --level: var(--p-success); }
+  .warn    { --level: var(--p-warn);    }
+  .err     { --level: var(--p-err);     }
+  .info    { --level: var(--p);         }   /* info = brand primary */
+
+  /* Icon glyphs — drawn with pseudo elements */
+  .toast .ic.check::before {
+    content:""; width:9px; height:4.5px; border-left:2px solid currentColor; border-bottom:2px solid currentColor;
+    transform: rotate(-45deg); margin-top:-2px; display:block;
+  }
+  .toast .ic.warn::before { content:"!"; }
+  .toast .ic.err::before  { content:"✕"; }
+  .toast .ic.info::before { content:"i"; font-style:italic; font-family:serif; }
+
+  /* ============================================================
+     PRODUCT PALETTES
+     Each defines: primary + 3 tints along its hue axis
+     ============================================================ */
+
+  /* Gofive · empeo · Calendio — ORANGE */
+  .t-gofive {
+    --p:         #F88411;   --p-on:#fff;
+    --p-success: #D96A00;   /* deep orange = "go" */
+    --p-warn:    #F9D423;   /* sunglow */
+    --p-err:     #F83600;   /* flame deep */
+  }
+  .t-gofive .warn .ic { color:#212121; }
+
+  /* Venio — BLUE */
+  .t-venio {
+    --p:         #116DFC;   --p-on:#fff;
+    --p-success: #0A4CB8;
+    --p-warn:    #4DA3FF;
+    --p-err:     #0025A8;
+  }
+
+  /* Desk — GREEN */
+  .t-desk {
+    --p:         #2DAE4B;   --p-on:#fff;
+    --p-success: #1E7A34;
+    --p-warn:    #9FD844;
+    --p-err:     #0B5721;
+  }
+
+  /* ShipX — AMBER */
+  .t-shipx {
+    --p:         #E89A2A;   --p-on:#fff;
+    --p-success: #B8760F;
+    --p-warn:    #F5C76B;
+    --p-err:     #8A4D00;
+  }
+
+  /* SalesBear — YELLOW */
+  .t-sales {
+    --p:         #FFC505;   --p-on:#212121;
+    --p-success: #C79100;
+    --p-warn:    #FFE066;
+    --p-err:     #8A5E00;
+  }
+  .t-sales .info .ic,
+  .t-sales .warn .ic { color:#212121; }
+
+  /* eTAXGO — RED */
+  .t-etax {
+    --p:         #EB1C26;   --p-on:#fff;
+    --p-success: #A81018;
+    --p-warn:    #F5695F;
+    --p-err:     #6E0007;
+  }
+
+  /* emconnect — INDIGO */
+  .t-emcn {
+    --p:         #5E5EED;   --p-on:#fff;
+    --p-success: #3D3DBD;
+    --p-warn:    #9B9BFA;
+    --p-err:     #1F1F8A;
+  }
+
+  .legend { display:flex; gap:14px; font-size:10.5px; color:#6E6E7A; font-family: var(--gf-font-mono); padding: 0 16px 12px; flex-wrap:wrap; }
+  .legend b { color:#1A1A1F; font-weight:700; font-family: inherit; }
+  .legend .sw { display:inline-flex; align-items:center; gap:5px; }
+  .legend .sw i { width:10px; height:10px; border-radius:3px; display:inline-block; }
+</style></head>
+<body>
+<div class="wrap">
+
+  <!-- GOFIVE / empeo / Calendio -->
+  <div class="card t-gofive">
+    <div class="hdr"><div class="chip" style="background:#F88411">G</div>
+      <div><div class="tname">Gofive · empeo · Calendio</div><div class="ttag">Primary #F88411 — all statuses tinted along orange</div></div>
+    </div>
+    <div class="stack">
+      <div class="toast success"><div class="ic check"></div><div class="bd"><div class="ttl">Payroll approved</div><div class="msg">March cycle · 1,284 employees</div></div><button class="close"></button></div>
+      <div class="toast warn"><div class="ic warn"></div><div class="bd"><div class="ttl">Waiting check-in</div><div class="msg">12 employees have not checked in yet</div></div><button class="close"></button></div>
+      <div class="toast err"><div class="ic err"></div><div class="bd"><div class="ttl">Failed to save</div><div class="msg">Network error — please retry.</div></div><button class="close"></button></div>
+      <div class="toast info"><div class="ic info"></div><div class="bd"><div class="ttl">New feature available</div><div class="msg">Shift swap is now open to managers.</div></div><button class="close"></button></div>
+    </div>
+    <div class="legend">
+      <span class="sw"><i style="background:#D96A00"></i>success</span>
+      <span class="sw"><i style="background:#F88411"></i>info · primary</span>
+      <span class="sw"><i style="background:#F9D423"></i>warn</span>
+      <span class="sw"><i style="background:#F83600"></i>error</span>
+    </div>
+  </div>
+
+  <!-- Venio -->
+  <div class="card t-venio">
+    <div class="hdr"><div class="chip" style="background:#116DFC">V</div>
+      <div><div class="tname">Venio</div><div class="ttag">Primary #116DFC — all statuses tinted along blue</div></div>
+    </div>
+    <div class="stack">
+      <div class="toast success"><div class="ic check"></div><div class="bd"><div class="ttl">Deal closed · ฿820,000</div><div class="msg">ACME Co. — moved to Won stage</div></div><button class="close"></button></div>
+      <div class="toast warn"><div class="ic warn"></div><div class="bd"><div class="ttl">Follow-up overdue</div><div class="msg">3 leads past their due date</div></div><button class="close"></button></div>
+      <div class="toast err"><div class="ic err"></div><div class="bd"><div class="ttl">Sync failed</div><div class="msg">Reconnect your Google account</div></div><button class="close"></button></div>
+      <div class="toast info"><div class="ic info"></div><div class="bd"><div class="ttl">New pipeline stage</div><div class="msg">"Qualified" added by Admin</div></div><button class="close"></button></div>
+    </div>
+    <div class="legend">
+      <span class="sw"><i style="background:#0A4CB8"></i>success</span>
+      <span class="sw"><i style="background:#116DFC"></i>info · primary</span>
+      <span class="sw"><i style="background:#4DA3FF"></i>warn</span>
+      <span class="sw"><i style="background:#0025A8"></i>error</span>
+    </div>
+  </div>
+
+  <!-- Desk -->
+  <div class="card t-desk">
+    <div class="hdr"><div class="chip" style="background:#2DAE4B">D</div>
+      <div><div class="tname">Desk</div><div class="ttag">Primary #2DAE4B — all statuses tinted along green</div></div>
+    </div>
+    <div class="stack">
+      <div class="toast success"><div class="ic check"></div><div class="bd"><div class="ttl">Ticket resolved</div><div class="msg">#12842 closed by agent</div></div><button class="close"></button></div>
+      <div class="toast warn"><div class="ic warn"></div><div class="bd"><div class="ttl">SLA approaching</div><div class="msg">5 tickets due within 1 hour</div></div><button class="close"></button></div>
+      <div class="toast err"><div class="ic err"></div><div class="bd"><div class="ttl">Agent offline</div><div class="msg">Queue auto-paused</div></div><button class="close"></button></div>
+      <div class="toast info"><div class="ic info"></div><div class="bd"><div class="ttl">Macro created</div><div class="msg">"Refund reply" saved to shared macros</div></div><button class="close"></button></div>
+    </div>
+    <div class="legend">
+      <span class="sw"><i style="background:#1E7A34"></i>success</span>
+      <span class="sw"><i style="background:#2DAE4B"></i>info · primary</span>
+      <span class="sw"><i style="background:#9FD844"></i>warn</span>
+      <span class="sw"><i style="background:#0B5721"></i>error</span>
+    </div>
+  </div>
+
+  <!-- ShipX -->
+  <div class="card t-shipx">
+    <div class="hdr"><div class="chip" style="background:#E89A2A">S</div>
+      <div><div class="tname">ShipX</div><div class="ttag">Primary #E89A2A — all statuses tinted along amber</div></div>
+    </div>
+    <div class="stack">
+      <div class="toast success"><div class="ic check"></div><div class="bd"><div class="ttl">Package delivered</div><div class="msg">TH-88-4021 · Bangkok</div></div><button class="close"></button></div>
+      <div class="toast warn"><div class="ic warn"></div><div class="bd"><div class="ttl">Delivery delayed</div><div class="msg">Weather warning at hub BKK-02</div></div><button class="close"></button></div>
+      <div class="toast err"><div class="ic err"></div><div class="bd"><div class="ttl">Courier cancelled</div><div class="msg">Reassigning to nearest rider…</div></div><button class="close"></button></div>
+      <div class="toast info"><div class="ic info"></div><div class="bd"><div class="ttl">New route optimised</div><div class="msg">Saved 18 km for tomorrow's batch</div></div><button class="close"></button></div>
+    </div>
+    <div class="legend">
+      <span class="sw"><i style="background:#B8760F"></i>success</span>
+      <span class="sw"><i style="background:#E89A2A"></i>info · primary</span>
+      <span class="sw"><i style="background:#F5C76B"></i>warn</span>
+      <span class="sw"><i style="background:#8A4D00"></i>error</span>
+    </div>
+  </div>
+
+  <!-- SalesBear -->
+  <div class="card t-sales">
+    <div class="hdr"><div class="chip onlight" style="background:#FFC505">B</div>
+      <div><div class="tname">SalesBear</div><div class="ttag">Primary #FFC505 — all statuses tinted along yellow</div></div>
+    </div>
+    <div class="stack">
+      <div class="toast success"><div class="ic check"></div><div class="bd"><div class="ttl">Quote accepted</div><div class="msg">Siam Motors signed the proposal</div></div><button class="close"></button></div>
+      <div class="toast warn"><div class="ic warn"></div><div class="bd"><div class="ttl">Quota at 80%</div><div class="msg">Q2 target · 9 days remaining</div></div><button class="close"></button></div>
+      <div class="toast err"><div class="ic err"></div><div class="bd"><div class="ttl">Lead lost</div><div class="msg">Reason: chose a competitor</div></div><button class="close"></button></div>
+      <div class="toast info"><div class="ic info"></div><div class="bd"><div class="ttl">Leaderboard updated</div><div class="msg">You're #3 this week 🐻</div></div><button class="close"></button></div>
+    </div>
+    <div class="legend">
+      <span class="sw"><i style="background:#C79100"></i>success</span>
+      <span class="sw"><i style="background:#FFC505"></i>info · primary</span>
+      <span class="sw"><i style="background:#FFE066"></i>warn</span>
+      <span class="sw"><i style="background:#8A5E00"></i>error</span>
+    </div>
+  </div>
+
+  <!-- eTAXGO -->
+  <div class="card t-etax">
+    <div class="hdr"><div class="chip" style="background:#EB1C26">T</div>
+      <div><div class="tname">eTAXGO</div><div class="ttag">Primary #EB1C26 — all statuses tinted along red</div></div>
+    </div>
+    <div class="stack">
+      <div class="toast success"><div class="ic check"></div><div class="bd"><div class="ttl">e-Tax submitted</div><div class="msg">Batch 03-2026 accepted by RD</div></div><button class="close"></button></div>
+      <div class="toast warn"><div class="ic warn"></div><div class="bd"><div class="ttl">Certificate expiring</div><div class="msg">Renew within 14 days</div></div><button class="close"></button></div>
+      <div class="toast err"><div class="ic err"></div><div class="bd"><div class="ttl">Filing rejected</div><div class="msg">Invalid seller TIN on 2 lines</div></div><button class="close"></button></div>
+      <div class="toast info"><div class="ic info"></div><div class="bd"><div class="ttl">New tax form released</div><div class="msg">ภ.พ.30 updated format — May 2026</div></div><button class="close"></button></div>
+    </div>
+    <div class="legend">
+      <span class="sw"><i style="background:#A81018"></i>success</span>
+      <span class="sw"><i style="background:#EB1C26"></i>info · primary</span>
+      <span class="sw"><i style="background:#F5695F"></i>warn</span>
+      <span class="sw"><i style="background:#6E0007"></i>error</span>
+    </div>
+  </div>
+
+  <!-- emconnect -->
+  <div class="card t-emcn">
+    <div class="hdr"><div class="chip" style="background:#5E5EED">C</div>
+      <div><div class="tname">emconnect</div><div class="ttag">Primary #5E5EED — all statuses tinted along indigo</div></div>
+    </div>
+    <div class="stack">
+      <div class="toast success"><div class="ic check"></div><div class="bd"><div class="ttl">Message delivered</div><div class="msg">Broadcast sent to 84 team members</div></div><button class="close"></button></div>
+      <div class="toast warn"><div class="ic warn"></div><div class="bd"><div class="ttl">Channel quiet</div><div class="msg">No activity in #hr-announce for 7 days</div></div><button class="close"></button></div>
+      <div class="toast err"><div class="ic err"></div><div class="bd"><div class="ttl">Mention failed</div><div class="msg">User left the workspace</div></div><button class="close"></button></div>
+      <div class="toast info"><div class="ic info"></div><div class="bd"><div class="ttl">Huddle started</div><div class="msg">Join the Design standup now</div></div><button class="close"></button></div>
+    </div>
+    <div class="legend">
+      <span class="sw"><i style="background:#3D3DBD"></i>success</span>
+      <span class="sw"><i style="background:#5E5EED"></i>info · primary</span>
+      <span class="sw"><i style="background:#9B9BFA"></i>warn</span>
+      <span class="sw"><i style="background:#1F1F8A"></i>error</span>
+    </div>
+  </div>
+
+</div>
+</body></html>

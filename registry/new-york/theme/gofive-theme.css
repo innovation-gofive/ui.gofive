@@ -1,0 +1,286 @@
+/* ============================================================
+   GoFive theme — colors for brand, neutrals & semantic states.
+
+   Install:  npx shadcn@latest add https://registry.gofive.co.th/r/theme.json
+   Then import this file in your app's globals.css, after the
+   Tailwind import:
+
+     @import "tailwindcss";
+     @import "./gofive-theme.css";
+
+   Switch product palette at runtime by setting data-brand on
+   <html> (or any ancestor):
+
+     <html data-brand="venio">   <!-- empeo | calendio | venio | desk
+                                       shipx | salesbear | etaxgo | emconnect -->
+
+   Omit data-brand for the base Gofive (orange) palette.
+   ============================================================ */
+
+@theme inline {
+  /* Semantic colors (brand-tunable) */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-foreground: var(--success-soft-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-foreground: var(--warning-soft-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-foreground: var(--danger-soft-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-soft: var(--info-soft);
+  --color-info-soft-foreground: var(--info-soft-foreground);
+
+  /* Neutral ramp (ink → surface) */
+  --color-gf-fg-1: var(--gf-fg-1);
+  --color-gf-fg-2: var(--gf-fg-2);
+  --color-gf-fg-3: var(--gf-fg-3);
+  --color-gf-fg-4: var(--gf-fg-4);
+  --color-gf-fg-5: var(--gf-fg-5);
+  --color-gf-fg-6: var(--gf-fg-6);
+  --color-gf-line-1: var(--gf-line-1);
+  --color-gf-line-2: var(--gf-line-2);
+  --color-gf-line-4: var(--gf-line-4);
+  --color-gf-bg-2: var(--gf-bg-2);
+  --color-gf-bg-3: var(--gf-bg-3);
+  --color-gf-bg-4: var(--gf-bg-4);
+}
+
+/* base — Gofive · empeo · Calendio (orange) */
+:root {
+  --gf-fg-1: #1c1c22;
+  --gf-fg-2: #383842;
+  --gf-fg-3: #52525f;
+  --gf-fg-4: #6a6a7c;
+  --gf-fg-5: #83839a;
+  --gf-fg-6: #a5a5b6;
+  --gf-line-1: #d2d2da;
+  --gf-line-2: #dfdfe8;
+  --gf-line-4: #ececf1;
+  --gf-bg-2: #f6f6f8;
+  --gf-bg-3: #f5f5f5;
+  --gf-bg-4: #efefef;
+  --gf-white: #ffffff;
+  --gf-black: #000000;
+
+  --background: #ffffff;
+  --foreground: var(--gf-fg-1);
+  --card: #ffffff;
+  --card-foreground: var(--gf-fg-1);
+  --popover: #ffffff;
+  --popover-foreground: var(--gf-fg-1);
+  --muted: var(--gf-bg-2);
+  --muted-foreground: var(--gf-fg-4);
+  --accent: var(--gf-bg-2);
+  --accent-foreground: var(--gf-fg-1);
+  --secondary: var(--gf-bg-2);
+  --secondary-foreground: var(--gf-fg-2);
+  --border: var(--gf-line-2);
+  --input: var(--gf-line-2);
+
+  --primary: #f88411;
+  --primary-foreground: #ffffff;
+  --ring: #f88411;
+
+  --success: #1da577;
+  --success-foreground: #ffffff;
+  --success-soft: #dbf3e8;
+  --success-soft-foreground: #0d6a4b;
+  --warning: #f9d423;
+  --warning-foreground: #212121;
+  --warning-soft: #fff4bf;
+  --warning-soft-foreground: #7a5800;
+  --danger: #d93a1a;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fde0d6;
+  --danger-soft-foreground: #8a1f0a;
+  --info: #0a66e0;
+  --info-foreground: #ffffff;
+  --info-soft: #ddeafc;
+  --info-soft-foreground: #063f89;
+
+  --destructive: var(--danger);
+  --destructive-foreground: var(--danger-foreground);
+}
+
+[data-brand="empeo"],
+[data-brand="calendio"] {
+  --primary: #f88411;
+  --primary-foreground: #ffffff;
+  --ring: #f88411;
+}
+
+[data-brand="venio"] {
+  --primary: #116dfc;
+  --primary-foreground: #ffffff;
+  --ring: #116dfc;
+  --success: #0fa36a;
+  --success-foreground: #ffffff;
+  --success-soft: #d6f2e4;
+  --success-soft-foreground: #07623f;
+  --warning: #ffc230;
+  --warning-foreground: #212121;
+  --warning-soft: #ffefc2;
+  --warning-soft-foreground: #7a5800;
+  --danger: #e0335a;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fbdbe3;
+  --danger-soft-foreground: #8f0e2e;
+  --info: #116dfc;
+  --info-foreground: #ffffff;
+  --info-soft: #dce8fe;
+  --info-soft-foreground: #064099;
+}
+
+[data-brand="desk"] {
+  --primary: #2dae4b;
+  --primary-foreground: #ffffff;
+  --ring: #2dae4b;
+  --success: #2dae4b;
+  --success-foreground: #ffffff;
+  --success-soft: #dbf3df;
+  --success-soft-foreground: #155f26;
+  --warning: #f5b800;
+  --warning-foreground: #212121;
+  --warning-soft: #fff1c2;
+  --warning-soft-foreground: #7a5800;
+  --danger: #d43a2f;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fbdcd9;
+  --danger-soft-foreground: #8a1b14;
+  --info: #0f8fb8;
+  --info-foreground: #ffffff;
+  --info-soft: #d5ecf4;
+  --info-soft-foreground: #0a566f;
+}
+
+[data-brand="shipx"] {
+  --primary: #e89a2a;
+  --primary-foreground: #ffffff;
+  --ring: #e89a2a;
+  --success: #1da577;
+  --success-foreground: #ffffff;
+  --success-soft: #dbf3e8;
+  --success-soft-foreground: #0d6a4b;
+  --warning: #e89a2a;
+  --warning-foreground: #212121;
+  --warning-soft: #fbe9cc;
+  --warning-soft-foreground: #7a4b0a;
+  --danger: #c2362c;
+  --danger-foreground: #ffffff;
+  --danger-soft: #f6d7d4;
+  --danger-soft-foreground: #7f150e;
+  --info: #156fb5;
+  --info-foreground: #ffffff;
+  --info-soft: #d8e7f5;
+  --info-soft-foreground: #0a3e6b;
+}
+
+[data-brand="salesbear"] {
+  --primary: #ffc505;
+  --primary-foreground: #212121;
+  --ring: #ffc505;
+  --success: #17a76b;
+  --success-foreground: #ffffff;
+  --success-soft: #d6f2e3;
+  --success-soft-foreground: #0a5e3b;
+  --warning: #ffc505;
+  --warning-foreground: #212121;
+  --warning-soft: #fff1b2;
+  --warning-soft-foreground: #6e5200;
+  --danger: #e03a3a;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fbdbdb;
+  --danger-soft-foreground: #8a1414;
+  --info: #1565c9;
+  --info-foreground: #ffffff;
+  --info-soft: #d5e3f5;
+  --info-soft-foreground: #0a3a78;
+}
+
+[data-brand="etaxgo"] {
+  --primary: #eb1c26;
+  --primary-foreground: #ffffff;
+  --ring: #eb1c26;
+  --success: #1da577;
+  --success-foreground: #ffffff;
+  --success-soft: #dbf3e8;
+  --success-soft-foreground: #0d6a4b;
+  --warning: #f0b400;
+  --warning-foreground: #212121;
+  --warning-soft: #fcebb8;
+  --warning-soft-foreground: #75530a;
+  --danger: #eb1c26;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fbd7d9;
+  --danger-soft-foreground: #8a0b11;
+  --info: #1a64b8;
+  --info-foreground: #ffffff;
+  --info-soft: #d6e3f2;
+  --info-soft-foreground: #0c3a70;
+}
+
+[data-brand="emconnect"] {
+  --primary: #5e5eed;
+  --primary-foreground: #ffffff;
+  --ring: #5e5eed;
+  --success: #16a37a;
+  --success-foreground: #ffffff;
+  --success-soft: #d6f1e6;
+  --success-soft-foreground: #0a5e47;
+  --warning: #f5b83c;
+  --warning-foreground: #212121;
+  --warning-soft: #fcecc2;
+  --warning-soft-foreground: #7a5300;
+  --danger: #e03556;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fbdbe2;
+  --danger-soft-foreground: #8a0f2c;
+  --info: #5e5eed;
+  --info-foreground: #ffffff;
+  --info-soft: #e1e1fc;
+  --info-soft-foreground: #30309c;
+}
+
+/* keep destructive in sync after any brand switch */
+[data-brand] {
+  --destructive: var(--danger);
+  --destructive-foreground: var(--danger-foreground);
+}
+
+/* dark mode — neutrals overridden; semantic hues inherited,
+   soft tints recomputed from them so it works for any brand */
+.dark {
+  --background: #15151a;
+  --foreground: #ececf1;
+  --card: #1c1c22;
+  --card-foreground: #ececf1;
+  --popover: #1c1c22;
+  --popover-foreground: #ececf1;
+  --muted: #26262e;
+  --muted-foreground: #a5a5b6;
+  --accent: #26262e;
+  --accent-foreground: #ececf1;
+  --secondary: #26262e;
+  --secondary-foreground: #dfdfe8;
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+
+  --gf-bg-2: #1c1c22;
+  --gf-bg-3: #15151a;
+  --gf-bg-4: #26262e;
+
+  --success-soft: color-mix(in oklab, var(--success) 22%, var(--card));
+  --success-soft-foreground: color-mix(in oklab, var(--success) 70%, white);
+  --warning-soft: color-mix(in oklab, var(--warning) 22%, var(--card));
+  --warning-soft-foreground: color-mix(in oklab, var(--warning) 75%, white);
+  --danger-soft: color-mix(in oklab, var(--danger) 22%, var(--card));
+  --danger-soft-foreground: color-mix(in oklab, var(--danger) 72%, white);
+  --info-soft: color-mix(in oklab, var(--info) 22%, var(--card));
+  --info-soft-foreground: color-mix(in oklab, var(--info) 72%, white);
+}

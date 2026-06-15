@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox",
+  "title": "Checkbox",
+  "description": "A Radix-based checkbox supporting checked, unchecked, and indeterminate states with primary-themed active styling and sm/md/lg sizes.",
+  "dependencies": [
+    "radix-ui",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/ui/checkbox.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Checkbox as CheckboxPrimitive } from \"radix-ui\"\nimport { Check, Minus } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport type CheckboxSize = \"sm\" | \"md\" | \"lg\"\n\nconst BOX_SIZE: Record<CheckboxSize, string> = {\n  sm: \"size-3.5 rounded-[3.5px]\",\n  md: \"size-[18px] rounded-[5px]\",\n  lg: \"size-[22px] rounded-[6px]\",\n}\n\nconst ICON_SIZE: Record<CheckboxSize, string> = {\n  sm: \"[&_svg]:size-2.5\",\n  md: \"[&_svg]:size-3\",\n  lg: \"[&_svg]:size-3.5\",\n}\n\nfunction Checkbox({\n  className,\n  size = \"md\",\n  checked,\n  ...props\n}: React.ComponentProps<typeof CheckboxPrimitive.Root> & {\n  size?: CheckboxSize\n}) {\n  const indeterminate = checked === \"indeterminate\"\n\n  return (\n    <CheckboxPrimitive.Root\n      data-slot=\"checkbox\"\n      checked={checked}\n      className={cn(\n        \"peer inline-flex shrink-0 items-center justify-center border-[1.5px] border-input bg-background text-primary-foreground outline-none transition-[background-color,border-color,box-shadow]\",\n        \"hover:border-primary\",\n        \"focus-visible:border-primary focus-visible:ring-ring/50 focus-visible:ring-[3px]\",\n        \"data-[state=checked]:border-primary data-[state=checked]:bg-primary\",\n        \"data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary\",\n        \"disabled:cursor-not-allowed disabled:border-input disabled:bg-muted\",\n        \"data-[state=checked]:disabled:border-muted-foreground data-[state=checked]:disabled:bg-muted-foreground\",\n        \"data-[state=indeterminate]:disabled:border-muted-foreground data-[state=indeterminate]:disabled:bg-muted-foreground\",\n        BOX_SIZE[size],\n        ICON_SIZE[size],\n        className\n      )}\n      {...props}\n    >\n      <CheckboxPrimitive.Indicator\n        data-slot=\"checkbox-indicator\"\n        className=\"flex items-center justify-center text-current\"\n      >\n        {indeterminate ? (\n          <Minus className=\"stroke-[3.5]\" />\n        ) : (\n          <Check className=\"stroke-[3.5]\" />\n        )}\n      </CheckboxPrimitive.Indicator>\n    </CheckboxPrimitive.Root>\n  )\n}\n\nexport { Checkbox }\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -1,0 +1,298 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Calendar" subtitle="Month, Week, Day/Agenda" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gofive — Calendar</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin:0; background: var(--gf-bg-2); color: var(--gf-fg-1); }
+  .wrap { padding: 24px; display:flex; flex-direction:column; gap:20px; }
+  .card { background: var(--gf-bg-1); border:1px solid var(--gf-line-4); border-radius: 14px; overflow:hidden; }
+  .hdr  { padding: 12px 16px; border-bottom:1px solid var(--gf-line-5); display:flex; align-items:center; justify-content:space-between; }
+  .hdr .ttl { font-size:13px; font-weight:600; color:var(--gf-fg-1); }
+  .hdr .tag { font-size:10.5px; color:var(--gf-fg-4); font-family: var(--gf-font-mono); }
+  .body { padding: 16px; }
+
+  /* ============ Month view ============ */
+  .cal-top {
+    display:flex; align-items:center; justify-content:space-between; margin-bottom: 12px;
+  }
+  .cal-top h3 { font-size:18px; font-weight:600; color:var(--gf-fg-1); margin:0; }
+  .cal-top .ctrls { display:flex; gap:6px; align-items:center; }
+  .seg { display:flex; background: var(--gf-bg-2); border-radius: 8px; padding: 2px; gap: 2px; }
+  .seg button {
+    height:28px; padding: 0 12px; border-radius: 6px; border: 0; background: transparent;
+    font-size: 12.5px; font-weight: 500; color: var(--gf-fg-3); cursor:pointer;
+    font-family: var(--gf-font-family);
+  }
+  .seg button.active { background: var(--gf-bg-1); color: var(--gf-fg-1); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .navbtn {
+    width: 32px; height: 32px; border-radius: 8px; border:1px solid var(--gf-line-2); background: var(--gf-bg-1);
+    color: var(--gf-fg-2); display: flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .navbtn:hover { background: var(--gf-bg-2); }
+  .today-btn {
+    height: 32px; padding: 0 14px; border-radius: 8px; border:1px solid var(--gf-line-2); background: var(--gf-bg-1);
+    color: var(--gf-fg-2); font-size: 13px; font-weight: 500; cursor:pointer; font-family: var(--gf-font-family);
+  }
+
+  .grid-month { display: grid; grid-template-columns: repeat(7, 1fr); border:1px solid var(--gf-line-4); border-radius: 10px; overflow:hidden; }
+  .gm-wd {
+    padding: 8px 10px; font-size: 11px; font-weight: 600; color: var(--gf-fg-4); text-transform: uppercase;
+    background: var(--gf-bg-2); border-bottom:1px solid var(--gf-line-4);
+  }
+  .gm-cell {
+    min-height: 96px; padding: 6px 8px; background: var(--gf-bg-1);
+    border-right: 1px solid var(--gf-line-5); border-bottom: 1px solid var(--gf-line-5);
+    display:flex; flex-direction:column; gap:3px;
+  }
+  .gm-cell:nth-child(7n + 1), .gm-cell:nth-child(7n) { }
+  .gm-cell.muted { background: var(--gf-bg-2); }
+  .gm-cell.muted .num { color: var(--gf-fg-5); }
+  .gm-cell .num { font-size: 12px; font-weight: 500; color: var(--gf-fg-2); }
+  .gm-cell.today .num {
+    color: #fff; background: var(--gf-primary); width: 22px; height: 22px; border-radius: 999px;
+    display:flex; align-items:center; justify-content:center; font-weight:600;
+  }
+  .ev {
+    font-size: 11.5px; padding: 2px 6px; border-radius: 4px;
+    white-space:nowrap; overflow: hidden; text-overflow: ellipsis;
+    background: var(--gf-primary-wash); color: var(--gf-primary-deep);
+    border-left: 2px solid var(--gf-primary);
+  }
+  .ev.success { background: var(--gf-success-soft, #E8F7EE); color: #0F6B2F; border-color: #2DAE4B; }
+  .ev.warn    { background: var(--gf-warning-soft, #FFF4DC); color: #8F5E00; border-color: #E0A42E; }
+  .ev.info    { background: var(--gf-info-soft, #E3EEFE); color: #1D4DB1; border-color: #2F6BE4; }
+  .ev.more    { background: transparent; color: var(--gf-fg-4); border:0; padding-left:0; font-size:10.5px; }
+
+  /* ============ Week view ============ */
+  .week {
+    display: grid; grid-template-columns: 50px repeat(7, 1fr);
+    border:1px solid var(--gf-line-4); border-radius: 10px; overflow:hidden; position:relative;
+  }
+  .wk-hdr { padding: 10px 8px; text-align: center; border-bottom:1px solid var(--gf-line-4); background: var(--gf-bg-2); }
+  .wk-hdr .dow { font-size: 10.5px; color: var(--gf-fg-4); font-weight: 600; text-transform: uppercase; }
+  .wk-hdr .d { font-size: 18px; font-weight: 600; color: var(--gf-fg-1); margin-top: 2px; }
+  .wk-hdr.today .d { color: #fff; background: var(--gf-primary); width: 30px; height: 30px; border-radius: 999px; display:inline-flex; align-items:center; justify-content:center; }
+  .wk-time { grid-column: 1; padding-top: 8px; }
+  .wk-time .h { height: 48px; font-size: 10.5px; color: var(--gf-fg-4); text-align: right; padding-right: 8px; }
+  .wk-col { border-right: 1px solid var(--gf-line-5); position: relative; }
+  .wk-col .slot { height: 48px; border-bottom: 1px dashed var(--gf-line-5); }
+  .wk-ev {
+    position: absolute; left: 4px; right: 4px; padding: 4px 6px; border-radius: 6px;
+    font-size: 11.5px; line-height: 1.25;
+    background: var(--gf-primary-wash); color: var(--gf-primary-deep);
+    border-left: 2px solid var(--gf-primary);
+    overflow: hidden;
+  }
+  .wk-ev .t { font-size: 10px; color: var(--gf-fg-4); }
+  .wk-ev.success { background: var(--gf-success-soft, #E8F7EE); color: #0F6B2F; border-color: #2DAE4B; }
+  .wk-ev.info    { background: var(--gf-info-soft, #E3EEFE); color: #1D4DB1; border-color: #2F6BE4; }
+  .wk-ev.warn    { background: var(--gf-warning-soft, #FFF4DC); color: #8F5E00; border-color: #E0A42E; }
+
+  /* ============ Day / Agenda ============ */
+  .agenda { display:flex; flex-direction:column; gap: 8px; }
+  .ag-group .ag-label { font-size: 11.5px; font-weight: 600; color: var(--gf-fg-4); text-transform: uppercase; letter-spacing: .04em; padding: 6px 2px; }
+  .ag-item { display: grid; grid-template-columns: 86px 1fr auto; gap: 12px; align-items:center; padding: 10px 12px; border:1px solid var(--gf-line-4); border-radius: 8px; }
+  .ag-time { font-size: 12.5px; color: var(--gf-fg-3); font-variant-numeric: tabular-nums; }
+  .ag-title { font-size: 13.5px; font-weight: 500; color: var(--gf-fg-1); }
+  .ag-meta { font-size: 11.5px; color: var(--gf-fg-4); margin-top: 2px; }
+  .ag-dot { width: 8px; height: 8px; border-radius:999px; background: var(--gf-primary); }
+  .ag-item.s .ag-dot { background: #2DAE4B; }
+  .ag-item.w .ag-dot { background: #E0A42E; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Month view -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Calendar — Month view</div><div class="tag">Default mode</div></div>
+    <div class="body">
+      <div class="cal-top">
+        <div style="display:flex; align-items:center; gap: 10px;">
+          <button class="navbtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="navbtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <button class="today-btn">Today</button>
+          <h3>April 2026</h3>
+        </div>
+        <div class="ctrls">
+          <div class="seg">
+            <button>Day</button>
+            <button>Week</button>
+            <button class="active">Month</button>
+            <button>Year</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-month" id="month"></div>
+    </div>
+  </div>
+
+  <!-- Week view -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Calendar — Week view</div><div class="tag">Timed events</div></div>
+    <div class="body">
+      <div class="cal-top">
+        <div style="display:flex; align-items:center; gap: 10px;">
+          <button class="navbtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="navbtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <button class="today-btn">Today</button>
+          <h3>20 – 26 April 2026</h3>
+        </div>
+        <div class="ctrls">
+          <div class="seg">
+            <button>Day</button>
+            <button class="active">Week</button>
+            <button>Month</button>
+            <button>Year</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="wk-hdr" style="grid-column:1"></div>
+        <div class="wk-hdr"><div class="dow">Mon</div><div class="d">20</div></div>
+        <div class="wk-hdr"><div class="dow">Tue</div><div class="d">21</div></div>
+        <div class="wk-hdr"><div class="dow">Wed</div><div class="d">22</div></div>
+        <div class="wk-hdr"><div class="dow">Thu</div><div class="d">23</div></div>
+        <div class="wk-hdr today"><div class="dow">Fri</div><div class="d">24</div></div>
+        <div class="wk-hdr"><div class="dow">Sat</div><div class="d">25</div></div>
+        <div class="wk-hdr"><div class="dow">Sun</div><div class="d">26</div></div>
+
+        <div class="wk-time" id="wk-time"></div>
+        <div class="wk-col" id="c1"></div>
+        <div class="wk-col" id="c2"></div>
+        <div class="wk-col" id="c3"></div>
+        <div class="wk-col" id="c4"></div>
+        <div class="wk-col" id="c5"></div>
+        <div class="wk-col" id="c6"></div>
+        <div class="wk-col" id="c7"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day / Agenda -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Day / Agenda</div><div class="tag">List view</div></div>
+    <div class="body">
+      <div class="cal-top">
+        <div style="display:flex; align-items:center; gap: 10px;">
+          <button class="navbtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="navbtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <h3>Friday, 24 April 2026</h3>
+        </div>
+        <div class="ctrls">
+          <div class="seg">
+            <button class="active">Day</button>
+            <button>Week</button>
+            <button>Month</button>
+            <button>Year</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="agenda">
+        <div class="ag-group">
+          <div class="ag-label">Morning</div>
+          <div class="ag-item">
+            <div class="ag-time">09:00 – 09:30</div>
+            <div><div class="ag-title">Design system sync</div><div class="ag-meta">Meeting room 4 · with Ploy, Nat</div></div>
+            <div class="ag-dot"></div>
+          </div>
+          <div class="ag-item s" style="margin-top:6px;">
+            <div class="ag-time">10:00 – 11:00</div>
+            <div><div class="ag-title">Sprint planning</div><div class="ag-meta">Empeo team</div></div>
+            <div class="ag-dot"></div>
+          </div>
+        </div>
+        <div class="ag-group">
+          <div class="ag-label">Afternoon</div>
+          <div class="ag-item w">
+            <div class="ag-time">13:30 – 14:15</div>
+            <div><div class="ag-title">Product review</div><div class="ag-meta">Quarterly goals check-in</div></div>
+            <div class="ag-dot"></div>
+          </div>
+          <div class="ag-item" style="margin-top:6px;">
+            <div class="ag-time">15:00 – 15:45</div>
+            <div><div class="ag-title">1:1 with Lead</div><div class="ag-meta">Coffee bar, 3F</div></div>
+            <div class="ag-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* Month grid — April 2026. 1 Apr = Wed (treat as Mon-start week) */
+  const weekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const events = {
+    3: [{t:'Team standup', k:''}],
+    7: [{t:'Release 6.5', k:'success'}, {t:'QA review', k:'info'}],
+    10: [{t:'Design review', k:''}],
+    15: [{t:'All hands', k:'info'}, {t:'Demo day', k:'success'}, {t:'Catch up', k:''}],
+    20: [{t:'Sprint start', k:'success'}],
+    22: [{t:'Client call', k:'warn'}],
+    24: [{t:'DS sync', k:''}, {t:'1:1', k:'info'}],
+    28: [{t:'Quarterly review', k:'warn'}],
+  };
+
+  (function month(){
+    const el = document.getElementById('month');
+    let html = weekdays.map(w => `<div class="gm-wd">${w}</div>`).join('');
+    // 1 April 2026 is Wednesday → index 2 in mon-start
+    const pad = 2; const dim = 30; const prevDim = 31;
+    for (let i = pad - 1; i >= 0; i--) {
+      html += `<div class="gm-cell muted"><div class="num">${prevDim - i}</div></div>`;
+    }
+    for (let d = 1; d <= dim; d++) {
+      const isToday = d === 24;
+      const evs = events[d] || [];
+      let evHtml = evs.slice(0, 2).map(e => `<div class="ev ${e.k}">${e.t}</div>`).join('');
+      if (evs.length > 2) evHtml += `<div class="ev more">+${evs.length - 2} more</div>`;
+      html += `<div class="gm-cell ${isToday ? 'today' : ''}"><div class="num">${d}</div>${evHtml}</div>`;
+    }
+    const filled = pad + dim;
+    const trail = Math.ceil(filled / 7) * 7 - filled;
+    for (let i = 1; i <= trail; i++) {
+      html += `<div class="gm-cell muted"><div class="num">${i}</div></div>`;
+    }
+    el.innerHTML = html;
+  })();
+
+  /* Week view timeline */
+  (function week(){
+    const hours = ['8','9','10','11','12','1','2','3','4','5','6'];
+    document.getElementById('wk-time').innerHTML = hours.map(h => `<div class="h">${h}:00</div>`).join('');
+    for (let i = 1; i <= 7; i++) {
+      const col = document.getElementById('c' + i);
+      col.innerHTML = hours.map(() => '<div class="slot"></div>').join('');
+    }
+    function addEv(col, top, height, title, time, k = '') {
+      const el = document.getElementById('c' + col);
+      const d = document.createElement('div');
+      d.className = 'wk-ev ' + k;
+      d.style.top = top + 'px';
+      d.style.height = height + 'px';
+      d.innerHTML = `<div class="t">${time}</div>${title}`;
+      el.appendChild(d);
+    }
+    addEv(1, 48, 48, 'Standup', '9:00');
+    addEv(1, 144, 72, 'Design crit', '11:00', 'info');
+    addEv(2, 96, 48, 'Planning', '10:00', 'success');
+    addEv(3, 24, 24, 'Coffee', '8:30');
+    addEv(3, 192, 96, 'Workshop', '12:00', 'warn');
+    addEv(4, 96, 60, 'Client call', '10:00', 'warn');
+    addEv(5, 48, 30, 'Sync', '9:00');
+    addEv(5, 240, 90, '1:1', '1:00', 'info');
+    addEv(5, 168, 60, 'Review', '11:30', 'success');
+    addEv(6, 120, 40, 'Design review', '10:30', 'info');
+  })();
+</script>
+</body>
+</html>

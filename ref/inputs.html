@@ -1,0 +1,857 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Inputs" subtitle="States · specialized · dropdowns · multi-select" viewport="900x3400" -->
+<html><head><meta charset="utf-8"><title>Gofive — Inputs (comprehensive)</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+  html,body { margin:0; background:#F6F6F8; color:#1A1A1F;
+    font-family:"Plus Jakarta Sans","Gofive","Inter",system-ui,sans-serif; }
+  .wrap { padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
+  .card { background:#fff; border:1px solid #ECECF0; border-radius:14px; }
+  .hdr  { padding:11px 16px; border-bottom:1px solid #F2F2F5; font-weight:700; font-size:13px; letter-spacing:-.01em; display:flex; justify-content:space-between; align-items:center; }
+  .hdr .sub { font-weight:500; font-size:10.5px; color:#6E6E7A; font-family: var(--gf-font-mono); }
+  .body { padding:14px 16px 18px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+  .body.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .body.full { grid-template-columns:1fr; }
+
+  .field { display:flex; flex-direction:column; gap:6px; }
+  .lbl { font-size:11.5px; font-weight:600; color:#3B3B44; letter-spacing:-.005em; }
+  .lbl .req { color:#E11D35; margin-left:3px; }
+  .lbl .opt { color:#8A8A96; font-weight:500; margin-left:4px; }
+  .hint { font-size:10.5px; color:#6E6E7A; line-height:1.45; }
+  .hint.err { color:#E11D35; }
+  .hint.ok  { color:#1DA577; }
+
+  /* Base input — PRIMARY (filled card-style) */
+  .inp {
+    display:flex; align-items:center; gap:8px;
+    height:38px; padding:0 12px; border-radius:8px;
+    border:1px solid #D6D6DC; background:#fff;
+    font-size:13px; color:#1A1A1F; transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .inp input, .inp textarea {
+    flex:1; border:0; outline:0; background:transparent; font:inherit; color:inherit; padding:0; min-width:0;
+  }
+  .inp input::placeholder, .inp textarea::placeholder { color:#9A9AA6; }
+  .inp:hover { border-color:#B8B8C0; }
+  .inp.focused { border-color:#F88411; box-shadow:0 0 0 3px rgba(248,132,17,.18); }
+  .inp.error   { border-color:#E11D35; box-shadow:0 0 0 3px rgba(225,29,53,.18); }
+  .inp.success { border-color:#1DA577; box-shadow:0 0 0 3px rgba(29,165,119,.14); }
+  .inp.disabled{ background:#F4F4F6; color:#A5A5B4; cursor:not-allowed; border-color:#ECECF0; }
+  .inp.disabled input::placeholder { color:#B8B8C0; }
+  .inp.readonly{ background:#FAFAFC; border-color:#ECECF0; }
+
+  /* SECONDARY — underline only */
+  .inp.under { border:0; border-bottom:1px solid #D6D6DC; border-radius:0; padding:0 0 6px; height:auto; }
+  .inp.under.focused { border-bottom-color:#F88411; box-shadow:0 1px 0 0 #F88411; }
+  .inp.under.error { border-bottom-color:#E11D35; box-shadow:0 1px 0 0 #E11D35; }
+
+  /* SIZES */
+  .inp.xs { height:28px; font-size:12px; border-radius:6px; padding:0 10px; }
+  .inp.sm { height:32px; font-size:12.5px; border-radius:7px; padding:0 10px; }
+  .inp.lg { height:44px; font-size:14px; border-radius:10px; padding:0 14px; }
+
+  /* ICONS (pure CSS masks) */
+  .ic { width:14px; height:14px; flex:0 0 14px; background:currentColor;
+    -webkit-mask-size:contain; mask-size:contain;
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+    -webkit-mask-position:center; mask-position:center; color:#6E6E7A; }
+  .ic.search { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M10 4a6 6 0 1 1-3.7 10.7l-3.3 3.3-1.4-1.4 3.3-3.3A6 6 0 0 1 10 4zm0 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M10 4a6 6 0 1 1-3.7 10.7l-3.3 3.3-1.4-1.4 3.3-3.3A6 6 0 0 1 10 4zm0 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8z'/></svg>"); }
+  .ic.mail   { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M3 6h18v12H3zm2 2v.2l7 4.2 7-4.2V8H5zm14 2.5-7 4.2-7-4.2V16h14z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M3 6h18v12H3zm2 2v.2l7 4.2 7-4.2V8H5zm14 2.5-7 4.2-7-4.2V16h14z'/></svg>"); }
+  .ic.eye    { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 5C5 5 2 12 2 12s3 7 10 7 10-7 10-7-3-7-10-7zm0 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 5C5 5 2 12 2 12s3 7 10 7 10-7 10-7-3-7-10-7zm0 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8z'/></svg>"); }
+  .ic.x      { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3 10.6 10.6 16.9 4.3z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3 10.6 10.6 16.9 4.3z'/></svg>"); }
+  .ic.caret  { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 10l5 5 5-5z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 10l5 5 5-5z'/></svg>"); }
+  .ic.cal    { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 2v2H4v18h16V4h-3V2h-2v2H9V2H7zM6 9h12v11H6V9z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 2v2H4v18h16V4h-3V2h-2v2H9V2H7zM6 9h12v11H6V9z'/></svg>"); }
+  .ic.up     { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 14l5-5 5 5z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 14l5-5 5 5z'/></svg>"); width:10px; height:10px; flex-basis:10px; }
+  .ic.dn     { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 10l5 5 5-5z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M7 10l5 5 5-5z'/></svg>"); width:10px; height:10px; flex-basis:10px; }
+  .ic.upl    { -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 3 6 9h4v8h4V9h4l-6-6zM4 19h16v2H4z'/></svg>"); mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M12 3 6 9h4v8h4V9h4l-6-6zM4 19h16v2H4z'/></svg>"); }
+
+  /* Suffix text (unit / currency) */
+  .suffix, .prefix { color:#6E6E7A; font-size:12px; white-space:nowrap; }
+
+  /* Textarea */
+  .ta { min-height:90px; align-items:flex-start; padding:10px 12px; height:auto; }
+  .ta textarea { resize:vertical; min-height:70px; line-height:1.5; }
+  .counter { align-self:flex-end; font-size:10.5px; color:#8A8A96; font-family: var(--gf-font-mono); }
+
+  /* Number stepper */
+  .stepper { display:flex; flex-direction:column; gap:2px; margin-left:6px; }
+  .stepper button { width:18px; height:14px; border:1px solid #D6D6DC; background:#fff; border-radius:4px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; }
+  .stepper button:hover { background:#F4F4F6; }
+
+  /* Chips inside tag input */
+  .chip { display:inline-flex; align-items:center; gap:4px; background:#FFE9CC; color:#7A3A00; padding:3px 8px; border-radius:999px; font-size:11px; font-weight:600; }
+  .chip .ic.x { width:10px; height:10px; flex-basis:10px; color:#7A3A00; cursor:pointer; }
+  .tagwrap { flex-wrap:wrap; min-height:38px; padding:5px 8px; gap:5px; }
+  .tagwrap input { min-width:80px; }
+
+  /* Select-like (dropdown) */
+  .value { flex:1; }
+  .muted { color:#9A9AA6; }
+
+  /* Segmented */
+  .seg { display:inline-flex; border:1px solid #D6D6DC; border-radius:8px; padding:2px; background:#F4F4F6; }
+  .seg button { border:0; background:transparent; font:inherit; font-size:12px; padding:6px 10px; border-radius:6px; cursor:pointer; color:#3B3B44; }
+  .seg button.on { background:#fff; color:#212121; font-weight:600; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+
+  /* Switch + checkbox + radio */
+  .sw { width:34px; height:20px; border-radius:999px; background:#D6D6DC; position:relative; cursor:pointer; transition: background .2s; }
+  .sw::after { content:""; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.15); transition: transform .2s; }
+  .sw.on { background:#F88411; }
+  .sw.on::after { transform: translateX(14px); }
+  .cb, .rb { width:16px; height:16px; border:1px solid #B8B8C0; border-radius:4px; display:inline-flex; align-items:center; justify-content:center; }
+  .rb { border-radius:50%; }
+  .cb.on { background:#F88411; border-color:#F88411; }
+  .cb.on::after { content:""; width:8px; height:4px; border-left:2px solid #fff; border-bottom:2px solid #fff; transform: rotate(-45deg); margin-top:-2px; }
+  .rb.on { border-color:#F88411; }
+  .rb.on::after { content:""; width:8px; height:8px; border-radius:50%; background:#F88411; }
+  .optrow { display:flex; align-items:center; gap:8px; font-size:12.5px; }
+
+  /* File drop */
+  .drop { border:1.5px dashed #D6D6DC; border-radius:10px; padding:16px; background:#FAFAFC; text-align:center; color:#6E6E7A; font-size:12px; }
+  .drop b { color:#F88411; }
+
+  /* Slider */
+  .rng { position:relative; height:20px; display:flex; align-items:center; padding: 0 6px; }
+  .rng .track { flex:1; height:4px; background:#E6E6EC; border-radius:2px; position:relative; }
+  .rng .fill  { position:absolute; left:0; top:0; bottom:0; width:55%; background:#F88411; border-radius:2px; }
+  .rng .thumb { position:absolute; left:55%; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; border:2px solid #F88411; box-shadow:0 1px 2px rgba(0,0,0,.15); }
+
+  /* OTP */
+  .otp { display:flex; gap:6px; }
+  .otp .cell { width:36px; height:40px; border-radius:8px; border:1px solid #D6D6DC; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; }
+  .otp .cell.focused { border-color:#F88411; box-shadow:0 0 0 3px rgba(248,132,17,.18); }
+
+  /* ============================================================
+     Dropdown · Select · Multi-select (open states)
+     ============================================================ */
+  .dd-wrap { position: relative; }
+  /* Trigger looks like .inp — reuse styles */
+  .menu {
+    position: absolute; left:0; right:0; top: calc(100% + 6px);
+    background:#fff; border:1px solid #E4E4EA; border-radius:10px;
+    box-shadow: 0 12px 28px rgba(17,17,22,.12), 0 2px 6px rgba(17,17,22,.06);
+    padding: 4px; max-height: 260px; overflow: auto; z-index: 4;
+    animation: menuIn .16s cubic-bezier(.2,.9,.3,1) both;
+  }
+  @keyframes menuIn { from { opacity:0; transform: translateY(-4px);} to { opacity:1; transform:none;} }
+
+  .menu .head {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 8px 10px 6px; font-size:10px; font-weight:700; color:#8A8A96;
+    text-transform:uppercase; letter-spacing:.08em;
+  }
+  .menu .sep { height:1px; background:#F2F2F5; margin:4px 2px; }
+
+  .opt {
+    display:flex; align-items:center; gap:10px;
+    padding: 8px 10px; border-radius:7px; font-size:13px; cursor:pointer;
+    color:#1A1A1F; user-select:none;
+  }
+  .opt:hover { background:#F6F6F8; }
+  .opt.active { background:#FFF4E5; color:#B45A00; font-weight:600; }
+  .opt.active .ic.check { color:#F88411; }
+  .opt.selected { color:#1A1A1F; font-weight:600; }
+  .opt.selected .ic.check { color:#F88411; }
+  .opt.disabled { color:#B8B8C0; cursor:not-allowed; }
+  .opt .desc { font-size:11px; color:#8A8A96; font-weight:400; display:block; margin-top:1px; }
+  .opt .av {
+    width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:10px; font-weight:800; flex:0 0 22px;
+  }
+  .opt .kbd {
+    margin-left:auto; font-family: var(--gf-font-mono); font-size:10px;
+    background:#F2F2F5; color:#6E6E7A; padding:1px 5px; border-radius:4px;
+  }
+  .opt .country { font-size:14px; width:16px; }
+
+  /* Multi-select — checkbox on left */
+  .opt .cb { width:15px; height:15px; border:1.5px solid #B8B8C0; border-radius:4px; flex:0 0 15px;
+             display:flex; align-items:center; justify-content:center; background:#fff; }
+  .opt.selected .cb { background:#F88411; border-color:#F88411; }
+  .opt.selected .cb::after { content:""; width:7px; height:3.5px; border-left:1.6px solid #fff; border-bottom:1.6px solid #fff; transform: rotate(-45deg); margin-top:-2px; }
+  .opt .trailing { margin-left:auto; font-size:11px; color:#8A8A96; }
+
+  /* Group heading */
+  .ghdr {
+    padding: 6px 10px 4px; font-size:9.5px; font-weight:700; color:#8A8A96;
+    text-transform:uppercase; letter-spacing:.08em;
+  }
+
+  /* Selected chips inside multi-select trigger */
+  .mstrig { flex-wrap:wrap; min-height:38px; padding:5px 8px; gap:5px; }
+  .mschip {
+    display:inline-flex; align-items:center; gap:4px;
+    background:#FFE9CC; color:#7A3A00;
+    padding:3px 4px 3px 8px; border-radius:999px; font-size:11px; font-weight:600;
+  }
+  .mschip .ic.x { width:11px; height:11px; flex-basis:11px; color:#7A3A00; cursor:pointer; opacity:.7; }
+  .mschip .ic.x:hover { opacity:1; }
+  .mstrig .count { margin-left:auto; font-size:11px; color:#8A8A96; }
+
+  /* Footer in multi-select menu */
+  .menu .foot {
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 6px 8px; border-top:1px solid #F2F2F5; margin-top: 2px;
+    font-size:11px;
+  }
+  .menu .foot .link { color:#F88411; font-weight:600; cursor:pointer; }
+  .menu .foot .done {
+    background:#F88411; color:#fff; border:0; padding: 5px 12px;
+    border-radius:6px; font-family: inherit; font-size:11.5px; font-weight:600; cursor:pointer;
+  }
+  .menu .foot .done:hover { background:#D96A00; }
+
+  /* Typeahead search in menu */
+  .menu .search {
+    display:flex; align-items:center; gap:8px;
+    padding: 8px 10px; border-bottom:1px solid #F2F2F5;
+    color:#6E6E7A;
+  }
+  .menu .search input { flex:1; border:0; outline:0; font: inherit; font-size:12.5px; color:#1A1A1F; background:transparent; }
+
+  /* Empty state */
+  .empty { padding: 20px 12px; text-align:center; color:#8A8A96; font-size:12px; }
+  .empty b { display:block; color:#1A1A1F; font-weight:700; margin-bottom:2px; }
+
+  /* Mini color dot for status options */
+  .cdot { width:8px; height:8px; border-radius:50%; flex:0 0 8px; }
+
+  /* ===== Tree select ===== */
+  .tree { padding: 4px 2px; }
+  .tnode { display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:7px; font-size:13px; cursor:pointer; user-select:none; color:#1A1A1F; }
+  .tnode:hover { background:#F6F6F8; }
+  .tnode.active { background:#FFF4E5; color:#B45A00; font-weight:600; }
+  .tnode.selected { font-weight:600; }
+  .tnode.selected .cb { background:#F88411; border-color:#F88411; }
+  .tnode.selected .cb::after { content:""; width:7px; height:3.5px; border-left:1.6px solid #fff; border-bottom:1.6px solid #fff; transform: rotate(-45deg); margin-top:-2px; }
+  .tnode.indeterminate .cb { background:#F88411; border-color:#F88411; }
+  .tnode.indeterminate .cb::after { content:""; width:8px; height:2px; background:#fff; }
+  .tnode .cb { width:15px; height:15px; border:1.5px solid #B8B8C0; border-radius:4px; flex:0 0 15px; display:flex; align-items:center; justify-content:center; background:#fff; }
+  .tnode .chev { width:14px; height:14px; flex:0 0 14px; display:flex; align-items:center; justify-content:center; color:#8A8A96; font-size:10px; }
+  .tnode .chev.none { visibility:hidden; }
+  .tnode .chev.open::before  { content:"▾"; }
+  .tnode .chev.closed::before{ content:"▸"; }
+  .tnode .tcount { margin-left:auto; font-size:11px; color:#8A8A96; font-weight:500; }
+  .tnode .folder { color:#F88411; font-size:14px; }
+  .tnode .leaf   { color:#8A8A96; font-size:12px; }
+  .tchildren { position:relative; padding-left: 22px; }
+  .tchildren::before { content:""; position:absolute; left:14px; top:2px; bottom:6px; width:1px; background:#ECECF0; }
+  .card.dark { background:#1A1A1F; border-color:#2A2A32; color:#F3F3F5; }
+  .card.dark .hdr { border-color:#2A2A32; }
+  .card.dark .hdr .sub { color:#A8A8B4; }
+  .card.dark .lbl { color:#E6E6EC; }
+  .card.dark .hint { color:#9A9AA6; }
+  .card.dark .inp { background:#222228; border-color:#3A3A45; color:#F3F3F5; }
+  .card.dark .inp input::placeholder { color:#7A7A86; }
+  .card.dark .inp:hover { border-color:#4A4A55; }
+  .card.dark .inp.focused { border-color:#FBA040; box-shadow:0 0 0 3px rgba(251,160,64,.22); }
+  .card.dark .inp.disabled { background:#1D1D22; color:#6A6A74; }
+</style></head>
+<body>
+<div class="wrap">
+
+  <!-- 1. Basic states — primary filled style -->
+  <div class="card">
+    <div class="hdr">Text Field · states <span class="sub">primary · filled · size md</span></div>
+    <div class="body">
+      <div class="field"><label class="lbl">Default</label>
+        <div class="inp"><input placeholder="Placeholder"></div>
+        <span class="hint">resting, no focus</span></div>
+      <div class="field"><label class="lbl">Filled</label>
+        <div class="inp"><input value="Somchai Prasert"></div>
+        <span class="hint">has value</span></div>
+      <div class="field"><label class="lbl">Hover</label>
+        <div class="inp" style="border-color:#B8B8C0;"><input placeholder="Hover border"></div>
+        <span class="hint">cursor hover</span></div>
+      <div class="field"><label class="lbl">Focused</label>
+        <div class="inp focused"><input value="focus ring"></div>
+        <span class="hint">3px primary ring</span></div>
+      <div class="field"><label class="lbl">Error</label>
+        <div class="inp error"><input value="invalid@"></div>
+        <span class="hint err">Please enter a valid email.</span></div>
+      <div class="field"><label class="lbl">Success</label>
+        <div class="inp success"><input value="somchai@gofive.co.th"></div>
+        <span class="hint ok">Email verified</span></div>
+      <div class="field"><label class="lbl">Disabled</label>
+        <div class="inp disabled"><input value="EMP-00421" disabled></div>
+        <span class="hint">disabled — not editable</span></div>
+      <div class="field"><label class="lbl">Read-only</label>
+        <div class="inp readonly"><input value="gofive.co.th" readonly></div>
+        <span class="hint">read-only display</span></div>
+      <div class="field"><label class="lbl">Required<span class="req">*</span></label>
+        <div class="inp"><input placeholder="Required field"></div>
+        <span class="hint">asterisk on label</span></div>
+    </div>
+  </div>
+
+  <!-- 2. With affix icons / prefix / suffix -->
+  <div class="card">
+    <div class="hdr">With icons &amp; affixes <span class="sub">leading · trailing · prefix text · clear</span></div>
+    <div class="body">
+      <div class="field"><label class="lbl">Search</label>
+        <div class="inp"><span class="ic search"></span><input placeholder="Search employees…"></div></div>
+      <div class="field"><label class="lbl">Email</label>
+        <div class="inp focused"><span class="ic mail"></span><input value="somchai@gofive.co.th"><span class="ic x" style="cursor:pointer"></span></div>
+        <span class="hint">leading + clear button</span></div>
+      <div class="field"><label class="lbl">Password</label>
+        <div class="inp"><input type="password" value="••••••••"><span class="ic eye" style="cursor:pointer"></span></div>
+        <span class="hint">trailing reveal</span></div>
+      <div class="field"><label class="lbl">Website</label>
+        <div class="inp"><span class="prefix">https://</span><input value="gofive.co.th"></div></div>
+      <div class="field"><label class="lbl">Price</label>
+        <div class="inp"><span class="prefix">฿</span><input value="24,900" style="text-align:right"><span class="suffix">THB</span></div></div>
+      <div class="field"><label class="lbl">Weight</label>
+        <div class="inp"><input value="1,250" style="text-align:right"><span class="suffix">kg</span></div></div>
+    </div>
+  </div>
+
+  <!-- 3. Sizes + variants -->
+  <div class="card">
+    <div class="hdr">Sizes · variants <span class="sub">xs · sm · md · lg  |  filled / underlined</span></div>
+    <div class="body">
+      <div class="field"><label class="lbl">Extra small</label>
+        <div class="inp xs"><input placeholder="xs · 28px"></div></div>
+      <div class="field"><label class="lbl">Small</label>
+        <div class="inp sm"><input placeholder="sm · 32px"></div></div>
+      <div class="field"><label class="lbl">Medium (default)</label>
+        <div class="inp"><input placeholder="md · 38px"></div></div>
+      <div class="field"><label class="lbl">Large</label>
+        <div class="inp lg"><input placeholder="lg · 44px"></div></div>
+      <div class="field"><label class="lbl">Secondary · underline</label>
+        <div class="inp under"><input placeholder="Type here"></div>
+        <span class="hint">minimal underline style</span></div>
+      <div class="field"><label class="lbl">Secondary · focused</label>
+        <div class="inp under focused"><input value="Underline focus"></div></div>
+    </div>
+  </div>
+
+  <!-- 4. Specialized inputs -->
+  <div class="card">
+    <div class="hdr">Specialized inputs <span class="sub">number · date · select · textarea · search-clear</span></div>
+    <div class="body">
+      <div class="field"><label class="lbl">Number with stepper</label>
+        <div class="inp"><input value="12" style="text-align:right">
+          <div class="stepper"><button><span class="ic up"></span></button><button><span class="ic dn"></span></button></div>
+        </div></div>
+      <div class="field"><label class="lbl">Date</label>
+        <div class="inp"><span class="ic cal"></span><input value="19 Apr 2026"><span class="ic caret"></span></div></div>
+      <div class="field"><label class="lbl">Date range</label>
+        <div class="inp"><span class="ic cal"></span><input value="1 Apr – 30 Apr 2026"></div></div>
+      <div class="field"><label class="lbl">Select (single)</label>
+        <div class="inp"><span class="value">Bangkok</span><span class="ic caret"></span></div></div>
+      <div class="field"><label class="lbl">Select (placeholder)</label>
+        <div class="inp"><span class="value muted">Choose a department</span><span class="ic caret"></span></div></div>
+      <div class="field"><label class="lbl">Autocomplete / combobox</label>
+        <div class="inp focused"><span class="ic search"></span><input value="Som"><span class="ic caret"></span></div>
+        <span class="hint">suggestions shown below on focus</span></div>
+      <div class="field" style="grid-column:span 2"><label class="lbl">Tag input</label>
+        <div class="inp tagwrap">
+          <span class="chip">Sales <span class="ic x"></span></span>
+          <span class="chip">HR <span class="ic x"></span></span>
+          <span class="chip">Bangkok <span class="ic x"></span></span>
+          <input placeholder="Add tag…">
+        </div></div>
+      <div class="field"><label class="lbl">Textarea</label>
+        <div class="inp ta"><textarea placeholder="Write a note…">ขอบคุณลูกค้าทุกท่านสำหรับการสนับสนุนตลอดปีที่ผ่านมา</textarea></div>
+        <div style="display:flex; justify-content:space-between;"><span class="hint">Markdown supported</span><span class="counter">62 / 500</span></div></div>
+    </div>
+  </div>
+
+  <!-- 5. Rich inputs -->
+  <div class="card">
+    <div class="hdr">Rich inputs <span class="sub">OTP · slider · file · segmented · switch · check · radio</span></div>
+    <div class="body">
+      <div class="field"><label class="lbl">OTP</label>
+        <div class="otp">
+          <div class="cell">4</div><div class="cell">2</div><div class="cell">9</div>
+          <div class="cell focused">_</div><div class="cell"></div><div class="cell"></div>
+        </div>
+        <span class="hint">6-digit verification</span></div>
+      <div class="field"><label class="lbl">Slider</label>
+        <div class="rng"><div class="track"><div class="fill"></div><div class="thumb"></div></div></div>
+        <span class="hint">value: 55%</span></div>
+      <div class="field"><label class="lbl">Segmented control</label>
+        <div class="seg"><button class="on">Day</button><button>Week</button><button>Month</button></div></div>
+
+      <div class="field" style="grid-column:span 3"><label class="lbl">File upload</label>
+        <div class="drop"><span class="ic upl" style="display:inline-block; vertical-align:middle; margin-right:6px;"></span>
+          Drop files here or <b>browse</b> — PDF, PNG, JPG up to 10 MB</div></div>
+
+      <div class="field"><label class="lbl">Toggle / switch</label>
+        <div style="display:flex; gap:16px; align-items:center;">
+          <div class="optrow"><div class="sw on"></div> Enabled</div>
+          <div class="optrow"><div class="sw"></div> Disabled</div>
+        </div></div>
+      <div class="field"><label class="lbl">Checkbox</label>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <div class="optrow"><div class="cb on"></div> ฉันยอมรับเงื่อนไข</div>
+          <div class="optrow"><div class="cb"></div> รับข่าวสารทางอีเมล</div>
+        </div></div>
+      <div class="field"><label class="lbl">Radio group</label>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <div class="optrow"><div class="rb on"></div> รายเดือน</div>
+          <div class="optrow"><div class="rb"></div> รายปี (ประหยัด 20%)</div>
+        </div></div>
+    </div>
+  </div>
+
+  <!-- 5b. Dropdown · Select · Multi-select (OPEN) -->
+  <div class="card">
+    <div class="hdr">Dropdown · Selection · Multi-select <span class="sub">open menu anatomy</span></div>
+    <div class="body">
+
+      <!-- Single select — simple list, one active -->
+      <div class="field">
+        <label class="lbl">Single select · simple</label>
+        <div class="dd-wrap">
+          <div class="inp focused"><span class="value">Bangkok</span><span class="ic caret"></span></div>
+          <div class="menu">
+            <div class="opt selected"><span class="country">🇹🇭</span>Bangkok<span class="ic check" style="margin-left:auto;"></span></div>
+            <div class="opt"><span class="country">🇹🇭</span>Chiang Mai</div>
+            <div class="opt"><span class="country">🇹🇭</span>Phuket</div>
+            <div class="opt active"><span class="country">🇹🇭</span>Khon Kaen<span class="ic arrow" style="margin-left:auto;"></span></div>
+            <div class="opt"><span class="country">🇹🇭</span>Hat Yai</div>
+            <div class="opt disabled"><span class="country">🇹🇭</span>Pattaya <span class="trailing">— coming soon</span></div>
+          </div>
+        </div>
+        <span class="hint">shows selected ✓, hover/active highlight, disabled option</span>
+      </div>
+
+      <!-- Single select — with search + grouping + rich rows -->
+      <div class="field">
+        <label class="lbl">Combobox · search + groups</label>
+        <div class="dd-wrap">
+          <div class="inp focused"><span class="ic search"></span><input value="So"><span class="ic caret"></span></div>
+          <div class="menu">
+            <div class="search"><span class="ic search"></span><input value="So" placeholder="Search people…"></div>
+
+            <div class="ghdr">Suggested</div>
+            <div class="opt selected">
+              <div class="av" style="background:#F88411">SP</div>
+              <div><span>Somchai Prasert</span><span class="desc">somchai@gofive.co.th · HR</span></div>
+              <span class="ic check" style="margin-left:auto"></span>
+            </div>
+            <div class="opt">
+              <div class="av" style="background:#0A66E0">SM</div>
+              <div><span>Sompong Manee</span><span class="desc">sompong@gofive.co.th · Sales</span></div>
+            </div>
+
+            <div class="sep"></div>
+            <div class="ghdr">All employees · 128 more</div>
+            <div class="opt">
+              <div class="av" style="background:#1DA577">SR</div>
+              <div><span>Sorasit Ratana</span><span class="desc">Engineering · Bangkok</span></div>
+              <span class="kbd">↵</span>
+            </div>
+            <div class="opt">
+              <div class="av" style="background:#5E5EED">SO</div>
+              <div><span>Sorawit O.</span><span class="desc">Product · remote</span></div>
+            </div>
+          </div>
+        </div>
+        <span class="hint">typeahead · grouped results · keyboard hint</span>
+      </div>
+
+      <!-- Status select — with color dots -->
+      <div class="field">
+        <label class="lbl">Status select</label>
+        <div class="dd-wrap">
+          <div class="inp focused"><span class="cdot" style="background:#1DA577;"></span><span class="value">In progress</span><span class="ic caret"></span></div>
+          <div class="menu">
+            <div class="opt"><span class="cdot" style="background:#8A8A96"></span>Backlog</div>
+            <div class="opt"><span class="cdot" style="background:#0A66E0"></span>Todo</div>
+            <div class="opt selected"><span class="cdot" style="background:#1DA577"></span>In progress<span class="ic check" style="margin-left:auto"></span></div>
+            <div class="opt"><span class="cdot" style="background:#F9D423"></span>Needs review</div>
+            <div class="opt"><span class="cdot" style="background:#1A1A1F"></span>Done</div>
+            <div class="opt"><span class="cdot" style="background:#D93A1A"></span>Cancelled</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-select — chips in trigger + checkbox list -->
+      <div class="field" style="grid-column: span 2">
+        <label class="lbl">Multi-select · with chips</label>
+        <div class="dd-wrap">
+          <div class="inp mstrig focused">
+            <span class="mschip">Sales <span class="ic x"></span></span>
+            <span class="mschip">HR <span class="ic x"></span></span>
+            <span class="mschip">Engineering <span class="ic x"></span></span>
+            <input placeholder="Search departments…" value="">
+            <span class="count">3 selected</span>
+          </div>
+          <div class="menu">
+            <div class="search"><span class="ic search"></span><input placeholder="Search…"></div>
+            <div class="head">
+              <span>8 departments</span>
+              <span class="link" style="color:#F88411; cursor:pointer">Select all</span>
+            </div>
+            <div class="opt selected"><div class="cb"></div>Sales <span class="trailing">24 people</span></div>
+            <div class="opt selected"><div class="cb"></div>HR <span class="trailing">8 people</span></div>
+            <div class="opt selected"><div class="cb"></div>Engineering <span class="trailing">62 people</span></div>
+            <div class="opt"><div class="cb"></div>Design <span class="trailing">14 people</span></div>
+            <div class="opt"><div class="cb"></div>Finance <span class="trailing">6 people</span></div>
+            <div class="opt"><div class="cb"></div>Operations <span class="trailing">22 people</span></div>
+            <div class="opt disabled"><div class="cb"></div>Legal <span class="trailing">— locked</span></div>
+            <div class="foot">
+              <span class="link">Clear all</span>
+              <button class="done">Apply (3)</button>
+            </div>
+          </div>
+        </div>
+        <span class="hint">chips in trigger · checkbox list · select-all · apply footer</span>
+      </div>
+
+      <!-- Multi-select — tag-style inline (no chips, just checks) -->
+      <div class="field">
+        <label class="lbl">Multi-select · inline checks</label>
+        <div class="dd-wrap">
+          <div class="inp focused"><span class="value">3 tags selected</span><span class="ic caret"></span></div>
+          <div class="menu">
+            <div class="opt selected"><div class="cb"></div><span class="cdot" style="background:#F88411"></span>Urgent</div>
+            <div class="opt selected"><div class="cb"></div><span class="cdot" style="background:#0A66E0"></span>Customer</div>
+            <div class="opt"><div class="cb"></div><span class="cdot" style="background:#1DA577"></span>Internal</div>
+            <div class="opt selected"><div class="cb"></div><span class="cdot" style="background:#D93A1A"></span>Blocker</div>
+            <div class="opt"><div class="cb"></div><span class="cdot" style="background:#5E5EED"></span>Research</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="field">
+        <label class="lbl">Empty state</label>
+        <div class="dd-wrap">
+          <div class="inp focused"><span class="ic search"></span><input value="zzzz"><span class="ic caret"></span></div>
+          <div class="menu">
+            <div class="search"><span class="ic search"></span><input value="zzzz" placeholder="Search…"></div>
+            <div class="empty"><b>No matches</b>Try a different keyword.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions menu — not a select but same pattern -->
+      <div class="field">
+        <label class="lbl">Action menu</label>
+        <div class="dd-wrap">
+          <div class="inp focused"><span class="value">More actions</span><span class="ic caret"></span></div>
+          <div class="menu">
+            <div class="opt">Duplicate <span class="kbd">⌘D</span></div>
+            <div class="opt">Rename <span class="kbd">⌘R</span></div>
+            <div class="opt">Move to folder</div>
+            <div class="sep"></div>
+            <div class="opt" style="color:#D93A1A;">Delete <span class="kbd" style="color:#D93A1A; background:#FDE0D6;">⌫</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Person picker — single select with rich avatar + presence -->
+      <div class="field">
+        <label class="lbl">Person picker · single</label>
+        <div class="dd-wrap">
+          <div class="inp focused" style="padding-left:6px;">
+            <span class="av" style="width:26px;height:26px;border-radius:50%;background:#F88411;color:#fff;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 26px;">SP</span>
+            <div style="display:flex;flex-direction:column;line-height:1.15;">
+              <span style="font-size:13px;font-weight:600;">Somchai Prasert</span>
+              <span style="font-size:10.5px;color:#8A8A96;">HR Manager · Bangkok</span>
+            </div>
+            <span class="ic caret" style="margin-left:auto;"></span>
+          </div>
+          <div class="menu">
+            <div class="search"><span class="ic search"></span><input placeholder="Search by name, email, team…"></div>
+            <div class="ghdr">Assigned recently</div>
+            <div class="opt selected">
+              <div class="av" style="background:#F88411">SP</div>
+              <div><span>Somchai Prasert</span><span class="desc">somchai@gofive.co.th · HR</span></div>
+              <span class="ic check" style="margin-left:auto"></span>
+            </div>
+            <div class="opt">
+              <div class="av" style="background:#0A66E0; position:relative;">AK<span style="position:absolute;right:-1px;bottom:-1px;width:8px;height:8px;border-radius:50%;background:#1DA577;border:1.5px solid #fff;"></span></div>
+              <div><span>Anong Kraipob</span><span class="desc">anong@gofive.co.th · Design</span></div>
+              <span class="trailing" style="color:#1DA577; font-weight:600;">Online</span>
+            </div>
+            <div class="opt">
+              <div class="av" style="background:#1DA577; position:relative;">NS<span style="position:absolute;right:-1px;bottom:-1px;width:8px;height:8px;border-radius:50%;background:#F9D423;border:1.5px solid #fff;"></span></div>
+              <div><span>Nirut Suwanphan</span><span class="desc">nirut@gofive.co.th · Sales</span></div>
+              <span class="trailing" style="color:#B88000; font-weight:600;">Away</span>
+            </div>
+            <div class="sep"></div>
+            <div class="ghdr">All teammates · 128</div>
+            <div class="opt">
+              <div class="av" style="background:#5E5EED">PC</div>
+              <div><span>Prapa Chaiyo</span><span class="desc">Product · remote</span></div>
+            </div>
+            <div class="opt">
+              <div class="av" style="background:#D93A1A">KT</div>
+              <div><span>Kittipong Th.</span><span class="desc">Engineering · Chiang Mai</span></div>
+            </div>
+            <div class="opt disabled">
+              <div class="av" style="background:#B8B8C0">MW</div>
+              <div><span>Montri W.</span><span class="desc">On leave until 15 May</span></div>
+            </div>
+            <div class="sep"></div>
+            <div class="opt" style="color:#F88411; font-weight:600;">
+              <div class="av" style="background:#FFE9CC; color:#F88411;">+</div>
+              Invite someone by email…
+            </div>
+          </div>
+        </div>
+        <span class="hint">avatar + presence dot · recently-assigned group · invite fallback</span>
+      </div>
+
+      <!-- Person picker — multi with avatar chips -->
+      <div class="field" style="grid-column: span 2;">
+        <label class="lbl">Person picker · multi · assignees</label>
+        <div class="dd-wrap">
+          <div class="inp mstrig focused" style="min-height:42px;">
+            <span class="mschip" style="padding-left:2px;background:#FFE9CC;color:#7A3A00;">
+              <span class="av" style="width:18px;height:18px;border-radius:50%;background:#F88411;color:#fff;font-size:8.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;">SP</span>
+              Somchai P.<span class="ic x"></span>
+            </span>
+            <span class="mschip" style="padding-left:2px;background:#DDEAFC;color:#063F89;">
+              <span class="av" style="width:18px;height:18px;border-radius:50%;background:#0A66E0;color:#fff;font-size:8.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;">AK</span>
+              Anong K.<span class="ic x"></span>
+            </span>
+            <span class="mschip" style="padding-left:2px;background:#DBF3E8;color:#0D6A4B;">
+              <span class="av" style="width:18px;height:18px;border-radius:50%;background:#1DA577;color:#fff;font-size:8.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;">NS</span>
+              Nirut S.<span class="ic x"></span>
+            </span>
+            <span class="mschip" style="padding-left:2px;background:#EDE9FF;color:#3D2BBD;">
+              <span class="av" style="width:18px;height:18px;border-radius:50%;background:#5E5EED;color:#fff;font-size:8.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;">PC</span>
+              Prapa C.<span class="ic x"></span>
+            </span>
+            <input placeholder="Add more…" value="">
+            <span class="count">4 assignees</span>
+          </div>
+          <div class="menu">
+            <div class="search"><span class="ic search"></span><input placeholder="Search people…"></div>
+
+            <div class="head">
+              <span>Sales team · 24</span>
+              <span class="link" style="color:#F88411;cursor:pointer">Select whole team</span>
+            </div>
+
+            <div class="opt selected">
+              <div class="cb"></div>
+              <div class="av" style="background:#F88411">SP</div>
+              <div><span>Somchai Prasert</span><span class="desc">HR Manager · Bangkok</span></div>
+              <span class="trailing" style="color:#1DA577;font-weight:600;">● Online</span>
+            </div>
+            <div class="opt selected">
+              <div class="cb"></div>
+              <div class="av" style="background:#0A66E0">AK</div>
+              <div><span>Anong Kraipob</span><span class="desc">Senior Designer</span></div>
+              <span class="trailing" style="color:#1DA577;font-weight:600;">● Online</span>
+            </div>
+            <div class="opt selected">
+              <div class="cb"></div>
+              <div class="av" style="background:#1DA577">NS</div>
+              <div><span>Nirut Suwanphan</span><span class="desc">Sales Lead</span></div>
+              <span class="trailing" style="color:#B88000;font-weight:600;">● Away</span>
+            </div>
+            <div class="opt selected">
+              <div class="cb"></div>
+              <div class="av" style="background:#5E5EED">PC</div>
+              <div><span>Prapa Chaiyo</span><span class="desc">Product Manager</span></div>
+              <span class="trailing" style="color:#8A8A96;">Offline</span>
+            </div>
+
+            <div class="sep"></div>
+            <div class="ghdr">Suggested</div>
+            <div class="opt">
+              <div class="cb"></div>
+              <div class="av" style="background:#D93A1A">KT</div>
+              <div><span>Kittipong Th.</span><span class="desc">Senior Engineer</span></div>
+              <span class="trailing" style="color:#1DA577;font-weight:600;">● Online</span>
+            </div>
+            <div class="opt">
+              <div class="cb"></div>
+              <div class="av" style="background:#7A5800">MW</div>
+              <div><span>Montira W.</span><span class="desc">Finance Lead</span></div>
+            </div>
+            <div class="opt">
+              <div class="cb"></div>
+              <div class="av" style="background:#116DFC">BT</div>
+              <div><span>Busaba T.</span><span class="desc">HR Specialist</span></div>
+            </div>
+
+            <div class="foot">
+              <span class="link">Clear all</span>
+              <button class="done">Assign (4)</button>
+            </div>
+          </div>
+        </div>
+        <span class="hint">colored chips per person · presence status · "assign entire team" shortcut</span>
+      </div>
+
+      <!-- Avatar stack selector / reviewer list -->
+      <div class="field">
+        <label class="lbl">Reviewer stack</label>
+        <div class="dd-wrap">
+          <div class="inp focused" style="padding-left:10px; gap:6px;">
+            <div style="display:flex; align-items:center;">
+              <span class="av" style="width:24px;height:24px;border-radius:50%;background:#F88411;color:#fff;font-size:9.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;">SP</span>
+              <span class="av" style="width:24px;height:24px;border-radius:50%;background:#0A66E0;color:#fff;font-size:9.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;margin-left:-8px;">AK</span>
+              <span class="av" style="width:24px;height:24px;border-radius:50%;background:#1DA577;color:#fff;font-size:9.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;margin-left:-8px;">NS</span>
+              <span class="av" style="width:24px;height:24px;border-radius:50%;background:#F4F4F6;color:#52525F;font-size:9.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;margin-left:-8px;">+5</span>
+            </div>
+            <span style="font-size:12.5px; color:#52525F;">8 reviewers</span>
+            <span class="ic caret" style="margin-left:auto;"></span>
+          </div>
+          <div class="menu">
+            <div class="head"><span>Reviewers</span><span class="link" style="color:#F88411;cursor:pointer">+ Add</span></div>
+            <div class="opt selected"><div class="av" style="background:#F88411">SP</div>Somchai Prasert <span class="trailing" style="color:#8A8A96">Approved</span></div>
+            <div class="opt selected"><div class="av" style="background:#0A66E0">AK</div>Anong Kraipob <span class="trailing" style="color:#1DA577;font-weight:600">✓ Approved</span></div>
+            <div class="opt selected"><div class="av" style="background:#1DA577">NS</div>Nirut S. <span class="trailing" style="color:#B88000;font-weight:600">Pending</span></div>
+            <div class="opt selected"><div class="av" style="background:#5E5EED">PC</div>Prapa C. <span class="trailing" style="color:#8A8A96">Pending</span></div>
+            <div class="opt selected"><div class="av" style="background:#D93A1A">KT</div>Kittipong Th. <span class="trailing" style="color:#D93A1A;font-weight:600">Changes requested</span></div>
+          </div>
+        </div>
+        <span class="hint">stacked avatars · per-person review status trailing</span>
+      </div>
+
+      <!-- Tree select — single pick (radio-style) with folders -->
+      <div class="field">
+        <label class="lbl">Tree select · single · category</label>
+        <div class="dd-wrap">
+          <div class="inp focused">
+            <span style="color:#8A8A96; font-size:12.5px;">Engineering /</span>
+            <span class="value" style="font-weight:600;">Frontend / React</span>
+            <span class="ic caret" style="margin-left:auto;"></span>
+          </div>
+          <div class="menu">
+            <div class="search"><span class="ic search"></span><input placeholder="Search categories…"></div>
+            <div class="tree">
+              <div class="tnode"><span class="chev open"></span><span class="folder">▣</span>Sales<span class="tcount">24</span></div>
+              <div class="tchildren">
+                <div class="tnode"><span class="chev none"></span><span class="leaf">◦</span>Inbound</div>
+                <div class="tnode"><span class="chev none"></span><span class="leaf">◦</span>Outbound</div>
+                <div class="tnode"><span class="chev none"></span><span class="leaf">◦</span>Partnerships</div>
+              </div>
+              <div class="tnode"><span class="chev open"></span><span class="folder">▣</span>Engineering<span class="tcount">62</span></div>
+              <div class="tchildren">
+                <div class="tnode"><span class="chev open"></span><span class="folder">▣</span>Frontend<span class="tcount">14</span></div>
+                <div class="tchildren">
+                  <div class="tnode selected"><span class="chev none"></span><span class="leaf">◦</span>React<span class="ic check" style="margin-left:auto; color:#F88411;"></span></div>
+                  <div class="tnode"><span class="chev none"></span><span class="leaf">◦</span>Vue</div>
+                  <div class="tnode"><span class="chev none"></span><span class="leaf">◦</span>Design systems</div>
+                </div>
+                <div class="tnode"><span class="chev closed"></span><span class="folder">▣</span>Backend<span class="tcount">28</span></div>
+                <div class="tnode"><span class="chev closed"></span><span class="folder">▣</span>DevOps<span class="tcount">12</span></div>
+                <div class="tnode"><span class="chev closed"></span><span class="folder">▣</span>QA<span class="tcount">8</span></div>
+              </div>
+              <div class="tnode"><span class="chev closed"></span><span class="folder">▣</span>Design<span class="tcount">14</span></div>
+              <div class="tnode"><span class="chev closed"></span><span class="folder">▣</span>Operations<span class="tcount">22</span></div>
+            </div>
+          </div>
+        </div>
+        <span class="hint">breadcrumb in trigger · expandable folders · leaf = pick</span>
+      </div>
+
+      <!-- Tree multi-select with indeterminate parent -->
+      <div class="field" style="grid-column: span 2;">
+        <label class="lbl">Tree multi-select · departments &amp; teams</label>
+        <div class="dd-wrap">
+          <div class="inp mstrig focused">
+            <span class="mschip">Engineering / Frontend <span class="ic x"></span></span>
+            <span class="mschip">Engineering / DevOps <span class="ic x"></span></span>
+            <span class="mschip">Sales / Inbound <span class="ic x"></span></span>
+            <span class="mschip" style="background:#DDEAFC;color:#063F89;">Design (all 14) <span class="ic x"></span></span>
+            <input placeholder="Add…">
+            <span class="count">4 nodes · 54 people</span>
+          </div>
+          <div class="menu">
+            <div class="search"><span class="ic search"></span><input placeholder="Search…"></div>
+            <div class="head">
+              <span>Hierarchy</span>
+              <span class="link" style="color:#F88411;cursor:pointer">Expand all</span>
+            </div>
+            <div class="tree">
+              <div class="tnode indeterminate"><div class="cb"></div><span class="chev open"></span><span class="folder">▣</span>Sales<span class="tcount">1 / 3 · 8 people</span></div>
+              <div class="tchildren">
+                <div class="tnode selected"><div class="cb"></div><span class="chev none"></span><span class="leaf">◦</span>Inbound<span class="tcount">8</span></div>
+                <div class="tnode"><div class="cb"></div><span class="chev none"></span><span class="leaf">◦</span>Outbound<span class="tcount">10</span></div>
+                <div class="tnode"><div class="cb"></div><span class="chev none"></span><span class="leaf">◦</span>Partnerships<span class="tcount">6</span></div>
+              </div>
+
+              <div class="tnode indeterminate"><div class="cb"></div><span class="chev open"></span><span class="folder">▣</span>Engineering<span class="tcount">2 / 4 · 26 people</span></div>
+              <div class="tchildren">
+                <div class="tnode selected"><div class="cb"></div><span class="chev open"></span><span class="folder">▣</span>Frontend<span class="tcount">14 people</span></div>
+                <div class="tchildren">
+                  <div class="tnode selected"><div class="cb"></div><span class="chev none"></span><span class="leaf">◦</span>React<span class="tcount">8</span></div>
+                  <div class="tnode selected"><div class="cb"></div><span class="chev none"></span><span class="leaf">◦</span>Vue<span class="tcount">4</span></div>
+                  <div class="tnode selected"><div class="cb"></div><span class="chev none"></span><span class="leaf">◦</span>Design systems<span class="tcount">2</span></div>
+                </div>
+                <div class="tnode"><div class="cb"></div><span class="chev closed"></span><span class="folder">▣</span>Backend<span class="tcount">28</span></div>
+                <div class="tnode selected"><div class="cb"></div><span class="chev closed"></span><span class="folder">▣</span>DevOps<span class="tcount">12</span></div>
+                <div class="tnode"><div class="cb"></div><span class="chev closed"></span><span class="folder">▣</span>QA<span class="tcount">8</span></div>
+              </div>
+
+              <div class="tnode selected"><div class="cb"></div><span class="chev closed"></span><span class="folder">▣</span>Design<span class="tcount">14 · all selected</span></div>
+              <div class="tnode"><div class="cb"></div><span class="chev closed"></span><span class="folder">▣</span>Operations<span class="tcount">22</span></div>
+              <div class="tnode disabled" style="color:#B8B8C0; cursor:not-allowed;"><div class="cb"></div><span class="chev closed"></span><span class="folder" style="color:#B8B8C0">▣</span>Legal<span class="tcount">— locked</span></div>
+            </div>
+
+            <div class="foot">
+              <span class="link">Clear all</span>
+              <button class="done">Apply (54)</button>
+            </div>
+          </div>
+        </div>
+        <span class="hint">parent auto-toggles children · indeterminate state when some children selected · cascade counts</span>
+      </div>
+
+      <!-- Folder/file tree navigator -->
+      <div class="field">
+        <label class="lbl">File tree picker</label>
+        <div class="dd-wrap">
+          <div class="inp focused">
+            <span style="font-family:var(--gf-font-mono); font-size:12px; color:#52525F;">/src/components/Button.tsx</span>
+            <span class="ic caret" style="margin-left:auto;"></span>
+          </div>
+          <div class="menu">
+            <div class="tree">
+              <div class="tnode"><span class="chev open"></span><span class="folder">📁</span>src</div>
+              <div class="tchildren">
+                <div class="tnode"><span class="chev open"></span><span class="folder">📁</span>components</div>
+                <div class="tchildren">
+                  <div class="tnode selected"><span class="chev none"></span><span class="leaf">📄</span>Button.tsx<span class="tcount">2 KB</span></div>
+                  <div class="tnode"><span class="chev none"></span><span class="leaf">📄</span>Input.tsx<span class="tcount">4 KB</span></div>
+                  <div class="tnode"><span class="chev none"></span><span class="leaf">📄</span>Card.tsx<span class="tcount">1 KB</span></div>
+                </div>
+                <div class="tnode"><span class="chev closed"></span><span class="folder">📁</span>pages</div>
+                <div class="tnode"><span class="chev closed"></span><span class="folder">📁</span>utils</div>
+                <div class="tnode"><span class="chev none"></span><span class="leaf">📄</span>index.tsx</div>
+              </div>
+              <div class="tnode"><span class="chev closed"></span><span class="folder">📁</span>public</div>
+              <div class="tnode"><span class="chev none"></span><span class="leaf">📄</span>package.json</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. Dark theme sample -->
+  <div class="card dark">
+    <div class="hdr">Dark theme <span class="sub">same tokens · inverted surfaces</span></div>
+    <div class="body">
+      <div class="field"><label class="lbl">Default</label>
+        <div class="inp"><input placeholder="Placeholder"></div></div>
+      <div class="field"><label class="lbl">Focused</label>
+        <div class="inp focused"><input value="focus ring"></div></div>
+      <div class="field"><label class="lbl">Disabled</label>
+        <div class="inp disabled"><input value="EMP-00421" disabled></div></div>
+      <div class="field"><label class="lbl">With icon</label>
+        <div class="inp"><span class="ic search"></span><input placeholder="Search…"></div></div>
+      <div class="field"><label class="lbl">Select</label>
+        <div class="inp"><span class="value">Bangkok</span><span class="ic caret"></span></div></div>
+      <div class="field"><label class="lbl">Error</label>
+        <div class="inp error"><input value="invalid@"></div>
+        <span class="hint err">Please enter a valid email.</span></div>
+    </div>
+  </div>
+
+</div>
+</body></html>

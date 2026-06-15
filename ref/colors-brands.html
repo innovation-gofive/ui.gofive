@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- @dsCard group="Colors" name="Product Brand Colors" subtitle="Gofive official palette + product primaries" viewport="700x360" -->
+<html><head><meta charset="utf-8"><title>Gofive — Brand Colors</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin:0; padding:20px 24px; background:#fff; font-family: var(--gf-font-family); color: var(--gf-fg-1); }
+  .section-label { font-size:10px; font-weight:600; color: var(--gf-fg-5); text-transform:uppercase; letter-spacing:.07em; margin: 0 0 8px; }
+  .row { display:flex; gap:10px; margin-bottom:16px; }
+  .sw { flex:1; border:1px solid var(--gf-line-4); border-radius:10px; overflow:hidden; }
+  .chip { height:70px; display:flex; align-items:flex-end; padding:10px 12px; font-weight:700; font-size:13px; letter-spacing:-0.005em; color:#fff; }
+  .chip.onlight { color:#212121; }
+  .meta { padding:8px 12px 10px; font-size:10px; color: var(--gf-fg-4); line-height:1.4; }
+  .hex { display:block; color:#212121; font-weight:700; font-size:11px; font-family: var(--gf-font-mono); }
+  .grad { height: 68px; border-radius:10px; border:1px solid var(--gf-line-4); display:flex; align-items:flex-end; padding:10px 14px; color:#212121; font-weight:700; font-size:13px; }
+  .grid4 { display:grid; grid-template-columns: repeat(4,1fr); gap:10px; }
+</style></head>
+<body>
+  <div class="section-label">Gofive · Primary palette</div>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#F88411">Orange · Primary</div>
+      <div class="meta"><span class="hex">#F88411</span>Brand primary — buttons, links, accents</div></div>
+    <div class="sw"><div class="chip" style="background:#212121">Black · Secondary</div>
+      <div class="meta"><span class="hex">#212121</span>Logo text, high-emphasis headings</div></div>
+  </div>
+
+  <div class="section-label">Gofive · Gradient</div>
+  <div class="row">
+    <div class="sw" style="flex:3;">
+      <div class="grad" style="background: linear-gradient(90deg,#F83600 0%,#F88411 50%,#F9D423 100%);">
+        #F83600 &nbsp;→&nbsp; #F88411 &nbsp;→&nbsp; #F9D423
+      </div>
+      <div class="meta">Hero banners, splash backgrounds, marketing illustrations — <b>not</b> for UI chrome.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Product primaries</div>
+  <div class="grid4">
+    <div class="sw"><div class="chip" style="background:#F88411">empeo</div>
+      <div class="meta"><span class="hex">#F88411</span>HR · shares Gofive</div></div>
+    <div class="sw"><div class="chip" style="background:#116DFC">Venio</div>
+      <div class="meta"><span class="hex">#116DFC</span>CRM · Bluetiful</div></div>
+    <div class="sw"><div class="chip" style="background:linear-gradient(135deg,#2DAE4B,#1F8A3D)">Desk</div>
+      <div class="meta"><span class="hex">#2DAE4B</span>Helpdesk · Green</div></div>
+    <div class="sw"><div class="chip" style="background:linear-gradient(135deg,#E89A2A,#C26A1A)">ShipX</div>
+      <div class="meta"><span class="hex">#E89A2A</span>Logistics · Amber</div></div>
+    <div class="sw"><div class="chip onlight" style="background:#FFC505">SalesBear</div>
+      <div class="meta"><span class="hex">#FFC505</span>Sales · Sunglow</div></div>
+    <div class="sw"><div class="chip" style="background:#EB1C26">eTAXGO</div>
+      <div class="meta"><span class="hex">#EB1C26</span>Tax · Crimson</div></div>
+    <div class="sw"><div class="chip" style="background:#5E5EED">emconnect</div>
+      <div class="meta"><span class="hex">#5E5EED</span>Comms · Indigo</div></div>
+    <div class="sw"><div class="chip" style="background:#F88411">Calendio</div>
+      <div class="meta"><span class="hex">#F88411</span>Scheduling · shares Gofive</div></div>
+  </div>
+</body></html>

@@ -1,0 +1,259 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Dialog" subtitle="Confirm, form, wizard, sheet, drawer" -->
+<html lang="en"><head><meta charset="utf-8"><title>Gofive — Dialog</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:var(--gf-bg-2);color:var(--gf-fg-1);font-family:var(--gf-font-family)}
+.wrap{padding:22px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:14px;overflow:hidden}
+.hdr{padding:12px 16px;border-bottom:1px solid var(--gf-line-5);display:flex;justify-content:space-between;align-items:center}
+.ttl{font-size:13px;font-weight:600}
+.tag{font-size:10.5px;color:var(--gf-fg-4);font-family:var(--gf-font-mono)}
+.body{padding:0;position:relative;min-height:380px;background:var(--gf-bg-3);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.scrim{position:absolute;inset:0;background:rgba(20,20,43,.35);backdrop-filter:blur(2px)}
+
+/* Dialog base */
+.dlg{position:relative;z-index:1;background:var(--gf-bg-1);border-radius:14px;box-shadow:0 24px 64px rgba(20,20,43,.25);width:440px;max-width:calc(100% - 40px);overflow:hidden}
+.dlg .dh{padding:20px 22px 6px;display:flex;gap:14px;align-items:flex-start}
+.dlg .dh .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 38px}
+.dlg .dh .ic.dg{background:var(--gf-danger-soft);color:var(--gf-danger)}
+.dlg .dh .ic.wn{background:var(--gf-warning-soft);color:#8A6200}
+.dlg .dh .ic.ok{background:var(--gf-success-soft);color:#00875F}
+.dlg .dh .ic.in{background:var(--gf-info-soft);color:var(--gf-info)}
+.dlg .dh .tx{flex:1;min-width:0}
+.dlg .dh .t{font-size:16px;font-weight:600;color:var(--gf-fg-1);letter-spacing:-.01em}
+.dlg .dh .s{font-size:13px;color:var(--gf-fg-3);margin-top:4px;line-height:1.5}
+.dlg .x{width:28px;height:28px;border-radius:7px;border:0;background:transparent;color:var(--gf-fg-4);cursor:pointer;flex:0 0 28px;display:flex;align-items:center;justify-content:center}
+.dlg .x:hover{background:var(--gf-bg-2);color:var(--gf-fg-1)}
+.dlg .db{padding:14px 22px 4px;font-size:13.5px;color:var(--gf-fg-2);line-height:1.55}
+.dlg .df{padding:16px 22px 18px;display:flex;gap:8px;justify-content:flex-end}
+.dlg .df.spread{justify-content:space-between}
+.btn{height:36px;padding:0 16px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn.g{background:var(--gf-bg-1);border-color:var(--gf-line-2);color:var(--gf-fg-2)}
+.btn.g:hover{background:var(--gf-bg-2)}
+.btn.p{background:var(--gf-primary);color:#fff}
+.btn.dg{background:var(--gf-danger);color:#fff}
+.btn.t{background:transparent;color:var(--gf-fg-4)}
+.btn.t:hover{color:var(--gf-fg-1)}
+
+/* Form dialog */
+.dlg.form{width:520px}
+.fld{margin:10px 0}
+.fld label{font-size:12px;font-weight:600;color:var(--gf-fg-2);display:block;margin-bottom:6px}
+.fld .ip{height:38px;padding:0 12px;border-radius:8px;border:1px solid var(--gf-line-2);background:var(--gf-bg-1);font-family:inherit;font-size:13.5px;color:var(--gf-fg-1);width:100%;box-sizing:border-box}
+.fld textarea.ip{height:auto;padding:10px 12px;min-height:84px;resize:vertical}
+.fld-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:11.5px;color:var(--gf-fg-4);margin-top:4px}
+
+/* Sheet (bottom) */
+.sheet-wrap{width:420px;height:100%;background:var(--gf-bg-3);border-radius:12px;overflow:hidden;position:relative;display:flex;align-items:flex-end;justify-content:center}
+.sheet{position:relative;z-index:1;background:var(--gf-bg-1);border-radius:18px 18px 0 0;width:100%;padding:10px 18px 22px;box-shadow:0 -12px 36px rgba(0,0,0,.15)}
+.sheet .handle{width:40px;height:4px;border-radius:999px;background:var(--gf-line-2);margin:6px auto 14px}
+.sheet .t{font-size:16px;font-weight:600;text-align:center;margin-bottom:4px}
+.sheet .s{font-size:12.5px;color:var(--gf-fg-3);text-align:center;margin-bottom:14px}
+.sheet .opt{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;font-size:13.5px}
+.sheet .opt:hover{background:var(--gf-bg-2)}
+.sheet .opt .ic{width:32px;height:32px;border-radius:8px;background:var(--gf-bg-2);display:flex;align-items:center;justify-content:center;color:var(--gf-fg-2)}
+.sheet .opt.dg{color:var(--gf-danger)}
+
+/* Drawer (right) */
+.drawer-wrap{width:100%;height:100%;position:relative;overflow:hidden}
+.drawer{position:absolute;top:0;right:0;bottom:0;width:420px;background:var(--gf-bg-1);box-shadow:-12px 0 40px rgba(0,0,0,.15);display:flex;flex-direction:column;z-index:1}
+.drawer .dh2{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--gf-line-5)}
+.drawer .dh2 .t{font-size:15px;font-weight:600}
+.drawer .db2{flex:1;padding:18px 20px;overflow:auto;font-size:13.5px;color:var(--gf-fg-2);line-height:1.55}
+.drawer .df2{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--gf-line-5)}
+
+/* Big modal (stepper) */
+.dlg.big{width:560px}
+.steps{display:flex;align-items:center;gap:6px;padding:0 22px 10px;font-size:12px;color:var(--gf-fg-4)}
+.steps .st{display:flex;align-items:center;gap:6px}
+.steps .st .n{width:22px;height:22px;border-radius:999px;background:var(--gf-bg-2);color:var(--gf-fg-3);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11.5px}
+.steps .st.d .n{background:var(--gf-success);color:#fff}
+.steps .st.a .n{background:var(--gf-primary);color:#fff}
+.steps .st.a{color:var(--gf-fg-1);font-weight:600}
+.steps .ln{width:18px;height:1px;background:var(--gf-line-2)}
+.steps .st.d + .ln{background:var(--gf-success)}
+
+.kbd{font-family:var(--gf-font-mono);font-size:11px;padding:2px 6px;border-radius:5px;border:1px solid var(--gf-line-2);background:var(--gf-bg-2);color:var(--gf-fg-4)}
+</style>
+</head><body>
+<div class="wrap">
+  <!-- Destructive confirm -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Destructive confirm</div><div class="tag">Warning, single action</div></div>
+    <div class="body">
+      <div class="scrim"></div>
+      <div class="dlg">
+        <div class="dh">
+          <div class="ic dg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="tx">
+            <div class="t">Delete 3 employees?</div>
+            <div class="s">Their profiles, payroll records, and pending time-off requests will be permanently removed. This action cannot be undone.</div>
+          </div>
+          <button class="x"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg></button>
+        </div>
+        <div class="df">
+          <button class="btn g">Cancel</button>
+          <button class="btn dg">Delete permanently</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info / success alert -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Success confirm</div><div class="tag">Acknowledgement</div></div>
+    <div class="body">
+      <div class="scrim"></div>
+      <div class="dlg">
+        <div class="dh">
+          <div class="ic ok">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="tx">
+            <div class="t">Payroll submitted for March</div>
+            <div class="s">248 employees · ฿ 18.4M total. Approvers will be notified and payments are scheduled for March 28th.</div>
+          </div>
+        </div>
+        <div class="df spread">
+          <button class="btn t">View receipt</button>
+          <button class="btn p">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form dialog -->
+  <div class="card" style="grid-column:span 2">
+    <div class="hdr"><div class="ttl">Form dialog</div><div class="tag">Input-heavy modal</div></div>
+    <div class="body" style="min-height:460px">
+      <div class="scrim"></div>
+      <div class="dlg form">
+        <div class="dh">
+          <div class="ic in">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="3.5" stroke="currentColor" stroke-width="1.7"/><path d="M5 20a7 7 0 0114 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M17 5l3 3M20 5l-3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tx">
+            <div class="t">Invite a new employee</div>
+            <div class="s">Send an onboarding email with account setup instructions.</div>
+          </div>
+          <button class="x"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg></button>
+        </div>
+        <div class="db">
+          <div class="fld-row">
+            <div class="fld"><label>First name</label><input class="ip" value="Ploy"></div>
+            <div class="fld"><label>Last name</label><input class="ip" value="Kittisak"></div>
+          </div>
+          <div class="fld"><label>Work email</label><input class="ip" value="ploy.k@gofive.co.th"></div>
+          <div class="fld-row">
+            <div class="fld"><label>Role</label><input class="ip" value="Member"></div>
+            <div class="fld"><label>Department</label><input class="ip" value="People Ops"></div>
+          </div>
+          <div class="fld"><label>Personal note (optional)</label><textarea class="ip" placeholder="Welcome to the team…"></textarea>
+            <div class="hint">They will see this message in their welcome email.</div>
+          </div>
+        </div>
+        <div class="df spread">
+          <span style="font-size:12px;color:var(--gf-fg-4);align-self:center"><span class="kbd">⏎</span> Send invite</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn g">Cancel</button>
+            <button class="btn p">Send invite</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Multi-step -->
+  <div class="card" style="grid-column:span 2">
+    <div class="hdr"><div class="ttl">Multi-step dialog</div><div class="tag">Wizard · 3 of 4</div></div>
+    <div class="body" style="min-height:460px">
+      <div class="scrim"></div>
+      <div class="dlg big">
+        <div class="dh">
+          <div class="tx">
+            <div class="t">New workspace</div>
+            <div class="s">Step 3 of 4 — Connect integrations</div>
+          </div>
+          <button class="x"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg></button>
+        </div>
+        <div class="steps">
+          <div class="st d"><div class="n"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Workspace</div>
+          <span class="ln"></span>
+          <div class="st d"><div class="n"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Team</div>
+          <span class="ln"></span>
+          <div class="st a"><div class="n">3</div>Integrations</div>
+          <span class="ln"></span>
+          <div class="st"><div class="n">4</div>Review</div>
+        </div>
+        <div class="db">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <div style="border:1.5px solid var(--gf-primary);border-radius:10px;padding:12px;background:var(--gf-primary-wash)"><div style="font-weight:700;font-size:13.5px">Slack</div><div style="font-size:11.5px;color:var(--gf-fg-4);margin-top:2px">Team messaging</div></div>
+            <div style="border:1px solid var(--gf-line-2);border-radius:10px;padding:12px"><div style="font-weight:700;font-size:13.5px">Google</div><div style="font-size:11.5px;color:var(--gf-fg-4);margin-top:2px">Drive, Calendar</div></div>
+            <div style="border:1px solid var(--gf-line-2);border-radius:10px;padding:12px"><div style="font-weight:700;font-size:13.5px">LINE</div><div style="font-size:11.5px;color:var(--gf-fg-4);margin-top:2px">Notifications</div></div>
+          </div>
+          <div class="hint" style="margin-top:12px">You can add or change integrations anytime in workspace settings.</div>
+        </div>
+        <div class="df spread">
+          <button class="btn t">← Back</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn g">Skip</button>
+            <button class="btn p">Continue →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action sheet / drawer -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Action sheet</div><div class="tag">Bottom sheet (mobile)</div></div>
+    <div class="body">
+      <div class="sheet-wrap">
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="handle"></div>
+          <div class="t">Invoice #INV-2024-0412</div>
+          <div class="s">฿ 137,388 · Siam Cement Group</div>
+          <div class="opt"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3v14M6 11l6 6 6-6M4 21h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Download PDF</div>
+          <div class="opt"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 6h16v12H8l-4 4V6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div>Send reminder</div>
+          <div class="opt"><div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.7"/></svg></div>Record payment</div>
+          <div class="opt dg"><div class="ic" style="background:var(--gf-danger-soft);color:var(--gf-danger)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Void invoice</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hdr"><div class="ttl">Side drawer</div><div class="tag">Secondary pane</div></div>
+    <div class="body">
+      <div class="drawer-wrap">
+        <div class="scrim"></div>
+        <div class="drawer">
+          <div class="dh2">
+            <div class="t">Task details</div>
+            <button class="x"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg></button>
+          </div>
+          <div class="db2">
+            <div style="font-size:16px;font-weight:600;color:var(--gf-fg-1);margin-bottom:10px">Revise onboarding email templates</div>
+            <div style="display:grid;grid-template-columns:90px 1fr;gap:10px 16px;font-size:12.5px">
+              <div style="color:var(--gf-fg-4)">Status</div><div><span style="background:var(--gf-warning-soft);color:#8A6200;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:600">In progress</span></div>
+              <div style="color:var(--gf-fg-4)">Assignee</div><div>Ploy Kittisak</div>
+              <div style="color:var(--gf-fg-4)">Due</div><div>Apr 18, 2025</div>
+              <div style="color:var(--gf-fg-4)">Priority</div><div>High</div>
+            </div>
+            <div style="margin-top:14px;font-size:12.5px;line-height:1.55">Rewrite the day-1 and day-30 welcome emails to match the new brand voice. Include the updated benefits summary and remove references to the legacy portal.</div>
+          </div>
+          <div class="df2">
+            <button class="btn g">Close</button>
+            <button class="btn p">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

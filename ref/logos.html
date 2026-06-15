@@ -1,0 +1,93 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Logos" subtitle="Color + black text → light bg · Color + white text → dark bg · Mono for 1‑color contexts" viewport="700x400" -->
+<html><head><meta charset="utf-8"><title>Gofive — Logos</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; background: var(--gf-bg-1); font-family: var(--gf-font-family); color: var(--gf-fg-1); }
+  .wrap { padding: 20px 24px; display:flex; flex-direction:column; gap:14px; }
+  .section-label {
+    font-size: 10px; font-weight: 600; color: var(--gf-fg-5);
+    text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px;
+  }
+  .section-label b { color: var(--gf-fg-2); font-weight: 600; }
+
+  .grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .tile {
+    aspect-ratio: 5 / 3; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; border: 1px solid var(--gf-line-4);
+  }
+  .tile img { height: 36px; width: auto; display: block; }
+  .cap {
+    position: absolute; left: 8px; bottom: 6px;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 3px;
+  }
+  .cap.dark  { background: rgba(0,0,0,0.06);  color: #52525F; }
+  .cap.light { background: rgba(255,255,255,0.14); color: #fff; }
+  .tag-rec {
+    position:absolute; top:6px; right:6px;
+    background: #1C1C22; color:#fff; font-size:8px; font-weight:700;
+    letter-spacing:.06em; padding:2px 5px; border-radius:3px; text-transform: uppercase;
+  }
+  .tag-rec.light { background:#fff; color:#1C1C22; }
+
+  /* Official Gofive palette only:
+     #FFFFFF · #F88411 orange · #212121 black · gradient #F83600→#F88411→#F9D423 */
+  .bg-white  { background: #FFFFFF; }
+  .bg-wash   { background: #FFF4E5; }                 /* tint of #F88411 */
+  .bg-black  { background: #212121; border-color: #212121; }
+  .bg-orange { background: #F88411; border-color: #F88411; }
+  .bg-grad   { background: linear-gradient(90deg,#F83600 0%,#F88411 50%,#F9D423 100%); border-color: transparent; }
+</style></head>
+<body>
+  <div class="wrap">
+
+    <div>
+      <div class="section-label">Color + Black text · <b>on light backgrounds</b></div>
+      <div class="grid">
+        <div class="tile bg-white">
+          <img src="../assets/logos/gofive-color-black-horizontal.svg" alt="Gofive color + black text">
+          <span class="tag-rec">Default</span>
+          <span class="cap dark">on white</span>
+        </div>
+        <div class="tile bg-wash">
+          <img src="../assets/logos/gofive-color-black-horizontal.svg" alt="Gofive color + black text">
+          <span class="cap dark">on orange tint</span>
+        </div>
+        <div class="tile bg-white">
+          <img src="../assets/logos/gofive-black-horizontal.svg" alt="Gofive black mono">
+          <span class="cap dark">mono black · 1‑color print</span>
+        </div>
+        <div class="tile bg-wash">
+          <img src="../assets/logos/gofive-black-horizontal.svg" alt="Gofive black mono">
+          <span class="cap dark">mono black · on wash</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Color + White text · <b>on dark / brand backgrounds</b></div>
+      <div class="grid">
+        <div class="tile bg-black">
+          <img src="../assets/logos/gofive-color-white-horizontal.svg" alt="Gofive color + white text">
+          <span class="tag-rec light">Dark mode</span>
+          <span class="cap light">on black #212121</span>
+        </div>
+        <div class="tile bg-orange">
+          <img src="../assets/logos/gofive-white-horizontal.svg" alt="Gofive white mono">
+          <span class="cap light">mono white · on orange</span>
+        </div>
+        <div class="tile bg-grad">
+          <img src="../assets/logos/gofive-white-horizontal.svg" alt="Gofive white mono">
+          <span class="cap light">mono white · on brand gradient</span>
+        </div>
+        <div class="tile bg-black">
+          <img src="../assets/logos/gofive-white-horizontal.svg" alt="Gofive white mono">
+          <span class="cap light">mono white · on black</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body></html>

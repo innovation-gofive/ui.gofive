@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "progress",
+  "title": "Progress",
+  "description": "A linear progress bar built on Radix Progress with GoFive semantic colors and three track sizes.",
+  "dependencies": [
+    "radix-ui"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/ui/progress.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Progress as ProgressPrimitive } from \"radix-ui\"\n\nimport { cn } from \"@/lib/utils\"\n\n// ── GoFive semantic color tokens ───────────────────────────────────\nexport type ProgressColor = \"primary\" | \"success\" | \"warn\" | \"danger\" | \"info\"\nexport type ProgressSize = \"sm\" | \"md\" | \"lg\"\n\nconst FILL_COLOR: Record<ProgressColor, string> = {\n  primary: \"#0A66E0\",\n  success: \"#1DA577\",\n  warn: \"#F9D423\",\n  danger: \"#D93A1A\",\n  info: \"#0A66E0\",\n}\n\nconst TRACK_SIZE: Record<ProgressSize, string> = {\n  sm: \"h-1\",\n  md: \"h-1.5\",\n  lg: \"h-2.5\",\n}\n\nexport interface ProgressProps\n  extends React.ComponentProps<typeof ProgressPrimitive.Root> {\n  color?: ProgressColor\n  size?: ProgressSize\n}\n\nfunction Progress({\n  className,\n  value,\n  color = \"primary\",\n  size = \"md\",\n  ...props\n}: ProgressProps) {\n  const pct = value ?? 0\n\n  return (\n    <ProgressPrimitive.Root\n      data-slot=\"progress\"\n      value={value}\n      className={cn(\n        \"relative w-full overflow-hidden rounded-full bg-[#ECECF0]\",\n        TRACK_SIZE[size],\n        className,\n      )}\n      {...props}\n    >\n      <ProgressPrimitive.Indicator\n        data-slot=\"progress-indicator\"\n        className=\"h-full w-full flex-1 rounded-full transition-transform duration-500 ease-out\"\n        style={{\n          backgroundColor: FILL_COLOR[color],\n          transform: `translateX(-${100 - pct}%)`,\n        }}\n      />\n    </ProgressPrimitive.Root>\n  )\n}\n\nexport { Progress }\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

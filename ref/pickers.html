@@ -1,0 +1,258 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Picker" subtitle="Color, emoji, icon, media" -->
+<html lang="en"><head><meta charset="utf-8"><title>Gofive — Pickers</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:var(--gf-bg-2);color:var(--gf-fg-1);font-family:var(--gf-font-family)}
+.wrap{padding:22px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:14px;overflow:hidden}
+.hdr{padding:12px 16px;border-bottom:1px solid var(--gf-line-5);display:flex;justify-content:space-between;align-items:center}
+.ttl{font-size:13px;font-weight:600}
+.tag{font-size:10.5px;color:var(--gf-fg-4);font-family:var(--gf-font-mono)}
+.body{padding:18px;display:flex;flex-direction:column;gap:14px}
+.lbl{font-size:10.5px;color:var(--gf-fg-4);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.pop{background:var(--gf-bg-1);border:1px solid var(--gf-line-3);border-radius:12px;box-shadow:0 12px 36px rgba(20,20,43,.1);padding:12px;max-width:320px}
+.pop .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pop .hd .nm{font-size:13px;font-weight:600}
+.pop .hd .mt{font-size:11.5px;color:var(--gf-fg-4)}
+
+/* Color picker */
+.cp-sw{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-bottom:12px}
+.cp-sw .s{aspect-ratio:1;border-radius:6px;cursor:pointer;position:relative;border:1px solid rgba(0,0,0,.06)}
+.cp-sw .s.a::after{content:"";position:absolute;inset:0;border:2px solid var(--gf-fg-1);border-radius:7px;box-shadow:0 0 0 2px #fff inset}
+.cp-recent{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.cp-recent .s{width:22px;height:22px;border-radius:6px;cursor:pointer;border:1px solid rgba(0,0,0,.06)}
+.cp-hex{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--gf-line-2);border-radius:8px;font-family:var(--gf-font-mono);font-size:12.5px}
+.cp-hex .dot{width:18px;height:18px;border-radius:5px}
+.cp-hex input{border:0;outline:none;font-family:inherit;font-size:inherit;flex:1;background:transparent;color:var(--gf-fg-1);text-transform:uppercase}
+.cp-hex .a{color:var(--gf-fg-4)}
+.cp-slider{height:12px;border-radius:999px;margin:10px 0;position:relative}
+.cp-slider .knob{position:absolute;top:50%;width:16px;height:16px;border-radius:999px;background:#fff;border:1px solid rgba(0,0,0,.15);box-shadow:0 2px 6px rgba(0,0,0,.15);transform:translate(-50%,-50%)}
+.cp-hue{background:linear-gradient(to right,#ff0000,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000)}
+.cp-alpha{background:linear-gradient(to right,transparent,var(--gf-primary)),repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 50% / 8px 8px}
+
+/* Emoji picker */
+.em-srch{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--gf-bg-2);border-radius:8px;margin-bottom:10px;font-size:12.5px;color:var(--gf-fg-4)}
+.em-srch input{border:0;outline:none;background:transparent;font-family:inherit;font-size:inherit;color:var(--gf-fg-1);flex:1}
+.em-tabs{display:flex;gap:2px;border-bottom:1px solid var(--gf-line-5);padding-bottom:8px;margin-bottom:8px}
+.em-tabs .t{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;opacity:.6}
+.em-tabs .t.a{background:var(--gf-primary-wash);opacity:1}
+.em-cat{font-size:10.5px;font-weight:600;color:var(--gf-fg-4);text-transform:uppercase;letter-spacing:.04em;margin:6px 2px 4px}
+.em-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px}
+.em-grid .em{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:18px;cursor:pointer}
+.em-grid .em:hover{background:var(--gf-bg-2)}
+.em-grid .em.a{background:var(--gf-primary-wash);outline:1px solid var(--gf-primary)}
+.em-preview{display:flex;align-items:center;gap:10px;margin-top:8px;padding-top:10px;border-top:1px solid var(--gf-line-5)}
+.em-preview .big{font-size:26px}
+.em-preview .code{font-family:var(--gf-font-mono);font-size:11.5px;color:var(--gf-fg-4)}
+.em-preview .code b{color:var(--gf-fg-1);font-weight:600;font-family:inherit;font-size:12.5px;display:block}
+
+/* Icon picker */
+.ic-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.ic-grid .ic{aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--gf-fg-2);cursor:pointer;border:1px solid transparent}
+.ic-grid .ic:hover{background:var(--gf-bg-2);color:var(--gf-fg-1)}
+.ic-grid .ic.a{background:var(--gf-primary-wash);color:var(--gf-primary);border-color:var(--gf-primary)}
+.ic-var{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--gf-line-5);align-items:center}
+.ic-var .seg{display:inline-flex;padding:2px;background:var(--gf-bg-2);border-radius:7px;gap:2px}
+.ic-var .seg .s{padding:4px 9px;font-size:11.5px;color:var(--gf-fg-3);border-radius:5px;cursor:pointer}
+.ic-var .seg .s.a{background:var(--gf-bg-1);color:var(--gf-fg-1);box-shadow:0 1px 2px rgba(0,0,0,.06);font-weight:600}
+
+/* File picker / media dialog */
+.media{max-width:520px}
+.media .tabs{display:flex;gap:4px;padding:6px;background:var(--gf-bg-2);border-radius:8px;margin-bottom:10px}
+.media .tabs .t{flex:1;padding:6px 8px;font-size:12px;text-align:center;color:var(--gf-fg-3);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.media .tabs .t.a{background:var(--gf-bg-1);color:var(--gf-fg-1);box-shadow:0 1px 2px rgba(0,0,0,.06);font-weight:600}
+.media .lib{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.media .lib .th{aspect-ratio:1;border-radius:8px;border:2px solid transparent;cursor:pointer;position:relative;overflow:hidden}
+.media .lib .th.a{border-color:var(--gf-primary)}
+.media .lib .th.a::after{content:"✓";position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:999px;background:var(--gf-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+
+/* Trigger previews */
+.trig{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--gf-line-2);border-radius:8px;font-size:13px;width:fit-content}
+.trig .dot{width:14px;height:14px;border-radius:4px}
+.trig .chev{color:var(--gf-fg-4)}
+.trig.flat{border:0;padding:6px 8px;background:var(--gf-bg-2);border-radius:8px}
+.trig code{font-family:var(--gf-font-mono);font-size:12px;color:var(--gf-fg-4)}
+
+/* Buttons */
+.btns{display:flex;gap:6px;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--gf-line-5)}
+.btn{height:30px;padding:0 12px;border-radius:7px;font-size:12.5px;font-weight:600;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn.g{background:var(--gf-bg-1);border-color:var(--gf-line-2);color:var(--gf-fg-2)}
+.btn.p{background:var(--gf-primary);color:#fff}
+</style>
+</head><body>
+<div class="wrap">
+  <!-- Color picker -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Color picker</div><div class="tag">Swatch · recent · hex · hue</div></div>
+    <div class="body">
+      <div class="lbl">Trigger</div>
+      <div class="trig">
+        <span class="dot" style="background:var(--gf-primary)"></span>
+        <code>#F05B2F</code>
+        <svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="lbl">Popover</div>
+      <div class="pop">
+        <div class="hd"><div class="nm">Color</div><div class="mt">HEX</div></div>
+        <div class="cp-sw">
+          <div class="s" style="background:#F05B2F"></div>
+          <div class="s a" style="background:#F02848"></div>
+          <div class="s" style="background:#E89A2A"></div>
+          <div class="s" style="background:#FFC505"></div>
+          <div class="s" style="background:#2DAE4B"></div>
+          <div class="s" style="background:#00C291"></div>
+          <div class="s" style="background:#116DFC"></div>
+          <div class="s" style="background:#7B5CFF"></div>
+          <div class="s" style="background:#E677B7"></div>
+          <div class="s" style="background:#0891B2"></div>
+          <div class="s" style="background:#1C1C22"></div>
+          <div class="s" style="background:#52525F"></div>
+          <div class="s" style="background:#A5A5B6"></div>
+          <div class="s" style="background:#DFDFE8"></div>
+          <div class="s" style="background:#F6F6F8"></div>
+          <div class="s" style="background:#FFFFFF"></div>
+        </div>
+        <div class="cp-slider cp-hue"><span class="knob" style="left:2%"></span></div>
+        <div class="cp-slider cp-alpha"><span class="knob" style="left:100%"></span></div>
+        <div class="cp-hex">
+          <span class="dot" style="background:#F02848"></span>
+          <span class="a">#</span>
+          <input value="F02848">
+          <span class="a">100%</span>
+        </div>
+        <div style="margin-top:10px" class="lbl">Recent</div>
+        <div class="cp-recent">
+          <div class="s" style="background:#116DFC"></div>
+          <div class="s" style="background:#FFC505"></div>
+          <div class="s" style="background:#F05B2F"></div>
+          <div class="s" style="background:#2DAE4B"></div>
+          <div class="s" style="background:#E677B7"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emoji picker -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Emoji picker</div><div class="tag">Search · category · grid</div></div>
+    <div class="body">
+      <div class="lbl">Trigger</div>
+      <div class="trig flat"><span style="font-size:16px">🎉</span><span style="color:var(--gf-fg-3)">Add reaction</span></div>
+
+      <div class="lbl">Popover</div>
+      <div class="pop">
+        <div class="em-srch">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input placeholder="Search emoji…" value="party">
+        </div>
+        <div class="em-tabs">
+          <div class="t">🕘</div>
+          <div class="t a">😀</div>
+          <div class="t">🐶</div>
+          <div class="t">🍔</div>
+          <div class="t">⚽</div>
+          <div class="t">🚗</div>
+          <div class="t">💡</div>
+          <div class="t">🚩</div>
+        </div>
+        <div class="em-cat">Smileys & people</div>
+        <div class="em-grid">
+          <div class="em">😀</div><div class="em">😃</div><div class="em">😄</div><div class="em">😁</div>
+          <div class="em">😆</div><div class="em">🥹</div><div class="em">😅</div><div class="em">🤣</div>
+          <div class="em">😂</div><div class="em">🙂</div><div class="em">🙃</div><div class="em">🫠</div>
+          <div class="em">😉</div><div class="em">😊</div><div class="em">😇</div><div class="em">🥰</div>
+        </div>
+        <div class="em-cat">Activities</div>
+        <div class="em-grid">
+          <div class="em a">🎉</div><div class="em">🎊</div><div class="em">🎈</div><div class="em">🎁</div>
+          <div class="em">🎂</div><div class="em">🎆</div><div class="em">🎇</div><div class="em">✨</div>
+        </div>
+        <div class="em-preview">
+          <div class="big">🎉</div>
+          <div class="code"><b>Party popper</b>:tada: · U+1F389</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Icon picker -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Icon picker</div><div class="tag">Lucide-style · variants</div></div>
+    <div class="body">
+      <div class="lbl">Popover</div>
+      <div class="pop">
+        <div class="em-srch">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input placeholder="Search icons…" value="">
+        </div>
+        <div class="ic-grid">
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1V10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+          <div class="ic a"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 21a8 8 0 0116 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="15" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0z" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v4.5L15 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 6l9 7 9-7M3 6v12h18V6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 14V8a2 2 0 00-2-2h-3l-2-3h-4a2 2 0 00-2 2v1M2 8l8 14 12-8L2 8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="ic-var">
+          <span class="lbl" style="margin:0">Style</span>
+          <div class="seg"><div class="s a">Outline</div><div class="s">Solid</div><div class="s">Duotone</div></div>
+          <span class="lbl" style="margin-left:auto">24 px</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- File / media picker -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">File &amp; media picker</div><div class="tag">Library · upload · URL</div></div>
+    <div class="body">
+      <div class="pop media">
+        <div class="tabs">
+          <div class="t a">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="11" r="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M21 16l-5-5-8 8" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            Library
+          </div>
+          <div class="t">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 16V4M6 10l6-6 6 6M4 17v3h16v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Upload
+          </div>
+          <div class="t">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M9.5 14.5l5-5M7 13l-3 3a3 3 0 004 4l3-3M17 11l3-3a3 3 0 00-4-4l-3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            From URL
+          </div>
+          <div class="t">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>
+            Unsplash
+          </div>
+        </div>
+        <div class="em-srch">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input placeholder="Search your library…">
+        </div>
+        <div class="lib">
+          <div class="th" style="background:linear-gradient(135deg,#C7D2FE,#F9A8D4)"></div>
+          <div class="th a" style="background:linear-gradient(135deg,#FED7AA,#FECACA)"></div>
+          <div class="th" style="background:linear-gradient(135deg,#A7F3D0,#67E8F9)"></div>
+          <div class="th" style="background:linear-gradient(135deg,#DDD6FE,#FCE7F3)"></div>
+          <div class="th" style="background:linear-gradient(135deg,#1C1C22,#52525F)"></div>
+          <div class="th" style="background:linear-gradient(135deg,#FDE68A,#F59E0B)"></div>
+          <div class="th" style="background:linear-gradient(135deg,#93C5FD,#6366F1)"></div>
+          <div class="th" style="background:linear-gradient(135deg,#6EE7B7,#10B981)"></div>
+        </div>
+        <div class="btns">
+          <button class="btn g">Cancel</button>
+          <button class="btn p">Insert selection</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

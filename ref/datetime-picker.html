@@ -1,0 +1,458 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="DateTime Picker" subtitle="Date, range, time, datetime, month, year, quarter" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gofive — DateTime Picker</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin:0; background: var(--gf-bg-2); color: var(--gf-fg-1); }
+  .wrap { padding: 24px; display:flex; flex-direction:column; gap:20px; }
+  .row  { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; align-items:start; }
+  .card { background: var(--gf-bg-1); border:1px solid var(--gf-line-4); border-radius: 14px; overflow:hidden; }
+  .hdr  { padding: 12px 16px; border-bottom:1px solid var(--gf-line-5); display:flex; align-items:center; justify-content:space-between; }
+  .hdr .ttl { font-size:13px; font-weight:600; color:var(--gf-fg-1); }
+  .hdr .tag { font-size:10.5px; color:var(--gf-fg-4); font-family: var(--gf-font-mono); }
+  .body { padding: 16px; display:flex; flex-direction:column; gap:12px; }
+
+  /* Input trigger */
+  .field { display:flex; flex-direction:column; gap:6px; }
+  .lbl   { font-size:12px; font-weight:500; color:var(--gf-fg-3); }
+  .trig  {
+    display:flex; align-items:center; gap:8px; padding: 0 12px;
+    height: 36px; border-radius: 8px;
+    border:1px solid var(--gf-line-2); background: var(--gf-bg-1); color:var(--gf-fg-1);
+    font-size: 14px; font-family: var(--gf-font-family); cursor:pointer;
+    transition: border-color .12s, box-shadow .12s;
+  }
+  .trig:hover { border-color: var(--gf-line-1); }
+  .trig.focus { border-color: var(--gf-primary); box-shadow: var(--gf-ring); }
+  .trig svg { flex:0 0 16px; color: var(--gf-fg-4); }
+  .trig .val { flex: 1; }
+  .trig .placeholder { color: var(--gf-fg-4); }
+
+  /* Calendar popover */
+  .pop {
+    background: var(--gf-bg-1);
+    border:1px solid var(--gf-line-4);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(15,15,25,.08), 0 2px 6px rgba(15,15,25,.04);
+    padding: 14px;
+    width: fit-content;
+  }
+  .theme-dark .pop { box-shadow: 0 12px 40px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.4); }
+
+  .cal-head {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 2px 4px 12px;
+  }
+  .cal-title { font-weight:600; font-size:14px; color:var(--gf-fg-1); display:flex; gap:6px; align-items:center; cursor:pointer; }
+  .cal-title svg { color:var(--gf-fg-4); }
+  .nav { display:flex; gap:2px; }
+  .nav button {
+    width:28px; height:28px; border-radius:7px; background: transparent; border: 0;
+    color: var(--gf-fg-3); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .nav button:hover { background: var(--gf-bg-2); color: var(--gf-fg-1); }
+
+  .weekdays, .days {
+    display: grid; grid-template-columns: repeat(7, 32px); gap: 2px;
+  }
+  .weekdays .wd {
+    text-align:center; font-size:11px; color: var(--gf-fg-4); font-weight:500;
+    padding: 6px 0;
+  }
+  .day {
+    width: 32px; height: 32px; border-radius: 7px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 13px; color: var(--gf-fg-1);
+    cursor:pointer; border: 0; background: transparent;
+    font-family: var(--gf-font-family);
+    position: relative;
+  }
+  .day.muted { color: var(--gf-fg-5); }
+  .day:hover { background: var(--gf-bg-2); }
+  .day.today { color: var(--gf-primary); font-weight:600; }
+  .day.today::after {
+    content:""; width: 4px; height: 4px; border-radius:999px;
+    background: var(--gf-primary);
+    position:absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+  }
+  .day.selected { background: var(--gf-primary); color: #fff; font-weight:600; }
+  .day.selected::after { background: #fff; }
+  .day.disabled { color: var(--gf-fg-6); cursor: not-allowed; }
+  .day.disabled:hover { background: transparent; }
+
+  /* Range highlighting */
+  .day.in-range { background: var(--gf-primary-wash); color: var(--gf-fg-1); border-radius: 0; }
+  .day.range-start { background: var(--gf-primary); color: #fff; border-top-right-radius:0; border-bottom-right-radius:0; }
+  .day.range-end   { background: var(--gf-primary); color: #fff; border-top-left-radius:0; border-bottom-left-radius:0; }
+
+  /* Month / Year grid */
+  .grid-3 { display:grid; grid-template-columns: repeat(3, 68px); gap: 6px; padding: 4px 2px; }
+  .ybtn, .mbtn {
+    height: 44px; border-radius: 8px; border:0; background: transparent; color: var(--gf-fg-1);
+    font-size: 13px; cursor:pointer; font-family: var(--gf-font-family);
+  }
+  .ybtn:hover, .mbtn:hover { background: var(--gf-bg-2); }
+  .mbtn.selected, .ybtn.selected { background: var(--gf-primary); color:#fff; font-weight:600; }
+
+  /* Time wheel */
+  .time-body { display:flex; gap: 0; align-items: stretch; justify-content:center; padding: 8px 0; }
+  .wheel { width: 56px; height: 180px; overflow: hidden; position:relative; }
+  .wheel::before, .wheel::after {
+    content:""; position:absolute; left:0; right:0; height: 72px; pointer-events:none; z-index: 2;
+  }
+  .wheel::before { top: 0; background: linear-gradient(to bottom, var(--gf-bg-1), transparent); }
+  .wheel::after  { bottom: 0; background: linear-gradient(to top, var(--gf-bg-1), transparent); }
+  .wheel .list  {
+    display:flex; flex-direction:column; align-items:center; gap: 0;
+    padding: 72px 0;
+  }
+  .wheel .n {
+    height: 36px; width: 100%; display:flex; align-items:center; justify-content:center;
+    font-size: 14px; color: var(--gf-fg-4); font-variant-numeric: tabular-nums;
+  }
+  .wheel .n.sel { color: var(--gf-primary); font-weight: 600; font-size: 16px; }
+  .wheel .n.near { color: var(--gf-fg-3); font-size: 14px; }
+  .colon { display:flex; align-items:center; color:var(--gf-fg-3); font-weight:600; }
+
+  /* Footer actions */
+  .foot { display:flex; justify-content:flex-end; gap:8px; padding-top: 12px; border-top:1px solid var(--gf-line-5); margin-top:12px; }
+  .btn {
+    height: 32px; padding: 0 12px; border-radius: 7px; font-size: 13px; font-weight: 500;
+    font-family: var(--gf-font-family); cursor:pointer; border:1px solid transparent;
+  }
+  .btn.ghost { background: transparent; color: var(--gf-fg-2); border-color: var(--gf-line-2); }
+  .btn.ghost:hover { background: var(--gf-bg-2); }
+  .btn.primary { background: var(--gf-primary); color: #fff; }
+  .btn.primary:hover { background: var(--gf-primary-deep); }
+
+  /* Preset sidebar (for range picker) */
+  .range-wrap { display:flex; }
+  .presets {
+    display:flex; flex-direction:column; gap:2px;
+    padding: 4px 8px 4px 4px; border-right:1px solid var(--gf-line-5);
+    min-width: 140px; margin-right: 10px;
+  }
+  .preset {
+    padding: 8px 12px; font-size: 13px; color: var(--gf-fg-2);
+    background: transparent; border: 0; border-radius: 7px; text-align: left; cursor:pointer;
+    font-family: var(--gf-font-family);
+  }
+  .preset:hover { background: var(--gf-bg-2); color: var(--gf-fg-1); }
+  .preset.active { background: var(--gf-primary-wash); color: var(--gf-primary); font-weight: 500; }
+
+  /* Quarter grid */
+  .grid-2 { display:grid; grid-template-columns: repeat(2, 108px); gap: 8px; padding: 4px 2px; }
+  .qbtn { height: 60px; border-radius:10px; border: 1px solid var(--gf-line-2); background: var(--gf-bg-1);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    color: var(--gf-fg-1); cursor:pointer; font-family: var(--gf-font-family);
+  }
+  .qbtn .q { font-weight:600; font-size:14px; }
+  .qbtn .y { font-size: 11px; color: var(--gf-fg-4); }
+  .qbtn:hover { border-color: var(--gf-primary); }
+  .qbtn.selected { background: var(--gf-primary); color:#fff; border-color: var(--gf-primary); }
+  .qbtn.selected .y { color: rgba(255,255,255,.85); }
+
+  /* Range header with two inputs */
+  .rh { display:flex; gap: 8px; align-items:center; padding: 0 4px 12px; }
+  .rh .sep { color: var(--gf-fg-4); }
+
+  /* Disabled variant */
+  .trig.disabled { background: var(--gf-bg-2); color: var(--gf-fg-5); cursor: not-allowed; }
+  .trig.disabled svg { color: var(--gf-fg-6); }
+
+  /* Error variant */
+  .trig.error { border-color: var(--gf-danger, #E6443C); }
+  .err-msg { font-size: 12px; color: var(--gf-danger, #E6443C); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Triggers / field states -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Field triggers</div><div class="tag">Input states</div></div>
+    <div class="body">
+      <div class="row" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="field">
+          <div class="lbl">Default</div>
+          <button class="trig"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="val placeholder">Select date</span></button>
+        </div>
+        <div class="field">
+          <div class="lbl">Filled</div>
+          <button class="trig"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="val">24 Apr 2026</span></button>
+        </div>
+        <div class="field">
+          <div class="lbl">Focus</div>
+          <button class="trig focus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="val">24 Apr 2026</span></button>
+        </div>
+        <div class="field">
+          <div class="lbl">Disabled</div>
+          <button class="trig disabled" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="val">Locked</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day / Month / Year views -->
+  <div class="row">
+
+    <!-- DAY picker -->
+    <div class="card">
+      <div class="hdr"><div class="ttl">Date picker — Day</div><div class="tag">Type=Basic</div></div>
+      <div class="body">
+        <div class="pop">
+          <div class="cal-head">
+            <div class="cal-title">April 2026 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+            <div class="nav">
+              <button aria-label="prev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+              <button aria-label="next"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+            </div>
+          </div>
+          <div class="weekdays">
+            <div class="wd">Su</div><div class="wd">Mo</div><div class="wd">Tu</div><div class="wd">We</div><div class="wd">Th</div><div class="wd">Fr</div><div class="wd">Sa</div>
+          </div>
+          <div class="days" id="days"></div>
+          <div class="foot">
+            <button class="btn ghost">Clear</button>
+            <button class="btn primary">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTH view -->
+    <div class="card">
+      <div class="hdr"><div class="ttl">Month picker</div><div class="tag">Calendar=Month</div></div>
+      <div class="body">
+        <div class="pop">
+          <div class="cal-head">
+            <div class="cal-title">2026 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+            <div class="nav">
+              <button aria-label="prev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+              <button aria-label="next"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+            </div>
+          </div>
+          <div class="grid-3">
+            <button class="mbtn">Jan</button><button class="mbtn">Feb</button><button class="mbtn">Mar</button>
+            <button class="mbtn selected">Apr</button><button class="mbtn">May</button><button class="mbtn">Jun</button>
+            <button class="mbtn">Jul</button><button class="mbtn">Aug</button><button class="mbtn">Sep</button>
+            <button class="mbtn">Oct</button><button class="mbtn">Nov</button><button class="mbtn">Dec</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- YEAR view -->
+    <div class="card">
+      <div class="hdr"><div class="ttl">Year picker</div><div class="tag">Calendar=Year</div></div>
+      <div class="body">
+        <div class="pop">
+          <div class="cal-head">
+            <div class="cal-title">2020 — 2031</div>
+            <div class="nav">
+              <button aria-label="prev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+              <button aria-label="next"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+            </div>
+          </div>
+          <div class="grid-3">
+            <button class="ybtn">2020</button><button class="ybtn">2021</button><button class="ybtn">2022</button>
+            <button class="ybtn">2023</button><button class="ybtn">2024</button><button class="ybtn">2025</button>
+            <button class="ybtn selected">2026</button><button class="ybtn">2027</button><button class="ybtn">2028</button>
+            <button class="ybtn">2029</button><button class="ybtn">2030</button><button class="ybtn">2031</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Range + Quarter -->
+  <div class="row">
+    <!-- RANGE -->
+    <div class="card" style="grid-column: span 2; min-width: 520px;">
+      <div class="hdr"><div class="ttl">Date range — with presets</div><div class="tag">Type=Range</div></div>
+      <div class="body">
+        <div class="pop">
+          <div class="rh">
+            <button class="trig" style="width:160px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="val">10 Apr 2026</span></button>
+            <span class="sep">→</span>
+            <button class="trig" style="width:160px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="val">24 Apr 2026</span></button>
+          </div>
+          <div class="range-wrap">
+            <div class="presets">
+              <button class="preset">Today</button>
+              <button class="preset">Yesterday</button>
+              <button class="preset">Last 7 days</button>
+              <button class="preset active">Last 14 days</button>
+              <button class="preset">Last 30 days</button>
+              <button class="preset">This month</button>
+              <button class="preset">Last month</button>
+              <button class="preset">Custom</button>
+            </div>
+            <div>
+              <div class="cal-head">
+                <div class="cal-title">April 2026 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+                <div class="nav">
+                  <button aria-label="prev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+                  <button aria-label="next"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+              </div>
+              <div class="weekdays">
+                <div class="wd">Su</div><div class="wd">Mo</div><div class="wd">Tu</div><div class="wd">We</div><div class="wd">Th</div><div class="wd">Fr</div><div class="wd">Sa</div>
+              </div>
+              <div class="days" id="range-days"></div>
+            </div>
+          </div>
+          <div class="foot">
+            <button class="btn ghost">Cancel</button>
+            <button class="btn primary">Apply range</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quarter -->
+    <div class="card">
+      <div class="hdr"><div class="ttl">Quarter picker</div><div class="tag">Calendar=Quarter</div></div>
+      <div class="body">
+        <div class="pop">
+          <div class="cal-head">
+            <div class="cal-title">2026 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+            <div class="nav">
+              <button aria-label="prev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+              <button aria-label="next"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+            </div>
+          </div>
+          <div class="grid-2">
+            <button class="qbtn"><span class="q">Q1</span><span class="y">Jan – Mar</span></button>
+            <button class="qbtn selected"><span class="q">Q2</span><span class="y">Apr – Jun</span></button>
+            <button class="qbtn"><span class="q">Q3</span><span class="y">Jul – Sep</span></button>
+            <button class="qbtn"><span class="q">Q4</span><span class="y">Oct – Dec</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time + DateTime -->
+  <div class="row">
+
+    <!-- TIME -->
+    <div class="card">
+      <div class="hdr"><div class="ttl">Time picker</div><div class="tag">Basic Time</div></div>
+      <div class="body">
+        <div class="pop">
+          <div class="time-body">
+            <div class="wheel"><div class="list" id="hours"></div></div>
+            <div class="colon">:</div>
+            <div class="wheel"><div class="list" id="mins"></div></div>
+            <div class="colon" style="width:4px"></div>
+            <div class="wheel" style="width:44px"><div class="list" id="period"></div></div>
+          </div>
+          <div class="foot">
+            <button class="btn ghost">Cancel</button>
+            <button class="btn primary">Set time</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATE + TIME -->
+    <div class="card" style="grid-column: span 2;">
+      <div class="hdr"><div class="ttl">Date &amp; time picker</div><div class="tag">Type=Basic&amp;Time</div></div>
+      <div class="body">
+        <div class="pop" style="display:flex; gap: 16px; align-items: flex-start;">
+          <div>
+            <div class="cal-head">
+              <div class="cal-title">April 2026 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+              <div class="nav">
+                <button aria-label="prev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <button aria-label="next"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+            <div class="weekdays">
+              <div class="wd">Su</div><div class="wd">Mo</div><div class="wd">Tu</div><div class="wd">We</div><div class="wd">Th</div><div class="wd">Fr</div><div class="wd">Sa</div>
+            </div>
+            <div class="days" id="dt-days"></div>
+          </div>
+          <div style="border-left:1px solid var(--gf-line-5); padding-left: 16px;">
+            <div style="font-size:12px; color: var(--gf-fg-3); font-weight: 500; margin-bottom: 6px;">Time</div>
+            <div class="time-body" style="padding: 4px 0;">
+              <div class="wheel" style="height:140px"><div class="list" id="dt-hours"></div></div>
+              <div class="colon">:</div>
+              <div class="wheel" style="height:140px"><div class="list" id="dt-mins"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  /* Day-picker: April 2026. 1 Apr 2026 = Wednesday (index 3). */
+  function buildDays(target, selected, rangeStart, rangeEnd) {
+    const el = document.getElementById(target);
+    const first = 3;           // Wed
+    const daysInMonth = 30;    // April
+    const prevDays = 31;       // March has 31
+    let html = '';
+    // leading muted days
+    for (let i = first - 1; i >= 0; i--) {
+      html += `<button class="day muted">${prevDays - i}</button>`;
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      let cls = 'day';
+      if (d === 24) cls += ' today';
+      if (selected && d === selected) cls += ' selected';
+      if (rangeStart && rangeEnd) {
+        if (d === rangeStart) cls += ' range-start';
+        else if (d === rangeEnd) cls += ' range-end';
+        else if (d > rangeStart && d < rangeEnd) cls += ' in-range';
+      }
+      html += `<button class="${cls}">${d}</button>`;
+    }
+    // trailing muted days to fill 42 cells
+    const total = first + daysInMonth;
+    const trailing = 42 - total;
+    for (let i = 1; i <= trailing; i++) {
+      html += `<button class="day muted">${i}</button>`;
+    }
+    el.innerHTML = html;
+  }
+
+  buildDays('days', 24);
+  buildDays('range-days', null, 10, 24);
+  buildDays('dt-days', 24);
+
+  /* Time wheel */
+  function wheel(id, values, selIdx) {
+    const el = document.getElementById(id);
+    el.innerHTML = values.map((v, i) => {
+      const diff = Math.abs(i - selIdx);
+      let c = 'n';
+      if (diff === 0) c += ' sel';
+      else if (diff === 1) c += ' near';
+      return `<div class="${c}">${v}</div>`;
+    }).join('');
+    // scroll so selected is centered
+    requestAnimationFrame(() => {
+      const target = selIdx * 36 - (el.parentElement.clientHeight / 2 - 18) + 72;
+      el.parentElement.scrollTop = target;
+    });
+  }
+  const hrs = Array.from({length: 12}, (_, i) => String(i + 1).padStart(2, '0'));
+  const mns = Array.from({length: 60}, (_, i) => String(i).padStart(2, '0'));
+  wheel('hours', hrs, 8);   // 09
+  wheel('mins',  mns, 30);  // 30
+  wheel('period', ['AM','PM'], 0);
+  wheel('dt-hours', hrs, 8);
+  wheel('dt-mins',  mns, 30);
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Type" name="Type · body & weights" subtitle="Body sizes + 4 weights (woff2+woff) with Thai samples" viewport="800x520" --><html><head>
+<meta charset="utf-8"><title>Type body &amp; weights</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:var(--gf-bg-1);font-family:var(--gf-font-family);color:var(--gf-fg-1);-webkit-font-smoothing:antialiased;}
+.wrap{padding:22px 28px;display:flex;flex-direction:column;gap:12px;}
+.section{font-size:10px;color:var(--gf-fg-5);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:6px;}
+.row{display:flex;align-items:baseline;gap:16px;padding:4px 0;}
+.label{font-size:10px;color:var(--gf-fg-5);min-width:80px;font-weight:500;letter-spacing:.02em;font-family:var(--gf-font-mono);}
+.body-lg{font-size:16px;line-height:1.55;}
+.body{font-size:14px;line-height:1.5;}
+.sm{font-size:12px;line-height:1.45;color:var(--gf-fg-3);}
+.xs{font-size:10px;line-height:1.4;color:var(--gf-fg-5);text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
+.w400{font-weight:400;}.w500{font-weight:500;}.w600{font-weight:600;}.w700{font-weight:700;}
+
+.weights{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px;padding-top:16px;border-top:1px solid var(--gf-line-4);}
+.wcard{display:flex;flex-direction:column;gap:6px;padding:14px;border:1px solid var(--gf-line-4);border-radius:10px;background:var(--gf-bg-1);}
+.wcard .sample{font-size:28px;letter-spacing:-.01em;line-height:1.1;color:var(--gf-fg-1);}
+.wcard .sample-th{font-size:22px;line-height:1.2;color:var(--gf-fg-2);margin-top:2px;}
+.wcard .meta{font-size:10.5px;color:var(--gf-fg-4);font-family:var(--gf-font-mono);margin-top:4px;display:flex;flex-direction:column;gap:2px;}
+.wcard .meta b{color:var(--gf-fg-1);font-weight:600;font-size:12px;font-family:var(--gf-font-family);}
+.wcard .use{font-size:11px;color:var(--gf-fg-3);line-height:1.4;margin-top:6px;padding-top:6px;border-top:1px solid var(--gf-line-5);}
+</style></head><body>
+<div class="wrap">
+
+  <div class="section">Body sizes</div>
+  <div class="row"><span class="label">Body L / 16</span><span class="body-lg">Attendance is on track this week. You're 4 hours over plan, which is normal for mid‑month.</span></div>
+  <div class="row"><span class="label">Body L / 16</span><span class="body-lg">การลงเวลาทำงานสัปดาห์นี้เป็นไปตามแผน คุณทำงานเกิน 4 ชม. ซึ่งปกติสำหรับกลางเดือน</span></div>
+  <div class="row"><span class="label">Body / 14</span><span class="body">Default UI size used across most screens — tables, labels, helper text.</span></div>
+  <div class="row"><span class="label">Body / 14</span><span class="body">ขนาดเริ่มต้นของ UI ใช้ในหน้าจอส่วนใหญ่ — ตาราง, ป้ายชื่อ, ข้อความช่วยเหลือ</span></div>
+  <div class="row"><span class="label">Small / 12</span><span class="sm">Meta text, captions, secondary fields · ข้อมูลเสริม, คำบรรยาย</span></div>
+  <div class="row"><span class="label">Overline / 10</span><span class="xs">Section heading · หัวข้อหมวดหมู่</span></div>
+
+  <div class="section" style="margin-top:10px;">Weights — woff2 + woff</div>
+  <div class="weights">
+    <div class="wcard">
+      <div class="sample w400">Aa Bb 12</div>
+      <div class="sample-th w400">กขค ๑๒๓</div>
+      <div class="meta"><b>Text · 400</b>font-weight: 400</div>
+      <div class="use">Body copy, tables, descriptions, helper text. Default weight.</div>
+    </div>
+    <div class="wcard">
+      <div class="sample w500">Aa Bb 12</div>
+      <div class="sample-th w500">กขค ๑๒๓</div>
+      <div class="meta"><b>Medium · 500</b>font-weight: 500</div>
+      <div class="use">Labels, menu items, nav resting, field names.</div>
+    </div>
+    <div class="wcard">
+      <div class="sample w600">Aa Bb 12</div>
+      <div class="sample-th w600">กขค ๑๒๓</div>
+      <div class="meta"><b>Semi Bold · 600</b>font-weight: 600</div>
+      <div class="use">Buttons, active nav, card titles, KPI numbers, section headers.</div>
+    </div>
+    <div class="wcard">
+      <div class="sample w700">Aa Bb 12</div>
+      <div class="sample-th w700">กขค ๑๒๓</div>
+      <div class="meta"><b>Bold · 700</b>font-weight: 700</div>
+      <div class="use">H1/H2, hero numbers, dialog titles. Use sparingly.</div>
+    </div>
+  </div>
+
+</div>
+</body></html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Avatars" subtitle="Sizes · status dot · stack" viewport="700x220" -->
+<html><head><meta charset="utf-8"><title>Gofive — Avatars</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin:0; padding: 26px; background:#fff; font-family: var(--gf-font-family); color: var(--gf-fg-1); }
+  .row { display:flex; gap: 14px; align-items:center; margin-bottom: 18px; }
+  .av { border-radius: 9999px; display:flex; align-items:center; justify-content:center; color: #fff; font-weight: 600; position: relative; flex-shrink: 0; }
+  .av.xs { width: 24px; height: 24px; font-size: 10px; }
+  .av.sm { width: 32px; height: 32px; font-size: 12px; }
+  .av.md { width: 40px; height: 40px; font-size: 14px; }
+  .av.lg { width: 56px; height: 56px; font-size: 18px; }
+  .av.xl { width: 72px; height: 72px; font-size: 24px; }
+  .av .st { position: absolute; right: 0; bottom: 0; width: 10px; height: 10px; border-radius: 9999px; background: var(--gf-success); border: 2px solid #fff; }
+  .stack { display:inline-flex; }
+  .stack .av { margin-left: -10px; border: 2px solid #fff; }
+  .stack .av:first-child { margin-left: 0; }
+  .lbl { font-size: 11px; color: var(--gf-fg-4); letter-spacing: 0.04em; text-transform: uppercase; width: 68px; }
+</style></head>
+<body>
+  <div class="row"><span class="lbl">Sizes</span>
+    <div class="av xs" style="background:#F05B2F">AS</div>
+    <div class="av sm" style="background:#116DFC">NK</div>
+    <div class="av md" style="background:#00C291">PC</div>
+    <div class="av lg" style="background:#5E5EED">SJ<span class="st"></span></div>
+    <div class="av xl" style="background:#EB1C26">MP</div>
+  </div>
+  <div class="row"><span class="lbl">Stack</span>
+    <div class="stack">
+      <div class="av md" style="background:#F05B2F">AS</div>
+      <div class="av md" style="background:#116DFC">NK</div>
+      <div class="av md" style="background:#00C291">PC</div>
+      <div class="av md" style="background:#5E5EED">SJ</div>
+      <div class="av md" style="background:var(--gf-line-2);color:var(--gf-fg-3)">+6</div>
+    </div>
+  </div>
+</body></html>

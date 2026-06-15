@@ -1,0 +1,254 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Filter" subtitle="Chips, bar, builder, saved views" -->
+<html lang="en"><head><meta charset="utf-8"><title>Gofive — Filter</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:var(--gf-bg-2);color:var(--gf-fg-1);font-family:var(--gf-font-family)}
+.wrap{padding:22px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:14px;overflow:hidden}
+.hdr{padding:12px 16px;border-bottom:1px solid var(--gf-line-5);display:flex;justify-content:space-between;align-items:center}
+.ttl{font-size:13px;font-weight:600}
+.tag{font-size:10.5px;color:var(--gf-fg-4);font-family:var(--gf-font-mono)}
+.body{padding:18px;display:flex;flex-direction:column;gap:18px}
+.lbl{font-size:10.5px;color:var(--gf-fg-4);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+
+/* Chip filters */
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--gf-line-2);background:var(--gf-bg-1);font-size:13px;color:var(--gf-fg-2);cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--gf-line-1);background:var(--gf-bg-2)}
+.chip .cnt{background:var(--gf-bg-2);font-size:11px;padding:1px 7px;border-radius:999px;color:var(--gf-fg-3);font-weight:600}
+.chip.a{border-color:var(--gf-primary);background:var(--gf-primary-wash);color:var(--gf-primary);font-weight:600}
+.chip.a .cnt{background:var(--gf-primary);color:#fff}
+.chip svg{opacity:.7}
+.chip .x{display:inline-flex;margin-left:2px;opacity:.6}
+.chip .x:hover{opacity:1}
+
+/* Filter bar with dropdowns */
+.fbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fbtn{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--gf-line-2);background:var(--gf-bg-1);font-size:13px;color:var(--gf-fg-2);cursor:pointer;font-family:inherit}
+.fbtn:hover{background:var(--gf-bg-2)}
+.fbtn.has{border-color:var(--gf-primary);color:var(--gf-primary);background:var(--gf-primary-wash)}
+.fbtn .vs{font-weight:600;color:var(--gf-fg-1)}
+.fbtn.has .vs{color:var(--gf-primary)}
+.fbtn .sep{color:var(--gf-fg-5);margin:0 2px}
+.fbtn.add{border-style:dashed;color:var(--gf-fg-3)}
+.fbtn.add:hover{border-color:var(--gf-primary);color:var(--gf-primary)}
+.fclear{background:transparent;border:0;color:var(--gf-fg-3);font-size:13px;cursor:pointer;font-family:inherit;padding:0 8px;height:36px}
+.fclear:hover{color:var(--gf-danger)}
+
+/* Advanced filter panel */
+.adv{background:var(--gf-bg-1);border:1px solid var(--gf-line-3);border-radius:12px;overflow:hidden;box-shadow:var(--gf-shadow-md,0 4px 16px rgba(20,20,43,.06));max-width:520px}
+.adv-h{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gf-line-5)}
+.adv-h .nm{font-weight:600;font-size:13.5px}
+.adv-h .mt{font-size:12px;color:var(--gf-fg-4)}
+.adv-b{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:8px}
+.row .idx{width:18px;font-size:11px;color:var(--gf-fg-5);text-transform:uppercase;font-weight:600}
+.join{font-size:11.5px;color:var(--gf-fg-4);font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:0 6px}
+.sel{height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--gf-line-2);background:var(--gf-bg-1);font-size:12.5px;color:var(--gf-fg-1);font-family:inherit;min-width:0}
+.sel.grow{flex:1}
+.sel.op{color:var(--gf-fg-3);min-width:96px}
+.sel.fld{min-width:130px;font-weight:600}
+.inp{height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--gf-line-2);background:var(--gf-bg-1);font-size:12.5px;color:var(--gf-fg-1);font-family:inherit;flex:1;min-width:0}
+.rm{width:28px;height:28px;border-radius:6px;border:0;background:transparent;color:var(--gf-fg-4);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:0 0 28px}
+.rm:hover{background:var(--gf-bg-2);color:var(--gf-danger)}
+.addf{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px;border-radius:7px;border:1px dashed var(--gf-line-2);background:transparent;font-size:12px;color:var(--gf-fg-3);cursor:pointer;font-family:inherit}
+.addf:hover{border-color:var(--gf-primary);color:var(--gf-primary)}
+.adv-f{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-top:1px solid var(--gf-line-5);background:var(--gf-bg-2)}
+.btn{height:32px;padding:0 14px;border-radius:7px;font-size:12.5px;font-weight:600;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn.g{background:var(--gf-bg-1);border-color:var(--gf-line-2);color:var(--gf-fg-2)}
+.btn.p{background:var(--gf-primary);color:#fff}
+.adv-f .rt{display:flex;gap:8px}
+
+/* Save view */
+.views{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.view{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:999px;background:var(--gf-bg-2);font-size:12.5px;color:var(--gf-fg-2);cursor:pointer;border:1px solid transparent}
+.view.a{background:var(--gf-fg-1);color:#fff}
+.view:not(.a):hover{background:var(--gf-bg-4);color:var(--gf-fg-1)}
+.view .dt{width:6px;height:6px;border-radius:50%}
+
+/* Applied summary */
+.appl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;background:var(--gf-primary-wash);border:1px solid color-mix(in oklab, var(--gf-primary) 20%, transparent);border-radius:10px}
+.appl .ic{color:var(--gf-primary);display:flex}
+.appl .msg{font-size:12.5px;color:var(--gf-fg-2)}
+.appl .msg b{color:var(--gf-primary)}
+.appl .clr{margin-left:auto;font-size:12px;background:transparent;border:0;color:var(--gf-primary);font-weight:600;cursor:pointer;font-family:inherit}
+
+/* Segmented */
+.seg{display:inline-flex;padding:3px;background:var(--gf-bg-2);border-radius:8px;gap:2px}
+.seg .s{padding:6px 14px;font-size:12.5px;color:var(--gf-fg-3);border-radius:6px;cursor:pointer;font-weight:500}
+.seg .s.a{background:var(--gf-bg-1);color:var(--gf-fg-1);box-shadow:0 1px 3px rgba(0,0,0,.06);font-weight:600}
+</style>
+</head><body>
+<div class="wrap">
+  <!-- Chip filters -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Filter chips</div><div class="tag">Quick toggle filters</div></div>
+    <div class="body">
+      <div class="lbl">Single-select (tab style)</div>
+      <div class="chips">
+        <div class="chip a">All <span class="cnt">248</span></div>
+        <div class="chip">Open <span class="cnt">42</span></div>
+        <div class="chip">In review <span class="cnt">18</span></div>
+        <div class="chip">Approved <span class="cnt">186</span></div>
+        <div class="chip">Archived <span class="cnt">12</span></div>
+      </div>
+
+      <div class="lbl">Multi-select (OR)</div>
+      <div class="chips">
+        <div class="chip a">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Marketing
+        </div>
+        <div class="chip a">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Engineering
+        </div>
+        <div class="chip">Product</div>
+        <div class="chip">Design</div>
+        <div class="chip">Operations</div>
+        <div class="chip">Finance</div>
+      </div>
+
+      <div class="lbl">With remove action</div>
+      <div class="chips">
+        <div class="chip a">
+          Priority: High
+          <span class="x"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </div>
+        <div class="chip a">
+          Owner: Ploy K.
+          <span class="x"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </div>
+        <div class="chip a">
+          Due: This week
+          <span class="x"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </div>
+        <button class="fclear">Clear all</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Filter bar</div><div class="tag">Dropdown-driven bar</div></div>
+    <div class="body">
+      <div class="lbl">Inactive state</div>
+      <div class="fbar">
+        <div class="fbtn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Status
+          <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div class="fbtn">Owner <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+        <div class="fbtn">Created <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+        <div class="fbtn">Tags <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+        <div class="fbtn add">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Add filter
+        </div>
+      </div>
+
+      <div class="lbl">With values applied</div>
+      <div class="fbar">
+        <div class="fbtn has">Status <span class="sep">is</span> <span class="vs">Open, In review</span>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <div class="fbtn has">Owner <span class="sep">=</span> <span class="vs">Me</span>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <div class="fbtn has">Due <span class="sep">within</span> <span class="vs">7 days</span>
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <div class="fbtn add"><svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg>Add filter</div>
+        <button class="fclear">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advanced panel -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Advanced filter</div><div class="tag">Builder with AND / OR groups</div></div>
+    <div class="body">
+      <div class="adv">
+        <div class="adv-h">
+          <div class="nm">Filter builder</div>
+          <div class="mt">3 conditions · matches 42 records</div>
+        </div>
+        <div class="adv-b">
+          <div class="row">
+            <span class="idx">1</span>
+            <span class="join">Where</span>
+            <select class="sel fld"><option>Status</option></select>
+            <select class="sel op"><option>is any of</option></select>
+            <select class="sel grow"><option>Open, In review</option></select>
+            <button class="rm"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg></button>
+          </div>
+          <div class="row">
+            <span class="idx">2</span>
+            <span class="join">And</span>
+            <select class="sel fld"><option>Priority</option></select>
+            <select class="sel op"><option>equals</option></select>
+            <select class="sel grow"><option>High</option></select>
+            <button class="rm"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg></button>
+          </div>
+          <div class="row">
+            <span class="idx">3</span>
+            <span class="join">And</span>
+            <select class="sel fld"><option>Due date</option></select>
+            <select class="sel op"><option>is within</option></select>
+            <input class="inp" value="Next 7 days">
+            <button class="rm"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg></button>
+          </div>
+          <button class="addf">
+            <svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></svg>
+            Add condition
+          </button>
+        </div>
+        <div class="adv-f">
+          <button class="btn g">Reset</button>
+          <div class="rt">
+            <button class="btn g">Cancel</button>
+            <button class="btn p">Apply filter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Saved views + summary -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Saved views &amp; applied summary</div><div class="tag">Persistent filter presets</div></div>
+    <div class="body">
+      <div class="lbl">Saved views</div>
+      <div class="views">
+        <div class="view a"><span class="dt" style="background:#fff"></span>My open tasks</div>
+        <div class="view"><span class="dt" style="background:var(--gf-warning)"></span>Overdue</div>
+        <div class="view"><span class="dt" style="background:var(--gf-info)"></span>In review</div>
+        <div class="view"><span class="dt" style="background:var(--gf-success)"></span>Shipped this week</div>
+        <div class="view" style="color:var(--gf-fg-4)">
+          <svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+          Save current view
+        </div>
+      </div>
+
+      <div class="lbl" style="margin-top:4px">Applied summary</div>
+      <div class="appl">
+        <span class="ic">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12l-4.5 5.5V13l-3 1.5V9.5L2 4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </span>
+        <div class="msg">Showing <b>42 of 248</b> records · <b>3 filters</b> applied · sorted by <b>Priority</b></div>
+        <button class="clr">Clear filters</button>
+      </div>
+
+      <div class="lbl" style="margin-top:4px">Layout mode</div>
+      <div class="seg">
+        <div class="s a">Table</div>
+        <div class="s">Board</div>
+        <div class="s">Timeline</div>
+        <div class="s">Calendar</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

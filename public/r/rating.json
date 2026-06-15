@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "rating",
+  "title": "Rating",
+  "description": "A star rating input supporting controlled and uncontrolled use, hover preview, read-only display, and three sizes.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/ui/rating.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Star } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport type RatingSize = \"sm\" | \"md\" | \"lg\"\n\nconst STAR_SIZE: Record<RatingSize, string> = {\n  sm: \"size-4\",\n  md: \"size-[22px]\",\n  lg: \"size-7\",\n}\n\nconst STAR_COLOR = \"#F5B700\"\nconst EMPTY_COLOR = \"#D4D4D8\"\n\nexport interface RatingProps\n  extends Omit<React.HTMLAttributes<HTMLDivElement>, \"onChange\"> {\n  value?: number\n  defaultValue?: number\n  max?: number\n  size?: RatingSize\n  readOnly?: boolean\n  disabled?: boolean\n  onChange?: (value: number) => void\n}\n\nfunction Rating({\n  value,\n  defaultValue = 0,\n  max = 5,\n  size = \"md\",\n  readOnly = false,\n  disabled = false,\n  onChange,\n  className,\n  ...props\n}: RatingProps) {\n  const isControlled = value !== undefined\n  const [internal, setInternal] = React.useState(defaultValue)\n  const [hover, setHover] = React.useState<number | null>(null)\n\n  const current = isControlled ? (value as number) : internal\n  const display = hover ?? current\n\n  const interactive = !readOnly && !disabled\n\n  function setValue(next: number) {\n    if (!interactive) return\n    if (!isControlled) setInternal(next)\n    onChange?.(next)\n  }\n\n  return (\n    <div\n      data-slot=\"rating\"\n      role={interactive ? \"radiogroup\" : \"img\"}\n      aria-label={`Rating: ${current} out of ${max}`}\n      className={cn(\n        \"inline-flex items-center gap-1\",\n        disabled && \"opacity-50\",\n        className,\n      )}\n      onMouseLeave={() => setHover(null)}\n      {...props}\n    >\n      {Array.from({ length: max }, (_, i) => {\n        const starValue = i + 1\n        const filled = starValue <= display\n\n        return (\n          <button\n            key={starValue}\n            type=\"button\"\n            role={interactive ? \"radio\" : undefined}\n            aria-checked={interactive ? starValue === current : undefined}\n            aria-label={`${starValue} star${starValue > 1 ? \"s\" : \"\"}`}\n            disabled={!interactive}\n            tabIndex={interactive ? 0 : -1}\n            onClick={() => setValue(starValue)}\n            onMouseEnter={() => interactive && setHover(starValue)}\n            className={cn(\n              \"shrink-0 leading-none transition-transform\",\n              interactive && \"cursor-pointer hover:scale-110\",\n              !interactive && \"cursor-default\",\n            )}\n          >\n            <Star\n              className={cn(STAR_SIZE[size], \"transition-colors\")}\n              style={{\n                color: filled ? STAR_COLOR : EMPTY_COLOR,\n                fill: filled ? STAR_COLOR : \"transparent\",\n              }}\n              strokeWidth={1.5}\n            />\n          </button>\n        )\n      })}\n    </div>\n  )\n}\n\nexport { Rating }\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

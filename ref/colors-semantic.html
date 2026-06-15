@@ -1,0 +1,294 @@
+<!doctype html>
+<!-- @dsCard group="Colors" name="Semantic Colors" subtitle="Per-product semantic palettes · Success/Warning/Danger/Info tuned per brand" viewport="780x1600" -->
+<html><head><meta charset="utf-8"><title>Gofive — Semantic Colors per Product</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin:0; background:#F6F6F8; font-family: var(--gf-font-family); color:#212121; }
+  .wrap { padding: 18px 20px; display:flex; flex-direction:column; gap:14px; }
+
+  .intro {
+    background:#FFFFFF; border:1px solid #ECECF0; border-radius:12px;
+    padding: 12px 16px; font-size: 12px; line-height: 1.55; color:#52525F;
+  }
+  .intro b { color:#212121; font-weight:700; }
+
+  /* Product card */
+  .product {
+    background:#FFFFFF; border:1px solid #ECECF0; border-radius:14px; overflow:hidden;
+  }
+  .prod-hdr {
+    display:flex; align-items:center; gap:12px;
+    padding: 12px 16px; border-bottom: 1px solid #F2F2F5;
+  }
+  .prod-swatch {
+    width:40px; height:40px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:800; font-size:16px; letter-spacing:-0.02em;
+  }
+  .prod-swatch.onlight { color:#212121; }
+  .prod-meta { display:flex; flex-direction:column; gap:1px; }
+  .prod-name { font-size: 14px; font-weight:700; color:#212121; letter-spacing:-0.01em; }
+  .prod-tag  { font-size: 10.5px; color:#6E6E7A; font-family: var(--gf-font-mono); }
+
+  .sem-row { display:grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 12px 16px 14px; }
+  .sem {
+    border-radius: 10px; overflow: hidden;
+    border: 1px solid #EEEEF2; background:#FFFFFF;
+  }
+  .solid {
+    height: 40px; display:flex; align-items:center; padding: 0 12px;
+    color:#fff; font-weight:700; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .solid.onlight { color:#212121; }
+  .soft  {
+    height: 24px; display:flex; align-items:center; padding: 0 12px;
+    font-size: 10px; font-weight: 600;
+  }
+  .meta {
+    padding: 6px 10px 8px; font-size: 10px;
+    display:flex; justify-content: space-between; align-items:center;
+    font-family: var(--gf-font-mono); color:#6E6E7A; border-top:1px solid #F2F2F5;
+  }
+  .meta .n { font-family: var(--gf-font-family); font-weight:700; font-size:10.5px; color:#212121; letter-spacing: 0.03em; }
+</style></head>
+<body>
+<div class="wrap">
+
+  <div class="intro">
+    <b>แนวคิด</b> — Semantic colors ปรับ <b>hue</b> ตาม product primary เพื่อให้กลมกลืนกับ brand แต่ยังรักษาความหมายเดิม (เขียว=สำเร็จ, เหลือง=เตือน, แดง=ผิดพลาด, น้ำเงิน=ข้อมูล).<br>
+    Product ที่มีสีตรงกับ semantic (<b>Desk</b>→Success, <b>SalesBear</b>→Warning, <b>eTAXGO</b>→Danger, <b>Venio</b>→Info) จะใช้ primary ของตัวเองเป็น semantic ตรงนั้นได้เลย.
+  </div>
+
+  <!-- Gofive / empeo / Calendio · Orange primary -->
+  <div class="product">
+    <div class="prod-hdr">
+      <div class="prod-swatch" style="background:#F88411">G</div>
+      <div class="prod-meta">
+        <div class="prod-name">Gofive · empeo · Calendio</div>
+        <div class="prod-tag">Primary #F88411 · warm orange family</div>
+      </div>
+    </div>
+    <div class="sem-row">
+      <div class="sem">
+        <div class="solid" style="background:#1DA577">Success</div>
+        <div class="soft"  style="background:#DBF3E8; color:#0D6A4B">pill / toast</div>
+        <div class="meta"><span class="n">Success</span><span>#1DA577</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid onlight" style="background:#F9D423">Warning</div>
+        <div class="soft"  style="background:#FFF4BF; color:#7A5800">pill / toast</div>
+        <div class="meta"><span class="n">Warning</span><span>#F9D423</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#D93A1A">Danger</div>
+        <div class="soft"  style="background:#FDE0D6; color:#8A1F0A">pill / toast</div>
+        <div class="meta"><span class="n">Danger</span><span>#D93A1A</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#0A66E0">Info</div>
+        <div class="soft"  style="background:#DDEAFC; color:#063F89">pill / toast</div>
+        <div class="meta"><span class="n">Info</span><span>#0A66E0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Venio · Blue primary -->
+  <div class="product">
+    <div class="prod-hdr">
+      <div class="prod-swatch" style="background:#116DFC">V</div>
+      <div class="prod-meta">
+        <div class="prod-name">Venio</div>
+        <div class="prod-tag">Primary #116DFC · Info = primary</div>
+      </div>
+    </div>
+    <div class="sem-row">
+      <div class="sem">
+        <div class="solid" style="background:#0FA36A">Success</div>
+        <div class="soft"  style="background:#D6F2E4; color:#07623F">pill / toast</div>
+        <div class="meta"><span class="n">Success</span><span>#0FA36A</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid onlight" style="background:#FFC230">Warning</div>
+        <div class="soft"  style="background:#FFEFC2; color:#7A5800">pill / toast</div>
+        <div class="meta"><span class="n">Warning</span><span>#FFC230</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#E0335A">Danger</div>
+        <div class="soft"  style="background:#FBDBE3; color:#8F0E2E">pill / toast</div>
+        <div class="meta"><span class="n">Danger</span><span>#E0335A</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#116DFC">Info</div>
+        <div class="soft"  style="background:#DCE8FE; color:#064099">pill / toast</div>
+        <div class="meta"><span class="n">Info</span><span>#116DFC</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desk · Green primary -->
+  <div class="product">
+    <div class="prod-hdr">
+      <div class="prod-swatch" style="background:#2DAE4B">D</div>
+      <div class="prod-meta">
+        <div class="prod-name">Desk</div>
+        <div class="prod-tag">Primary #2DAE4B · Success = primary</div>
+      </div>
+    </div>
+    <div class="sem-row">
+      <div class="sem">
+        <div class="solid" style="background:#2DAE4B">Success</div>
+        <div class="soft"  style="background:#DBF3DF; color:#155F26">pill / toast</div>
+        <div class="meta"><span class="n">Success</span><span>#2DAE4B</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid onlight" style="background:#F5B800">Warning</div>
+        <div class="soft"  style="background:#FFF1C2; color:#7A5800">pill / toast</div>
+        <div class="meta"><span class="n">Warning</span><span>#F5B800</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#D43A2F">Danger</div>
+        <div class="soft"  style="background:#FBDCD9; color:#8A1B14">pill / toast</div>
+        <div class="meta"><span class="n">Danger</span><span>#D43A2F</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#0F8FB8">Info</div>
+        <div class="soft"  style="background:#D5ECF4; color:#0A566F">pill / toast</div>
+        <div class="meta"><span class="n">Info</span><span>#0F8FB8</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ShipX · Amber primary -->
+  <div class="product">
+    <div class="prod-hdr">
+      <div class="prod-swatch" style="background:#E89A2A">S</div>
+      <div class="prod-meta">
+        <div class="prod-name">ShipX</div>
+        <div class="prod-tag">Primary #E89A2A · Warning = primary</div>
+      </div>
+    </div>
+    <div class="sem-row">
+      <div class="sem">
+        <div class="solid" style="background:#1DA577">Success</div>
+        <div class="soft"  style="background:#DBF3E8; color:#0D6A4B">pill / toast</div>
+        <div class="meta"><span class="n">Success</span><span>#1DA577</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid onlight" style="background:#E89A2A">Warning</div>
+        <div class="soft"  style="background:#FBE9CC; color:#7A4B0A">pill / toast</div>
+        <div class="meta"><span class="n">Warning</span><span>#E89A2A</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#C2362C">Danger</div>
+        <div class="soft"  style="background:#F6D7D4; color:#7F150E">pill / toast</div>
+        <div class="meta"><span class="n">Danger</span><span>#C2362C</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#156FB5">Info</div>
+        <div class="soft"  style="background:#D8E7F5; color:#0A3E6B">pill / toast</div>
+        <div class="meta"><span class="n">Info</span><span>#156FB5</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SalesBear · Yellow primary -->
+  <div class="product">
+    <div class="prod-hdr">
+      <div class="prod-swatch onlight" style="background:#FFC505">B</div>
+      <div class="prod-meta">
+        <div class="prod-name">SalesBear</div>
+        <div class="prod-tag">Primary #FFC505 · Warning = primary</div>
+      </div>
+    </div>
+    <div class="sem-row">
+      <div class="sem">
+        <div class="solid" style="background:#17A76B">Success</div>
+        <div class="soft"  style="background:#D6F2E3; color:#0A5E3B">pill / toast</div>
+        <div class="meta"><span class="n">Success</span><span>#17A76B</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid onlight" style="background:#FFC505">Warning</div>
+        <div class="soft"  style="background:#FFF1B2; color:#6E5200">pill / toast</div>
+        <div class="meta"><span class="n">Warning</span><span>#FFC505</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#E03A3A">Danger</div>
+        <div class="soft"  style="background:#FBDBDB; color:#8A1414">pill / toast</div>
+        <div class="meta"><span class="n">Danger</span><span>#E03A3A</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#1565C9">Info</div>
+        <div class="soft"  style="background:#D5E3F5; color:#0A3A78">pill / toast</div>
+        <div class="meta"><span class="n">Info</span><span>#1565C9</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- eTAXGO · Red primary -->
+  <div class="product">
+    <div class="prod-hdr">
+      <div class="prod-swatch" style="background:#EB1C26">T</div>
+      <div class="prod-meta">
+        <div class="prod-name">eTAXGO</div>
+        <div class="prod-tag">Primary #EB1C26 · Danger = primary</div>
+      </div>
+    </div>
+    <div class="sem-row">
+      <div class="sem">
+        <div class="solid" style="background:#1DA577">Success</div>
+        <div class="soft"  style="background:#DBF3E8; color:#0D6A4B">pill / toast</div>
+        <div class="meta"><span class="n">Success</span><span>#1DA577</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid onlight" style="background:#F0B400">Warning</div>
+        <div class="soft"  style="background:#FCEBB8; color:#75530A">pill / toast</div>
+        <div class="meta"><span class="n">Warning</span><span>#F0B400</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#EB1C26">Danger</div>
+        <div class="soft"  style="background:#FBD7D9; color:#8A0B11">pill / toast</div>
+        <div class="meta"><span class="n">Danger</span><span>#EB1C26</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#1A64B8">Info</div>
+        <div class="soft"  style="background:#D6E3F2; color:#0C3A70">pill / toast</div>
+        <div class="meta"><span class="n">Info</span><span>#1A64B8</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- emconnect · Indigo primary -->
+  <div class="product">
+    <div class="prod-hdr">
+      <div class="prod-swatch" style="background:#5E5EED">C</div>
+      <div class="prod-meta">
+        <div class="prod-name">emconnect</div>
+        <div class="prod-tag">Primary #5E5EED · indigo family</div>
+      </div>
+    </div>
+    <div class="sem-row">
+      <div class="sem">
+        <div class="solid" style="background:#16A37A">Success</div>
+        <div class="soft"  style="background:#D6F1E6; color:#0A5E47">pill / toast</div>
+        <div class="meta"><span class="n">Success</span><span>#16A37A</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid onlight" style="background:#F5B83C">Warning</div>
+        <div class="soft"  style="background:#FCECC2; color:#7A5300">pill / toast</div>
+        <div class="meta"><span class="n">Warning</span><span>#F5B83C</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#E03556">Danger</div>
+        <div class="soft"  style="background:#FBDBE2; color:#8A0F2C">pill / toast</div>
+        <div class="meta"><span class="n">Danger</span><span>#E03556</span></div>
+      </div>
+      <div class="sem">
+        <div class="solid" style="background:#5E5EED">Info</div>
+        <div class="soft"  style="background:#E1E1FC; color:#30309C">pill / toast</div>
+        <div class="meta"><span class="n">Info</span><span>#5E5EED</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>

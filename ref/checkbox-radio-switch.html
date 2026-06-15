@@ -1,0 +1,261 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Checkbox Radio Switch" subtitle="Checkbox, radio, switch — all states & sizes" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gofive — Checkbox · Radio · Switch</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin:0; background: var(--gf-bg-2); color: var(--gf-fg-1); }
+  .wrap { padding: 24px; display:flex; flex-direction:column; gap:20px; }
+  .row { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:16px; }
+  .card { background: var(--gf-bg-1); border:1px solid var(--gf-line-4); border-radius: 14px; overflow:hidden; }
+  .hdr { padding: 12px 16px; border-bottom:1px solid var(--gf-line-5); display:flex; align-items:center; justify-content:space-between; }
+  .hdr .ttl { font-size:13px; font-weight:600; }
+  .hdr .tag { font-size:10.5px; color:var(--gf-fg-4); font-family: var(--gf-font-mono); }
+  .body { padding:16px; display:flex; flex-direction:column; gap:14px; }
+  .section-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:var(--gf-fg-4); }
+  .states { display:flex; gap:18px; flex-wrap:wrap; align-items:center; }
+  .state { display:flex; flex-direction:column; gap:6px; align-items:flex-start; }
+  .state .lbl { font-size: 11px; color: var(--gf-fg-4); }
+
+  /* ============ CHECKBOX ============ */
+  .gf-chk {
+    display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+    font-size: 14px; color: var(--gf-fg-1); font-family: var(--gf-font-family);
+  }
+  .gf-chk input { position:absolute; opacity:0; pointer-events:none; }
+  .gf-chk .box {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid var(--gf-line-1);
+    background: var(--gf-bg-1);
+    display:flex; align-items:center; justify-content:center;
+    transition: background .12s, border-color .12s, box-shadow .12s;
+    flex-shrink: 0;
+  }
+  .gf-chk .box svg { opacity: 0; color: #fff; }
+  .gf-chk:hover .box { border-color: var(--gf-primary); }
+  .gf-chk.checked .box { background: var(--gf-primary); border-color: var(--gf-primary); }
+  .gf-chk.checked .box svg { opacity: 1; }
+  .gf-chk.focus .box { box-shadow: var(--gf-ring); border-color: var(--gf-primary); }
+  .gf-chk.indeterminate .box { background: var(--gf-primary); border-color: var(--gf-primary); }
+  .gf-chk.indeterminate .box::after { content:""; width:10px; height:2px; background:#fff; border-radius:2px; }
+  .gf-chk.indeterminate .box svg { display:none; }
+  .gf-chk.disabled { cursor:not-allowed; color: var(--gf-fg-5); }
+  .gf-chk.disabled .box { background: var(--gf-bg-2); border-color: var(--gf-line-2); }
+  .gf-chk.disabled.checked .box { background: var(--gf-fg-6); border-color: var(--gf-fg-6); }
+  .gf-chk.size-lg .box { width: 22px; height: 22px; border-radius: 6px; }
+  .gf-chk.size-sm .box { width: 14px; height: 14px; border-radius: 3.5px; }
+  .gf-chk.size-sm { font-size: 13px; gap: 8px; }
+
+  /* ============ RADIO ============ */
+  .gf-rad {
+    display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+    font-size: 14px; color: var(--gf-fg-1); font-family: var(--gf-font-family);
+  }
+  .gf-rad input { position:absolute; opacity:0; pointer-events:none; }
+  .gf-rad .dot {
+    width: 18px; height: 18px; border-radius: 999px;
+    border: 1.5px solid var(--gf-line-1);
+    background: var(--gf-bg-1);
+    display:flex; align-items:center; justify-content:center; flex-shrink: 0;
+    transition: border-color .12s, box-shadow .12s;
+  }
+  .gf-rad .dot::after {
+    content:""; width: 8px; height: 8px; border-radius:999px;
+    background: var(--gf-primary); transform: scale(0); transition: transform .12s;
+  }
+  .gf-rad:hover .dot { border-color: var(--gf-primary); }
+  .gf-rad.checked .dot { border-color: var(--gf-primary); }
+  .gf-rad.checked .dot::after { transform: scale(1); }
+  .gf-rad.focus .dot { box-shadow: var(--gf-ring); border-color: var(--gf-primary); }
+  .gf-rad.disabled { cursor:not-allowed; color: var(--gf-fg-5); }
+  .gf-rad.disabled .dot { background: var(--gf-bg-2); border-color: var(--gf-line-2); }
+  .gf-rad.disabled.checked .dot::after { background: var(--gf-fg-6); }
+
+  /* ============ SWITCH ============ */
+  .gf-sw {
+    display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+    font-size: 14px; color: var(--gf-fg-1); font-family: var(--gf-font-family);
+  }
+  .gf-sw input { position:absolute; opacity:0; pointer-events:none; }
+  .gf-sw .track {
+    width: 36px; height: 20px; border-radius: 999px; background: var(--gf-line-1);
+    position: relative; transition: background .15s; flex-shrink: 0;
+  }
+  .gf-sw .thumb {
+    position:absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+    background: #fff; border-radius: 999px; transition: left .15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  }
+  .gf-sw.on .track { background: var(--gf-primary); }
+  .gf-sw.on .thumb { left: 18px; }
+  .gf-sw.focus .track { box-shadow: var(--gf-ring); }
+  .gf-sw.disabled { cursor: not-allowed; color: var(--gf-fg-5); }
+  .gf-sw.disabled .track { background: var(--gf-line-3); }
+  .gf-sw.disabled.on .track { background: color-mix(in oklab, var(--gf-primary) 40%, var(--gf-line-2)); }
+
+  /* Sizes */
+  .gf-sw.size-sm .track { width: 28px; height: 16px; }
+  .gf-sw.size-sm .thumb { width: 12px; height: 12px; top: 2px; left: 2px; }
+  .gf-sw.size-sm.on .thumb { left: 14px; }
+  .gf-sw.size-lg .track { width: 46px; height: 26px; }
+  .gf-sw.size-lg .thumb { width: 22px; height: 22px; top: 2px; left: 2px; }
+  .gf-sw.size-lg.on .thumb { left: 22px; }
+
+  /* On/Off text variant */
+  .gf-sw.labeled .track { width: 52px; }
+  .gf-sw.labeled .txt {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    font-size: 9.5px; font-weight: 700; color: #fff; letter-spacing:.04em;
+  }
+  .gf-sw.labeled .txt.on  { left: 7px; opacity: 0; }
+  .gf-sw.labeled .txt.off { right: 7px; color: var(--gf-fg-2); }
+  .gf-sw.labeled.on .txt.on { opacity: 1; }
+  .gf-sw.labeled.on .txt.off { opacity: 0; }
+  .gf-sw.labeled .thumb { left: 3px; }
+  .gf-sw.labeled.on .thumb { left: 34px; }
+
+  /* Group card */
+  .group { display:flex; flex-direction:column; gap: 10px; padding: 14px; background: var(--gf-bg-2); border-radius: 10px; border: 1px solid var(--gf-line-5); }
+  .group-label { font-size: 13px; font-weight: 600; color: var(--gf-fg-1); }
+  .group-hint { font-size: 12px; color: var(--gf-fg-3); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Checkboxes -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Checkbox</div><div class="tag">14 — Checkbox</div></div>
+    <div class="body">
+      <div>
+        <div class="section-label" style="margin-bottom:10px;">States</div>
+        <div class="states">
+          <div class="state"><div class="lbl">Default</div><label class="gf-chk"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Unchecked</span></label></div>
+          <div class="state"><div class="lbl">Checked</div><label class="gf-chk checked"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Checked</span></label></div>
+          <div class="state"><div class="lbl">Indeterminate</div><label class="gf-chk indeterminate"><span class="box"></span><span>Partial</span></label></div>
+          <div class="state"><div class="lbl">Hover</div><label class="gf-chk" style="color:var(--gf-fg-1)"><span class="box" style="border-color:var(--gf-primary)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Hovered</span></label></div>
+          <div class="state"><div class="lbl">Focus</div><label class="gf-chk focus checked"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Focused</span></label></div>
+          <div class="state"><div class="lbl">Disabled</div><label class="gf-chk disabled"><span class="box"></span><span>Can't select</span></label></div>
+          <div class="state"><div class="lbl">Disabled + on</div><label class="gf-chk disabled checked"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Locked on</span></label></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label" style="margin-bottom:10px;">Sizes</div>
+        <div class="states">
+          <div class="state"><div class="lbl">Small</div><label class="gf-chk size-sm checked"><span class="box"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Small</span></label></div>
+          <div class="state"><div class="lbl">Medium</div><label class="gf-chk checked"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Medium</span></label></div>
+          <div class="state"><div class="lbl">Large</div><label class="gf-chk size-lg checked"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Large</span></label></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label" style="margin-bottom:10px;">Group with hierarchy</div>
+        <div class="group" style="max-width: 320px;">
+          <label class="gf-chk indeterminate"><span class="box"></span><span style="font-weight:600">Permissions</span></label>
+          <div style="display:flex; flex-direction:column; gap:8px; padding-left:28px;">
+            <label class="gf-chk checked"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>View records</span></label>
+            <label class="gf-chk checked"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Create records</span></label>
+            <label class="gf-chk"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Delete records</span></label>
+            <label class="gf-chk"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span><span>Export data</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Radios -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Radio button</div><div class="tag">Single select</div></div>
+    <div class="body">
+      <div>
+        <div class="section-label" style="margin-bottom:10px;">States</div>
+        <div class="states">
+          <div class="state"><div class="lbl">Default</div><label class="gf-rad"><span class="dot"></span><span>Option</span></label></div>
+          <div class="state"><div class="lbl">Checked</div><label class="gf-rad checked"><span class="dot"></span><span>Selected</span></label></div>
+          <div class="state"><div class="lbl">Hover</div><label class="gf-rad"><span class="dot" style="border-color:var(--gf-primary)"></span><span>Hovered</span></label></div>
+          <div class="state"><div class="lbl">Focus</div><label class="gf-rad focus checked"><span class="dot"></span><span>Focused</span></label></div>
+          <div class="state"><div class="lbl">Disabled</div><label class="gf-rad disabled"><span class="dot"></span><span>Disabled</span></label></div>
+          <div class="state"><div class="lbl">Disabled + on</div><label class="gf-rad disabled checked"><span class="dot"></span><span>Locked</span></label></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label" style="margin-bottom:10px;">Vertical group</div>
+        <div class="group" style="max-width: 320px;">
+          <div class="group-label">Notification frequency</div>
+          <div class="group-hint">How often should we send you summaries?</div>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+            <label class="gf-rad"><span class="dot"></span><span>Real-time</span></label>
+            <label class="gf-rad checked"><span class="dot"></span><span>Daily digest</span></label>
+            <label class="gf-rad"><span class="dot"></span><span>Weekly summary</span></label>
+            <label class="gf-rad disabled"><span class="dot"></span><span>Monthly (Pro only)</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Switches -->
+  <div class="card">
+    <div class="hdr"><div class="ttl">Switch / Toggle</div><div class="tag">Gofive Switch</div></div>
+    <div class="body">
+      <div>
+        <div class="section-label" style="margin-bottom:10px;">States</div>
+        <div class="states">
+          <div class="state"><div class="lbl">Off</div><label class="gf-sw"><span class="track"><span class="thumb"></span></span><span>Disabled mode</span></label></div>
+          <div class="state"><div class="lbl">On</div><label class="gf-sw on"><span class="track"><span class="thumb"></span></span><span>Enabled</span></label></div>
+          <div class="state"><div class="lbl">Focus</div><label class="gf-sw focus on"><span class="track"><span class="thumb"></span></span><span>Focused</span></label></div>
+          <div class="state"><div class="lbl">Disabled off</div><label class="gf-sw disabled"><span class="track"><span class="thumb"></span></span><span>Locked off</span></label></div>
+          <div class="state"><div class="lbl">Disabled on</div><label class="gf-sw disabled on"><span class="track"><span class="thumb"></span></span><span>Locked on</span></label></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label" style="margin-bottom:10px;">Sizes</div>
+        <div class="states">
+          <div class="state"><div class="lbl">Small</div><label class="gf-sw size-sm on"><span class="track"><span class="thumb"></span></span><span>Sm</span></label></div>
+          <div class="state"><div class="lbl">Medium</div><label class="gf-sw on"><span class="track"><span class="thumb"></span></span><span>Md</span></label></div>
+          <div class="state"><div class="lbl">Large</div><label class="gf-sw size-lg on"><span class="track"><span class="thumb"></span></span><span>Lg</span></label></div>
+          <div class="state"><div class="lbl">Labeled</div><label class="gf-sw labeled on"><span class="track"><span class="txt on">ON</span><span class="txt off">OFF</span><span class="thumb"></span></span></label></div>
+          <div class="state"><div class="lbl">Labeled off</div><label class="gf-sw labeled"><span class="track"><span class="txt on">ON</span><span class="txt off">OFF</span><span class="thumb"></span></span></label></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label" style="margin-bottom:10px;">Settings list</div>
+        <div class="group" style="max-width: 420px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:13.5px; font-weight:500; color:var(--gf-fg-1);">Email notifications</div>
+              <div style="font-size:12px; color:var(--gf-fg-4); margin-top:2px;">Receive updates when records change</div>
+            </div>
+            <label class="gf-sw on"><span class="track"><span class="thumb"></span></span></label>
+          </div>
+          <div style="height:1px; background:var(--gf-line-5);"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:13.5px; font-weight:500; color:var(--gf-fg-1);">Two-factor auth</div>
+              <div style="font-size:12px; color:var(--gf-fg-4); margin-top:2px;">Protect your account with an extra step</div>
+            </div>
+            <label class="gf-sw"><span class="track"><span class="thumb"></span></span></label>
+          </div>
+          <div style="height:1px; background:var(--gf-line-5);"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:13.5px; font-weight:500; color:var(--gf-fg-5);">Beta features</div>
+              <div style="font-size:12px; color:var(--gf-fg-5); margin-top:2px;">Only available on Pro plan</div>
+            </div>
+            <label class="gf-sw disabled"><span class="track"><span class="thumb"></span></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

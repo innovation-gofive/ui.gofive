@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- @dsCard group="Spacing" name="Radii & shadows" subtitle="4/8/12/16/20/pill · xs → xl shadows" viewport="700x280" --><html><head>
+<meta charset="utf-8"><title>Radii & shadows</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:var(--gf-bg-1);font-family:var(--gf-font-family);color:var(--gf-fg-1);}
+.wrap{padding:24px;display:flex;flex-direction:column;gap:18px;}
+.h{font-size:10px;color:var(--gf-fg-5);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+.row{display:flex;gap:14px;align-items:flex-end;}
+.rad{background:var(--gf-flame);width:56px;height:56px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;}
+.shad{background:#fff;width:120px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gf-fg-4);font-size:11px;font-weight:600;}
+.caption{font-size:10px;color:var(--gf-fg-5);font-family:var(--gf-font-mono);text-align:center;margin-top:6px;}
+.item{display:flex;flex-direction:column;align-items:center;}
+</style></head><body>
+<div class="wrap">
+  <div>
+    <div class="h">Radii</div>
+    <div class="row">
+      <div class="item"><div class="rad" style="border-radius:4px;">4</div><div class="caption">xs</div></div>
+      <div class="item"><div class="rad" style="border-radius:8px;">8</div><div class="caption">md · btn</div></div>
+      <div class="item"><div class="rad" style="border-radius:12px;">12</div><div class="caption">lg · card</div></div>
+      <div class="item"><div class="rad" style="border-radius:16px;">16</div><div class="caption">xl · dialog</div></div>
+      <div class="item"><div class="rad" style="border-radius:20px;">20</div><div class="caption">2xl</div></div>
+      <div class="item"><div class="rad" style="border-radius:9999px;">∞</div><div class="caption">pill</div></div>
+    </div>
+  </div>
+  <div>
+    <div class="h">Shadows</div>
+    <div class="row">
+      <div class="item"><div class="shad" style="box-shadow:0 1px 2px rgba(0,0,0,0.04);">xs</div><div class="caption">hairline</div></div>
+      <div class="item"><div class="shad" style="box-shadow:0 2px 6px rgba(28,28,34,0.06), 0 1px 2px rgba(28,28,34,0.04);">md</div><div class="caption">card</div></div>
+      <div class="item"><div class="shad" style="box-shadow:0 12px 32px rgba(28,28,34,0.10), 0 4px 8px rgba(28,28,34,0.04);">lg</div><div class="caption">menu</div></div>
+      <div class="item"><div class="shad" style="box-shadow:0 24px 48px rgba(28,28,34,0.14), 0 8px 16px rgba(28,28,34,0.06);">xl</div><div class="caption">dialog</div></div>
+    </div>
+  </div>
+</div>
+</body></html>

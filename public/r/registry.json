@@ -1,78 +1,304 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "acme",
-  "homepage": "https://acme.com",
+  "name": "gofive",
+  "homepage": "https://gofive.co.th",
   "items": [
     {
-      "name": "hello-world",
-      "type": "registry:component",
-      "title": "Hello World",
-      "description": "A simple hello world component",
-      "registryDependencies": ["button"],
+      "name": "theme",
+      "type": "registry:theme",
+      "title": "GoFive Theme",
+      "description": "GoFive color system — neutral ramp, base orange brand, and per-product semantic palettes (Success/Warning/Danger/Info). Switch product palette at runtime via data-brand (empeo, calendio, venio, desk, shipx, salesbear, etaxgo, emconnect). Includes light and dark mode.",
       "files": [
         {
-          "path": "registry/new-york/blocks/hello-world/hello-world.tsx",
-          "type": "registry:component"
+          "path": "registry/new-york/theme/gofive-theme.css",
+          "type": "registry:file",
+          "target": "app/gofive-theme.css"
         }
       ]
     },
     {
-      "name": "example-form",
-      "type": "registry:component",
-      "title": "Example Form",
-      "description": "A contact form with Zod validation.",
-      "dependencies": ["zod"],
-      "registryDependencies": ["button", "input", "label", "textarea", "card"],
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Tag & Badge",
+      "description": "Semantic status tags, count badges, avatar chips, and typing indicators with soft/solid/outline variants and pulse/spin/shimmer/pop animations.",
       "files": [
         {
-          "path": "registry/new-york/blocks/example-form/example-form.tsx",
-          "type": "registry:component"
+          "path": "registry/new-york/ui/tag-badge.tsx",
+          "type": "registry:ui"
         }
       ]
     },
     {
-      "name": "complex-component",
-      "type": "registry:component",
-      "title": "Complex Component",
-      "description": "A complex component showing hooks, libs and components.",
-      "registryDependencies": ["card"],
+      "name": "typography",
+      "type": "registry:ui",
+      "title": "Typography",
+      "description": "GoFive type scale — Display, H1–H3, Body Lg, Body, Small, and Caption with 400/500/600/700 weight overrides, rendered through a single variant-driven component.",
+      "registryDependencies": ["https://registry.gofive.co.th/r/fonts.json"],
+      "dependencies": ["class-variance-authority", "@radix-ui/react-slot"],
       "files": [
         {
-          "path": "registry/new-york/blocks/complex-component/page.tsx",
-          "type": "registry:page",
-          "target": "app/pokemon/page.tsx"
-        },
-        {
-          "path": "registry/new-york/blocks/complex-component/components/pokemon-card.tsx",
-          "type": "registry:component"
-        },
-        {
-          "path": "registry/new-york/blocks/complex-component/components/pokemon-image.tsx",
-          "type": "registry:component"
-        },
-        {
-          "path": "registry/new-york/blocks/complex-component/lib/pokemon.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "registry/new-york/blocks/complex-component/hooks/use-pokemon.ts",
-          "type": "registry:hook"
+          "path": "registry/new-york/ui/typography.tsx",
+          "type": "registry:ui"
         }
       ]
     },
     {
-      "name": "example-with-css",
-      "type": "registry:component",
-      "title": "Example with CSS",
-      "description": "A login form with a CSS file.",
+      "name": "fonts",
+      "type": "registry:lib",
+      "title": "GoFive Font",
+      "description": "GoFive custom font family — Text (400), Medium (500), SemiBold (600), Bold (700)",
       "files": [
         {
-          "path": "registry/new-york/blocks/example-with-css/example-card.tsx",
-          "type": "registry:component"
-        },
+          "path": "registry/new-york/lib/gofive-font.css",
+          "type": "registry:file",
+          "target": "lib/gofive-font.css"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "User avatars built on Radix with image fallback, five sizes, semantic status dots, solid/gradient fallback backgrounds, and an overlapping group with +N overflow.",
+      "dependencies": ["radix-ui"],
+      "files": [
         {
-          "path": "registry/new-york/blocks/example-with-css/example-card.css",
-          "type": "registry:component"
+          "path": "registry/new-york/ui/avatar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "A Radix-based checkbox supporting checked, unchecked, and indeterminate states with primary-themed active styling and sm/md/lg sizes.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "description": "A Radix-based set of mutually exclusive options with primary-themed selection, hover, focus, and disabled states.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/radio-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "A Radix-based on/off toggle with a primary-themed track, sliding thumb, and sm/md/lg sizes.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "A linear progress bar built on Radix Progress with GoFive semantic colors and three track sizes.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "A circular loading indicator with size and semantic color props using the React 19 hoisted-keyframe pattern.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "rating",
+      "type": "registry:ui",
+      "title": "Rating",
+      "description": "A star rating input supporting controlled and uncontrolled use, hover preview, read-only display, and three sizes.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/rating.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "A popup that shows information on hover or focus, built on Radix Tooltip with provider, trigger, and content parts.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "Primary-tinted status notifications with icon, title, description, optional action, close, and an auto-dismiss progress bar, driven by an imperative toast() store.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/toast.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "A composable modal dialog rendered over the page with header, body, and footer slots for confirm prompts, input-heavy forms, and multi-step wizards.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "filter",
+      "type": "registry:ui",
+      "title": "Filter",
+      "description": "Toggleable filter chips, a dropdown-driven filter bar, an add-filter affordance, and a segmented control with a GoFive accent for active and has-value states.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/filter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "search",
+      "type": "registry:ui",
+      "title": "Search",
+      "description": "A styled search input with leading icon, optional command-K hint and clear button, plus a controlled command palette with grouped, keyboard-navigable results.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/search.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "attachment",
+      "type": "registry:ui",
+      "title": "Attachment & Link",
+      "description": "A file dropzone, uploaded-file rows with type icon, size, upload progress, and remove, plus rich link preview cards for upload UIs.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/attachment.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "A self-contained month calendar with single-date and range selection, today highlighting, and out-of-month muted days, built on plain JS dates.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scheduler",
+      "type": "registry:ui",
+      "title": "Scheduler",
+      "description": "An event calendar with Month, Week, and Day/Agenda views, a segmented view switcher, Today navigation, and color-coded events, built on plain JS dates with no external date library.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/scheduler.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "datetime-picker",
+      "type": "registry:ui",
+      "title": "DateTime Picker",
+      "description": "Popover-based date, time, and combined date-time pickers built on the GoFive Calendar, with controlled state and no external date library.",
+      "registryDependencies": ["https://registry.gofive.co.th/r/calendar.json"],
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/datetime-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "picker",
+      "type": "registry:ui",
+      "title": "Picker",
+      "description": "Composable color, emoji, and icon pickers that each pair a trigger with a Radix Popover panel, with raw grids exported for inline use.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "title": "Menubar",
+      "description": "A horizontal application menu bar with dropdown menus, items, shortcuts, separators, checkbox and radio items, and nested submenus.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/menubar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "title": "Context Menu",
+      "description": "A right-click menu surfaced at the pointer with items, shortcuts, separators, checkbox and radio items, and nested submenus for contextual actions.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/context-menu.tsx",
+          "type": "registry:ui"
         }
       ]
     }

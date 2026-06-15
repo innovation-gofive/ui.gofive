@@ -1,0 +1,200 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Navigation" subtitle="Tabs, menu bar, context menu, mobile, sidebar" -->
+<html lang="en"><head><meta charset="utf-8"><title>Gofive — Navigation</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:var(--gf-bg-2);color:var(--gf-fg-1)}
+.wrap{padding:24px;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:14px;overflow:hidden}
+.hdr{padding:12px 16px;border-bottom:1px solid var(--gf-line-5);display:flex;justify-content:space-between}
+.ttl{font-size:13px;font-weight:600}
+.tag{font-size:10.5px;color:var(--gf-fg-4);font-family:var(--gf-font-mono)}
+.body{padding:16px;display:flex;flex-direction:column;gap:16px}
+.lbl{font-size:11px;color:var(--gf-fg-4);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+/* Tabs */
+.tabs-u{display:flex;gap:0;border-bottom:1px solid var(--gf-line-4)}
+.tabs-u .t{padding:10px 16px;font-size:13.5px;font-weight:500;color:var(--gf-fg-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:6px}
+.tabs-u .t:hover{color:var(--gf-fg-1)}
+.tabs-u .t.a{color:var(--gf-primary);border-color:var(--gf-primary);font-weight:600}
+.tabs-u .t .b{background:var(--gf-bg-2);font-size:11px;padding:1px 7px;border-radius:999px;color:var(--gf-fg-3)}
+.tabs-u .t.a .b{background:var(--gf-primary-wash);color:var(--gf-primary)}
+
+.tabs-p{display:inline-flex;gap:4px;padding:4px;background:var(--gf-bg-2);border-radius:10px}
+.tabs-p .t{padding:8px 14px;font-size:13px;color:var(--gf-fg-3);border-radius:7px;cursor:pointer;font-weight:500}
+.tabs-p .t.a{background:var(--gf-bg-1);color:var(--gf-fg-1);box-shadow:0 1px 3px rgba(0,0,0,.06);font-weight:600}
+
+.tabs-s{display:inline-flex;border:1px solid var(--gf-line-2);border-radius:8px;overflow:hidden}
+.tabs-s .t{padding:8px 16px;font-size:13px;color:var(--gf-fg-2);cursor:pointer;border-right:1px solid var(--gf-line-2)}
+.tabs-s .t:last-child{border-right:0}
+.tabs-s .t.a{background:var(--gf-primary);color:#fff}
+
+.tabs-v{display:flex;flex-direction:column;gap:2px;min-width:180px}
+.tabs-v .t{padding:8px 12px;font-size:13px;color:var(--gf-fg-2);cursor:pointer;border-radius:7px;display:flex;align-items:center;gap:8px}
+.tabs-v .t:hover{background:var(--gf-bg-2)}
+.tabs-v .t.a{background:var(--gf-primary-wash);color:var(--gf-primary);font-weight:600}
+
+/* Top menu bar */
+.topbar{display:flex;align-items:center;gap:18px;padding:0 16px;height:52px;border-bottom:1px solid var(--gf-line-4);background:var(--gf-bg-1);border-radius:10px 10px 0 0}
+.logo{font-weight:700;font-size:16px;color:var(--gf-fg-1)}
+.topbar .mi{font-size:13.5px;color:var(--gf-fg-3);cursor:pointer;padding:6px 10px;border-radius:7px}
+.topbar .mi:hover{background:var(--gf-bg-2);color:var(--gf-fg-1)}
+.topbar .mi.a{color:var(--gf-fg-1);font-weight:600}
+.topbar .spa{flex:1}
+.topbar .sb{width:240px;padding:0 12px 0 32px;height:32px;border-radius:8px;border:1px solid var(--gf-line-3);background:var(--gf-bg-2);font-size:13px;font-family:var(--gf-font-family);color:var(--gf-fg-1);position:relative}
+.sb-wrap{position:relative}
+.sb-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gf-fg-4);pointer-events:none}
+.av{width:32px;height:32px;border-radius:999px;background:linear-gradient(135deg,#7B88E8,#E677B7);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:12px}
+
+/* Context menu */
+.ctx{background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:10px;padding:6px;min-width:220px;box-shadow:0 8px 28px rgba(0,0,0,.1)}
+.theme-dark .ctx{background:var(--gf-bg-4);box-shadow:0 12px 36px rgba(0,0,0,.5)}
+.ctx .it{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:6px;font-size:13px;color:var(--gf-fg-1);cursor:pointer}
+.ctx .it:hover{background:var(--gf-bg-2)}
+.ctx .it .kb{margin-left:auto;font-size:11px;color:var(--gf-fg-4);font-family:var(--gf-font-mono)}
+.ctx .it.dg{color:#E6443C}
+.ctx .sep{height:1px;background:var(--gf-line-5);margin:4px 0}
+.ctx .lb{padding:6px 10px;font-size:10.5px;color:var(--gf-fg-4);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+/* Mobile bottom nav */
+.bnav{display:flex;background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:14px;padding:6px;width:320px;gap:2px}
+.bnav .nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:10px;font-size:10.5px;color:var(--gf-fg-4);cursor:pointer}
+.bnav .nv.a{color:var(--gf-primary)}
+.bnav .nv.a .ic{background:var(--gf-primary-wash)}
+.bnav .nv .ic{width:28px;height:12px;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:4px 14px}
+
+/* Sidebar */
+.side{width:240px;background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:2px}
+.side .brand{display:flex;align-items:center;gap:8px;padding:10px;margin-bottom:6px}
+.side .brand .sq{width:28px;height:28px;border-radius:8px;background:var(--gf-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.side .brand .nm{font-weight:700;font-size:14px}
+.side .lb{padding:10px 10px 4px;font-size:10.5px;color:var(--gf-fg-4);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.side .it{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13px;color:var(--gf-fg-2);cursor:pointer}
+.side .it:hover{background:var(--gf-bg-2)}
+.side .it.a{background:var(--gf-primary-wash);color:var(--gf-primary);font-weight:600}
+.side .it .bd{margin-left:auto;background:var(--gf-danger-soft,#FCE7E9);color:#E6443C;font-size:10.5px;padding:1px 7px;border-radius:999px;font-weight:600}
+.side .sub{padding-left:30px;display:flex;flex-direction:column;gap:2px;margin-top:2px}
+.side .sub .it{font-size:12.5px;padding:6px 10px}
+
+/* Collapsed rail */
+.rail{width:64px;background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:4px;align-items:center}
+.rail .it{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gf-fg-3);cursor:pointer}
+.rail .it:hover{background:var(--gf-bg-2)}
+.rail .it.a{background:var(--gf-primary-wash);color:var(--gf-primary)}
+.rail .sep{width:28px;height:1px;background:var(--gf-line-5);margin:4px 0}
+</style></head><body>
+
+<div class="wrap">
+
+  <!-- Tabs -->
+  <div class="card"><div class="hdr"><div class="ttl">Tabs</div><div class="tag">24 — Tab</div></div>
+    <div class="body">
+      <div class="lbl">Underline</div>
+      <div class="tabs-u">
+        <div class="t a">Overview <span class="b">12</span></div>
+        <div class="t">Activity</div>
+        <div class="t">Files <span class="b">3</span></div>
+        <div class="t">Members</div>
+        <div class="t">Settings</div>
+      </div>
+
+      <div class="lbl" style="margin-top:6px">Pill (segmented soft)</div>
+      <div class="tabs-p">
+        <div class="t a">Day</div><div class="t">Week</div><div class="t">Month</div><div class="t">Year</div>
+      </div>
+
+      <div class="lbl" style="margin-top:6px">Segmented</div>
+      <div class="tabs-s">
+        <div class="t">List</div><div class="t a">Board</div><div class="t">Timeline</div>
+      </div>
+
+      <div class="lbl" style="margin-top:6px">Vertical</div>
+      <div class="tabs-v">
+        <div class="t">General</div>
+        <div class="t a">Appearance</div>
+        <div class="t">Notifications</div>
+        <div class="t">Billing</div>
+        <div class="t">Integrations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Bar -->
+  <div class="card"><div class="hdr"><div class="ttl">Menu bar</div><div class="tag">25 — Menu-Bar</div></div>
+    <div class="body">
+      <div class="lbl">Top bar</div>
+      <div style="border:1px solid var(--gf-line-4);border-radius:10px;overflow:hidden">
+        <div class="topbar">
+          <div class="logo">Gofive</div>
+          <div class="mi a">Workspace</div>
+          <div class="mi">Records</div>
+          <div class="mi">Reports</div>
+          <div class="mi">Settings</div>
+          <div class="spa"></div>
+          <div class="sb-wrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input class="sb" placeholder="Search…"></div>
+          <div style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--gf-fg-3);cursor:pointer" title="Notifications"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+          <div class="av">NP</div>
+        </div>
+      </div>
+
+      <div class="lbl" style="margin-top:6px">Context menu</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div class="ctx">
+          <div class="it"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Rename<span class="kb">⌘R</span></div>
+          <div class="it"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Duplicate<span class="kb">⌘D</span></div>
+          <div class="it"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>Share…</div>
+          <div class="sep"></div>
+          <div class="lb">Move to</div>
+          <div class="it"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Archive</div>
+          <div class="sep"></div>
+          <div class="it dg"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>Delete<span class="kb">⌫</span></div>
+        </div>
+      </div>
+
+      <div class="lbl" style="margin-top:6px">Mobile bottom nav</div>
+      <div class="bnav">
+        <div class="nv a"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg></div>Home</div>
+        <div class="nv"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg></div>Search</div>
+        <div class="nv"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div>Create</div>
+        <div class="nv"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/></svg></div>Alerts</div>
+        <div class="nv"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>Me</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="card"><div class="hdr"><div class="ttl">Sidebar</div><div class="tag">29 — Sidebar</div></div>
+    <div class="body">
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+        <div class="side">
+          <div class="brand"><div class="sq">E</div><div class="nm">empeo</div></div>
+          <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>Dashboard</div>
+          <div class="it a"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Calendar</div>
+          <div class="sub">
+            <div class="it">Month view</div>
+            <div class="it a">Week view</div>
+            <div class="it">Agenda</div>
+          </div>
+          <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Employees <span class="bd">12</span></div>
+          <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg>Records</div>
+          <div class="lb">Insights</div>
+          <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17v-5M8 17v-3"/></svg>Reports</div>
+          <div class="it"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 1-.1 1.3l2 1.5-2 3.4-2.3-.9a7 7 0 0 1-2.3 1.3L14 21h-4l-.3-2.3a7 7 0 0 1-2.3-1.3L5 18.2l-2-3.4 2-1.5A7 7 0 0 1 5 12a7 7 0 0 1 .1-1.3l-2-1.5 2-3.4 2.3.9A7 7 0 0 1 9.7 5.4L10 3h4l.3 2.3a7 7 0 0 1 2.3 1.3L19 5.8l2 3.4-2 1.5"/></svg>Settings</div>
+        </div>
+
+        <div class="rail">
+          <div class="it" style="background:var(--gf-primary);color:#fff;width:40px;height:40px"><span style="font-weight:700">E</span></div>
+          <div class="sep"></div>
+          <div class="it a" title="Home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg></div>
+          <div class="it" title="Calendar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+          <div class="it" title="Team"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="it" title="Reports"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17v-5M8 17v-3"/></svg></div>
+          <div class="sep" style="margin-top:auto"></div>
+          <div class="it" title="Help"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body></html>

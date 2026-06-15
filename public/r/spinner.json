@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spinner",
+  "title": "Spinner",
+  "description": "A circular loading indicator with size and semantic color props using the React 19 hoisted-keyframe pattern.",
+  "files": [
+    {
+      "path": "registry/new-york/ui/spinner.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\n// ── GoFive semantic color tokens ───────────────────────────────────\nexport type SpinnerColor = \"primary\" | \"success\" | \"warn\" | \"danger\" | \"info\" | \"current\"\nexport type SpinnerSize = \"sm\" | \"md\" | \"lg\"\n\nconst SPINNER_COLOR: Record<SpinnerColor, string> = {\n  primary: \"#0A66E0\",\n  success: \"#1DA577\",\n  warn: \"#F9D423\",\n  danger: \"#D93A1A\",\n  info: \"#0A66E0\",\n  current: \"currentColor\",\n}\n\nconst SPINNER_SIZE: Record<SpinnerSize, { box: string; border: string }> = {\n  sm: { box: \"size-3.5\", border: \"2px\" },\n  md: { box: \"size-5\", border: \"2.5px\" },\n  lg: { box: \"size-10\", border: \"3px\" },\n}\n\n// ── Animation CSS (React 19 style hoisting deduplicates via href) ──\nconst SPINNER_CSS = `\n  .gf-spinner{display:inline-block;border-style:solid;border-radius:9999px;animation:gf-spin .8s linear infinite;}\n  @keyframes gf-spin{to{transform:rotate(360deg);}}\n`\n\nexport interface SpinnerProps extends React.HTMLAttributes<HTMLSpanElement> {\n  color?: SpinnerColor\n  size?: SpinnerSize\n  label?: string\n}\n\nfunction Spinner({\n  color = \"primary\",\n  size = \"md\",\n  label = \"Loading\",\n  className,\n  style,\n  ...props\n}: SpinnerProps) {\n  const dim = SPINNER_SIZE[size]\n  const fill = SPINNER_COLOR[color]\n\n  return (\n    <>\n      <style href=\"gf-spinner\" precedence=\"low\">{SPINNER_CSS}</style>\n      <span\n        data-slot=\"spinner\"\n        role=\"status\"\n        aria-label={label}\n        className={cn(\"gf-spinner shrink-0\", dim.box, className)}\n        style={{\n          borderWidth: dim.border,\n          borderColor: \"color-mix(in oklab, currentColor 18%, transparent)\",\n          borderTopColor: fill,\n          color: fill,\n          ...style,\n        }}\n        {...props}\n      />\n    </>\n  )\n}\n\nexport { Spinner }\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

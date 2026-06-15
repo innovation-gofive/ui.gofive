@@ -1,0 +1,645 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Mobile" subtitle="iOS &amp; Android — bottom nav · pickers · FAB · sheets · keyboard" -->
+<html lang="en"><head><meta charset="utf-8"><title>Gofive — Mobile components</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:var(--gf-bg-2);color:var(--gf-fg-1);font-family:var(--gf-font-family)}
+.wrap{padding:24px;display:flex;flex-direction:column;gap:24px}
+.card{background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:14px;overflow:hidden}
+.hdr{padding:12px 16px;border-bottom:1px solid var(--gf-line-5);display:flex;justify-content:space-between;align-items:center}
+.ttl{font-size:13px;font-weight:600}
+.tag{font-size:10.5px;color:var(--gf-fg-4);font-family:var(--gf-font-mono)}
+.body{padding:24px;display:flex;flex-wrap:wrap;gap:20px;justify-content:center;background:var(--gf-bg-2)}
+
+/* ============ Phone frame ============ */
+.phone{
+  width:320px;height:660px;
+  border-radius:42px;
+  background:#0E0E14;
+  padding:10px;
+  box-shadow:0 18px 40px rgba(20,20,43,.25), 0 6px 12px rgba(20,20,43,.12);
+  position:relative;flex-shrink:0;
+}
+.screen{
+  width:100%;height:100%;
+  border-radius:32px;background:var(--gf-bg-1);
+  overflow:hidden;position:relative;display:flex;flex-direction:column;
+}
+.phone.android .screen{border-radius:22px}
+.phone.android{border-radius:30px}
+
+/* Notch / dynamic island */
+.phone .notch{
+  position:absolute;top:18px;left:50%;transform:translateX(-50%);
+  width:110px;height:30px;border-radius:18px;background:#0E0E14;z-index:5;
+}
+.phone.android .notch{
+  width:8px;height:8px;border-radius:999px;background:#16161B;top:20px;
+}
+
+/* Status bar */
+.statusbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 22px 8px;font-size:14px;font-weight:600;color:var(--gf-fg-1);
+  background:var(--gf-bg-1);
+  position:relative;z-index:1;
+}
+.statusbar .time{letter-spacing:-.01em}
+.statusbar .icons{display:flex;gap:5px;align-items:center}
+.statusbar .icons svg{display:block}
+
+/* Phone tag */
+.ptag{
+  position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+  font-size:10.5px;color:var(--gf-fg-4);font-family:var(--gf-font-mono);
+  white-space:nowrap;
+}
+
+/* ============ Components: top bar ============ */
+.topbar{
+  display:flex;align-items:center;gap:8px;padding:8px 16px 12px;
+  background:var(--gf-bg-1);border-bottom:1px solid var(--gf-line-5);
+}
+.topbar .nav-btn{
+  width:34px;height:34px;border-radius:999px;display:flex;align-items:center;
+  justify-content:center;color:var(--gf-fg-2);background:transparent;border:0;cursor:pointer;
+}
+.topbar .nav-btn:hover{background:var(--gf-bg-2)}
+.topbar .tt{font-size:17px;font-weight:700;flex:1;text-align:center;letter-spacing:-.01em}
+.topbar.android .tt{text-align:left;font-size:18px;margin-left:6px}
+.topbar.large{padding:14px 18px 14px;flex-direction:column;align-items:flex-start;gap:2px;border-bottom:0}
+.topbar.large .tt{font-size:26px;font-weight:700;text-align:left;letter-spacing:-.02em}
+.topbar.large .sub{font-size:12.5px;color:var(--gf-fg-4)}
+
+/* ============ Bottom nav ============ */
+.bottombar{
+  position:absolute;left:0;right:0;bottom:0;
+  display:flex;background:var(--gf-bg-1);border-top:1px solid var(--gf-line-5);
+  padding:8px 4px 22px;
+}
+.bottombar .nv{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 4px;font-size:10px;color:var(--gf-fg-5);cursor:pointer;
+}
+.bottombar .nv.a{color:var(--gf-primary)}
+.bottombar .nv .ic{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.bottombar.android{padding:6px 0 12px}
+.bottombar.android .nv{font-size:11px}
+.bottombar.android .nv .pill{
+  background:var(--gf-primary-wash);padding:4px 14px;border-radius:14px;
+  margin-bottom:2px;display:flex;align-items:center;justify-content:center;
+}
+.bottombar.android .nv:not(.a) .pill{background:transparent;padding:4px 0}
+.home-indicator{
+  position:absolute;left:50%;transform:translateX(-50%);bottom:8px;
+  width:120px;height:4px;border-radius:999px;background:#0E0E14;
+}
+
+/* ============ Content ============ */
+.content{flex:1;overflow:auto;padding:0}
+.scroll-area{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+
+/* List rows */
+.row{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;
+  background:var(--gf-bg-1);
+}
+.row + .row{border-top:1px solid var(--gf-line-5)}
+.row .av{width:40px;height:40px;border-radius:999px;background:linear-gradient(135deg,#FFB057,#F05B2F);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.row .col{flex:1;min-width:0}
+.row .pn{font-size:15px;font-weight:600;color:var(--gf-fg-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .sm{font-size:13px;color:var(--gf-fg-4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .meta{font-size:12px;color:var(--gf-fg-4);flex-shrink:0}
+.row .chev{color:var(--gf-fg-5)}
+
+/* Mobile button */
+.btn{height:48px;padding:0 20px;border-radius:12px;font-size:15px;font-weight:600;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;width:100%}
+.btn.p{background:var(--gf-primary);color:#fff}
+.btn.g{background:var(--gf-bg-2);color:var(--gf-fg-1)}
+.btn.dg{background:var(--gf-danger);color:#fff}
+.btn.android{border-radius:24px;height:48px;text-transform:uppercase;letter-spacing:.04em;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.btn.text{background:transparent;color:var(--gf-primary)}
+
+.fab{
+  position:absolute;bottom:90px;right:18px;
+  width:56px;height:56px;border-radius:999px;background:var(--gf-primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(248,132,17,.4);cursor:pointer;border:0;z-index:2;
+}
+.fab.large{width:64px;height:64px}
+.fab.android{border-radius:18px}
+
+/* Mobile form / input */
+.mfield{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.mfield label{font-size:12.5px;font-weight:500;color:var(--gf-fg-3)}
+.mfield .mi{
+  height:48px;border-radius:10px;background:var(--gf-bg-2);
+  display:flex;align-items:center;padding:0 16px;font-size:16px;color:var(--gf-fg-1);
+}
+.mfield .mi.focus{background:var(--gf-bg-1);border:2px solid var(--gf-primary);padding:0 14px}
+.mfield .mi .ic{color:var(--gf-fg-4);margin-right:10px}
+.mfield .mi .clr{margin-left:auto;width:20px;height:20px;border-radius:999px;background:var(--gf-fg-6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
+.mfield.android .mi{background:transparent;border-radius:0;border-bottom:1px solid var(--gf-line-2);padding:0;height:40px;font-size:16px}
+.mfield.android.focus .mi{border-bottom:2px solid var(--gf-primary)}
+.mfield.android label{color:var(--gf-primary);font-size:12px}
+
+/* Card */
+.mcard{background:var(--gf-bg-1);border:1px solid var(--gf-line-4);border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.mcard h3{margin:0 0 4px;font-size:16px;font-weight:700;letter-spacing:-.01em}
+.mcard p{margin:0;font-size:13px;color:var(--gf-fg-4);line-height:1.5}
+.mcard .stat{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+.mcard .stat .v{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.mcard .stat .d{font-size:12px;color:#00875F;font-weight:600}
+.mcard .bar{height:6px;background:var(--gf-bg-2);border-radius:999px;margin-top:12px;overflow:hidden}
+.mcard .bar > span{display:block;height:100%;background:var(--gf-primary);border-radius:999px}
+
+/* Action sheet (iOS) */
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:3;border-radius:30px}
+.action-sheet{
+  position:absolute;left:10px;right:10px;bottom:10px;z-index:4;
+  display:flex;flex-direction:column;gap:8px;
+}
+.action-sheet .group{
+  background:#FAFAFC;border-radius:14px;overflow:hidden;backdrop-filter:blur(20px);
+}
+.action-sheet .group.dark{background:rgba(255,255,255,.95)}
+.action-sheet .ai{
+  padding:16px;text-align:center;font-size:17px;color:var(--gf-primary);cursor:pointer;
+  background:transparent;border:0;width:100%;font-family:inherit;font-weight:500;
+}
+.action-sheet .ai + .ai{border-top:1px solid rgba(60,60,67,.18)}
+.action-sheet .ai.cancel{font-weight:700}
+.action-sheet .ai.dg{color:var(--gf-danger)}
+.action-sheet .title{padding:14px 16px 10px;font-size:12.5px;color:var(--gf-fg-4);text-align:center;background:#FAFAFC;border-radius:14px 14px 0 0}
+
+/* Date wheel (iOS) */
+.wheel-pop{
+  position:absolute;left:10px;right:10px;bottom:10px;z-index:4;
+  background:#FAFAFC;border-radius:14px;overflow:hidden;
+}
+.wheel-pop .wh{
+  padding:12px 16px 8px;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid rgba(60,60,67,.18);
+}
+.wheel-pop .wh button{background:transparent;border:0;color:var(--gf-primary);font-family:inherit;font-size:15px;cursor:pointer;font-weight:500}
+.wheel-pop .wh .ti{font-size:13px;font-weight:600;color:var(--gf-fg-2)}
+.wheel-pop .wheels{display:flex;gap:0;height:200px;padding:8px 0;position:relative}
+.wheel-pop .wheels::before{
+  content:"";position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+  height:36px;background:rgba(120,120,128,.12);pointer-events:none;border-radius:8px;margin:0 12px;
+}
+.wheel{flex:1;text-align:center;font-size:21px;color:var(--gf-fg-4);overflow:hidden;position:relative}
+.wheel .v{padding:5px 0;line-height:26px}
+.wheel .v.sel{color:var(--gf-fg-1);font-weight:600}
+.wheel .v.near1{color:var(--gf-fg-3)}
+.wheel .v.near2{color:var(--gf-fg-5)}
+
+/* Material date picker (Android) */
+.mdpick{
+  position:absolute;left:14px;right:14px;top:50%;transform:translateY(-50%);z-index:4;
+  background:var(--gf-bg-1);border-radius:24px;padding:18px;box-shadow:0 10px 32px rgba(0,0,0,.3);
+}
+.mdpick .ml{font-size:11px;color:var(--gf-fg-4);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.mdpick .mv{font-size:30px;font-weight:600;margin:6px 0 14px;color:var(--gf-fg-1);letter-spacing:-.01em}
+.mdpick .mn{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:0 4px}
+.mdpick .mn .mt{font-size:13px;font-weight:600}
+.mdpick .mwd,.mdpick .md{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:2px}
+.mdpick .mwd{margin-bottom:2px}
+.mdpick .mwd span{font-size:11px;color:var(--gf-fg-4);font-weight:600;padding:6px 0}
+.mdpick .md button{
+  aspect-ratio:1;border:0;background:transparent;font-family:inherit;font-size:13px;
+  color:var(--gf-fg-1);border-radius:999px;cursor:pointer;
+}
+.mdpick .md button:hover{background:var(--gf-bg-2)}
+.mdpick .md button.muted{color:var(--gf-fg-5)}
+.mdpick .md button.sel{background:var(--gf-primary);color:#fff;font-weight:600}
+.mdpick .md button.today{border:1px solid var(--gf-primary);color:var(--gf-primary)}
+.mdpick .ma{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.mdpick .ma button{background:transparent;border:0;color:var(--gf-primary);font-family:inherit;font-size:14px;font-weight:600;padding:8px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;border-radius:6px}
+
+/* Snackbar / toast */
+.snackbar{
+  position:absolute;left:14px;right:14px;bottom:88px;z-index:3;
+  background:#2D2D34;color:#fff;border-radius:8px;padding:14px 16px;
+  display:flex;align-items:center;gap:12px;font-size:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,.3);
+}
+.snackbar .act{margin-left:auto;color:#FFB57A;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.04em;cursor:pointer}
+
+.toast-ios{
+  position:absolute;left:50%;top:14%;transform:translateX(-50%);z-index:5;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(20px);
+  width:160px;padding:24px 16px;border-radius:18px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+.toast-ios .ok{
+  width:44px;height:44px;border-radius:999px;background:#34C759;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+.toast-ios .lb{font-size:15px;font-weight:600}
+
+/* Pull to refresh */
+.ptr{position:absolute;left:50%;top:74px;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--gf-fg-4);font-size:12px}
+.ptr .sp{width:24px;height:24px;border:2.5px solid var(--gf-line-3);border-top-color:var(--gf-primary);border-radius:999px;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Keyboard (iOS-style approx) */
+.keyboard{position:absolute;left:0;right:0;bottom:0;background:#CCD0D8;padding:6px 4px 22px;display:flex;flex-direction:column;gap:6px;z-index:1}
+.kbd-row{display:flex;gap:4px;justify-content:center}
+.kbd{flex:1;height:34px;border-radius:5px;background:#FAFAFC;display:flex;align-items:center;justify-content:center;font-size:18px;color:#0E0E14;box-shadow:0 1px 0 rgba(0,0,0,.2);max-width:32px}
+.kbd.wide{max-width:none;flex:1.5}
+.kbd.space{flex:5;font-size:13px;color:var(--gf-fg-4)}
+.kbd.dark{background:#AAB0BC;color:#0E0E14;font-size:13px;font-weight:600}
+
+/* Chip / segmented */
+.segmented{display:flex;background:var(--gf-bg-2);border-radius:8px;padding:2px;gap:2px}
+.segmented .s{flex:1;padding:6px 8px;text-align:center;font-size:13px;color:var(--gf-fg-3);border-radius:6px;font-weight:500}
+.segmented .s.a{background:var(--gf-bg-1);color:var(--gf-fg-1);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* Notif row */
+.notif{display:flex;align-items:flex-start;gap:12px;padding:12px;border-radius:12px;background:var(--gf-bg-1);border:1px solid var(--gf-line-5)}
+.notif .ic{width:32px;height:32px;border-radius:8px;background:var(--gf-primary-wash);color:var(--gf-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notif .col{flex:1;min-width:0}
+.notif .tt{font-size:13.5px;font-weight:600;color:var(--gf-fg-1)}
+.notif .tx{font-size:12.5px;color:var(--gf-fg-3);margin-top:2px;line-height:1.4}
+.notif .when{font-size:11px;color:var(--gf-fg-5);margin-top:4px}
+</style>
+</head><body>
+<div class="wrap">
+
+<!-- =============== 1. iOS device — Home screen pattern =============== -->
+<div class="card">
+  <div class="hdr"><div class="ttl">iOS — Dashboard, bottom nav, FAB</div><div class="tag">List · cards · large title</div></div>
+  <div class="body">
+
+    <!-- iOS dashboard -->
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar">
+          <span class="time">9:41</span>
+          <span class="icons">
+            <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8.5h2v2H1zM5 6h2v4.5H5zM9 3h2v7.5H9zM13 0h2v10.5h-2z" fill="currentColor"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12"><path d="M1 4.5C3 2.5 5.5 1.5 8 1.5s5 1 7 3l-1.5 1.5C12 4.5 10 4 8 4s-4 .5-5.5 2L1 4.5zM4 7c1-1 2.5-1.5 4-1.5s3 .5 4 1.5l-1.5 1.5C9.5 8 8.7 7.5 8 7.5s-1.5.5-2.5 1L4 7z" fill="currentColor"/><circle cx="8" cy="10.5" r="1.5" fill="currentColor"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/><path d="M24 4v4" stroke="currentColor" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+        <div class="topbar large">
+          <div class="sub">Friday, May 22</div>
+          <div class="tt">Good morning, Ploy</div>
+        </div>
+        <div class="content">
+          <div class="scroll-area">
+            <div class="mcard">
+              <h3>This week</h3>
+              <p>You've been productive — 4 tasks done, 3 in progress.</p>
+              <div class="stat"><span class="v">14<span style="font-size:18px;color:var(--gf-fg-4);font-weight:400">/22</span></span><span class="d">+18%</span></div>
+              <div class="bar"><span style="width:64%"></span></div>
+            </div>
+            <div class="row" style="border-radius:14px;border:1px solid var(--gf-line-5)">
+              <div class="av">NT</div>
+              <div class="col"><div class="pn">Nattapong T.</div><div class="sm">Approved your leave request</div></div>
+              <div class="meta">12m</div>
+            </div>
+            <div class="row" style="border-radius:14px;border:1px solid var(--gf-line-5)">
+              <div class="av" style="background:linear-gradient(135deg,#5AC8FA,#2DAE4B)">PR</div>
+              <div class="col"><div class="pn">Project review</div><div class="sm">Tomorrow at 14:00 — Conf B</div></div>
+              <div class="meta">3h</div>
+            </div>
+            <div class="row" style="border-radius:14px;border:1px solid var(--gf-line-5)">
+              <div class="av" style="background:linear-gradient(135deg,#C471ED,#F64F95)">AW</div>
+              <div class="col"><div class="pn">Arisa W. mentioned you</div><div class="sm">In #design-review</div></div>
+              <div class="meta">5h</div>
+            </div>
+          </div>
+        </div>
+        <button class="fab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+        <div class="bottombar">
+          <div class="nv a">
+            <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1V10z"/></svg></div>
+            Home
+          </div>
+          <div class="nv">
+            <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            Tasks
+          </div>
+          <div class="nv">
+            <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            Calendar
+          </div>
+          <div class="nv">
+            <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.8"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            Search
+          </div>
+          <div class="nv">
+            <div class="ic" style="position:relative">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M5 20a7 7 0 0114 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <span style="position:absolute;top:-3px;right:-3px;background:var(--gf-danger);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:999px;border:1.5px solid var(--gf-bg-1)">3</span>
+            </div>
+            Profile
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="ptag">iOS · 320 × 660</div>
+    </div>
+
+    <!-- iOS Date wheel -->
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar">
+          <span class="time">9:41</span>
+          <span class="icons">
+            <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8.5h2v2H1zM5 6h2v4.5H5zM9 3h2v7.5H9zM13 0h2v10.5h-2z" fill="currentColor"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg>
+          </span>
+        </div>
+        <div class="topbar">
+          <button class="nav-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <div class="tt">New leave</div>
+          <button class="nav-btn" style="color:var(--gf-primary);width:auto;font-weight:600;font-size:15px;background:transparent">Save</button>
+        </div>
+        <div class="content">
+          <div class="scroll-area">
+            <div class="mfield"><label>Type</label>
+              <div class="mi">Annual leave<span style="margin-left:auto;color:var(--gf-fg-5)"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M3 5l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg></span></div>
+            </div>
+            <div class="mfield"><label>Reason</label>
+              <div class="mi" style="color:var(--gf-fg-5)">Optional</div>
+            </div>
+          </div>
+        </div>
+        <div class="sheet-bg"></div>
+        <div class="wheel-pop">
+          <div class="wh">
+            <button>Cancel</button>
+            <div class="ti">Choose date</div>
+            <button style="font-weight:700">Done</button>
+          </div>
+          <div class="wheels">
+            <div class="wheel">
+              <div class="v near2">May</div>
+              <div class="v near1">Jun</div>
+              <div class="v sel">Jul</div>
+              <div class="v near1">Aug</div>
+              <div class="v near2">Sep</div>
+            </div>
+            <div class="wheel">
+              <div class="v near2">21</div>
+              <div class="v near1">22</div>
+              <div class="v sel">23</div>
+              <div class="v near1">24</div>
+              <div class="v near2">25</div>
+            </div>
+            <div class="wheel">
+              <div class="v near2">2024</div>
+              <div class="v near1">2025</div>
+              <div class="v sel">2026</div>
+              <div class="v near1">2027</div>
+              <div class="v near2">2028</div>
+            </div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="ptag">iOS · Wheel picker</div>
+    </div>
+
+    <!-- iOS Action sheet -->
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar"><span class="time">9:41</span><span class="icons"><svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="topbar"><div class="tt">Invoice #INV-0412</div></div>
+        <div class="content">
+          <div class="scroll-area">
+            <div class="mcard">
+              <h3>Siam Cement Group</h3>
+              <p>Issued May 12 · Due Jun 11</p>
+              <div class="stat"><span class="v">฿ 137,388</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="sheet-bg"></div>
+        <div class="action-sheet">
+          <div class="group">
+            <div class="title">What would you like to do?</div>
+            <button class="ai">Download PDF</button>
+            <button class="ai">Send reminder</button>
+            <button class="ai">Record payment</button>
+            <button class="ai dg">Void invoice</button>
+          </div>
+          <div class="group">
+            <button class="ai cancel">Cancel</button>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="ptag">iOS · Action sheet</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- =============== 2. Android device =============== -->
+<div class="card">
+  <div class="hdr"><div class="ttl">Android — Material design</div><div class="tag">Top app bar · FAB · date picker · snackbar</div></div>
+  <div class="body">
+
+    <div class="phone android">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar" style="padding:8px 18px 4px;font-size:13px">
+          <span class="time">9:41</span>
+          <span class="icons">
+            <svg width="14" height="10" viewBox="0 0 16 11"><path d="M1 8.5h2v2H1zM5 6h2v4.5H5zM9 3h2v7.5H9zM13 0h2v10.5h-2z" fill="currentColor"/></svg>
+            <svg width="22" height="11" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg>
+          </span>
+        </div>
+        <div class="topbar android">
+          <button class="nav-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg></button>
+          <div class="tt">My tasks</div>
+          <button class="nav-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg></button>
+        </div>
+        <div class="content">
+          <div class="scroll-area">
+            <div class="segmented" style="margin-bottom:6px"><div class="s a">All</div><div class="s">Mine</div><div class="s">Done</div></div>
+            <div class="notif">
+              <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="col"><div class="tt">Revise onboarding emails</div><div class="tx">Due May 28 · assigned to you</div><div class="when">High priority</div></div>
+            </div>
+            <div class="notif">
+              <div class="ic" style="background:var(--gf-info-soft);color:var(--gf-info)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/></svg></div>
+              <div class="col"><div class="tt">Sprint review</div><div class="tx">Today at 16:00 · Conference Room B</div><div class="when">2h from now</div></div>
+            </div>
+            <div class="notif">
+              <div class="ic" style="background:var(--gf-success-soft);color:#00875F"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4 4L19 7" stroke-linecap="round"/></svg></div>
+              <div class="col"><div class="tt">PR #284 merged</div><div class="tx">Mobile UI components · branch ready to deploy</div></div>
+            </div>
+          </div>
+        </div>
+        <button class="fab android"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+        <div class="snackbar">
+          <span>Task marked as done</span>
+          <span class="act">Undo</span>
+        </div>
+        <div class="bottombar android">
+          <div class="nv a"><div class="pill"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1V10z"/></svg></div>Home</div>
+          <div class="nv"><div class="pill"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/></svg></div>Tasks</div>
+          <div class="nv"><div class="pill"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/></svg></div>Calendar</div>
+          <div class="nv"><div class="pill"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9" r="3.5"/><path d="M5 20a7 7 0 0114 0" stroke-linecap="round"/></svg></div>Profile</div>
+        </div>
+      </div>
+      <div class="ptag">Android · Material 3</div>
+    </div>
+
+    <!-- Android Date picker -->
+    <div class="phone android">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar" style="padding:8px 18px 4px;font-size:13px"><span class="time">9:41</span><span class="icons"><svg width="22" height="11" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="topbar android"><div class="tt">Date of birth</div></div>
+        <div class="content">
+          <div class="scroll-area">
+            <div class="mfield android focus"><label>Date</label><div class="mi">23 / 05 / 2026</div></div>
+          </div>
+        </div>
+        <div class="sheet-bg" style="background:rgba(0,0,0,.5)"></div>
+        <div class="mdpick">
+          <div class="ml">Select date</div>
+          <div class="mv">May 23, 2026</div>
+          <div class="mn">
+            <span class="mt">May 2026</span>
+            <div style="display:flex;gap:6px">
+              <button class="nav-btn" style="width:32px;height:32px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+              <button class="nav-btn" style="width:32px;height:32px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+            </div>
+          </div>
+          <div class="mwd"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+          <div class="md">
+            <button class="muted">28</button><button class="muted">29</button><button class="muted">30</button><button>1</button><button>2</button><button>3</button><button>4</button>
+            <button>5</button><button>6</button><button>7</button><button>8</button><button>9</button><button>10</button><button>11</button>
+            <button>12</button><button>13</button><button>14</button><button>15</button><button>16</button><button>17</button><button>18</button>
+            <button>19</button><button>20</button><button>21</button><button class="today">22</button><button class="sel">23</button><button>24</button><button>25</button>
+            <button>26</button><button>27</button><button>28</button><button>29</button><button>30</button><button>31</button><button class="muted">1</button>
+          </div>
+          <div class="ma">
+            <button>Cancel</button>
+            <button>OK</button>
+          </div>
+        </div>
+      </div>
+      <div class="ptag">Android · Date picker</div>
+    </div>
+
+    <!-- Android Form / Keyboard -->
+    <div class="phone android">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar" style="padding:8px 18px 4px;font-size:13px"><span class="time">9:41</span><span class="icons"><svg width="22" height="11" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="topbar android">
+          <button class="nav-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+          <div class="tt">Add expense</div>
+        </div>
+        <div class="content">
+          <div class="scroll-area" style="padding:16px 20px">
+            <div class="mfield android focus"><label>Amount (THB)</label><div class="mi">12,400|</div></div>
+            <div class="mfield android"><label>Category</label><div class="mi">Travel</div></div>
+            <div class="mfield android"><label>Date</label><div class="mi">May 22, 2026</div></div>
+            <button class="btn android" style="background:var(--gf-primary);color:#fff;margin-top:8px">Save expense</button>
+          </div>
+        </div>
+        <div class="keyboard">
+          <div class="kbd-row"><div class="kbd">1</div><div class="kbd">2</div><div class="kbd">3</div><div class="kbd">4</div><div class="kbd">5</div><div class="kbd">6</div><div class="kbd">7</div><div class="kbd">8</div><div class="kbd">9</div><div class="kbd">0</div></div>
+          <div class="kbd-row"><div class="kbd">q</div><div class="kbd">w</div><div class="kbd">e</div><div class="kbd">r</div><div class="kbd">t</div><div class="kbd">y</div><div class="kbd">u</div><div class="kbd">i</div><div class="kbd">o</div><div class="kbd">p</div></div>
+          <div class="kbd-row"><div class="kbd">a</div><div class="kbd">s</div><div class="kbd">d</div><div class="kbd">f</div><div class="kbd">g</div><div class="kbd">h</div><div class="kbd">j</div><div class="kbd">k</div><div class="kbd">l</div></div>
+          <div class="kbd-row"><div class="kbd dark wide">⇧</div><div class="kbd">z</div><div class="kbd">x</div><div class="kbd">c</div><div class="kbd">v</div><div class="kbd">b</div><div class="kbd">n</div><div class="kbd">m</div><div class="kbd dark wide">⌫</div></div>
+          <div class="kbd-row"><div class="kbd dark wide">123</div><div class="kbd dark">,</div><div class="kbd space">space</div><div class="kbd dark">.</div><div class="kbd dark wide">⏎</div></div>
+        </div>
+      </div>
+      <div class="ptag">Android · Form + keyboard</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- =============== 3. Mobile patterns — toast, refresh, FAB, segmented =============== -->
+<div class="card">
+  <div class="hdr"><div class="ttl">Mobile feedback patterns</div><div class="tag">Toast · pull-to-refresh · empty state</div></div>
+  <div class="body">
+
+    <!-- iOS toast -->
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar"><span class="time">9:41</span><span class="icons"><svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="topbar"><div class="tt">Save changes</div></div>
+        <div class="content">
+          <div class="scroll-area">
+            <div class="mfield"><label>Name</label><div class="mi">Ploy Kittisak</div></div>
+            <div class="mfield"><label>Phone</label><div class="mi">+66 81 234 5678</div></div>
+            <button class="btn p" style="margin-top:8px">Save</button>
+          </div>
+        </div>
+        <div class="toast-ios">
+          <div class="ok">✓</div>
+          <div class="lb">Saved</div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="ptag">iOS · HUD toast</div>
+    </div>
+
+    <!-- Pull to refresh -->
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar"><span class="time">9:41</span><span class="icons"><svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="topbar"><div class="tt">Inbox</div></div>
+        <div class="content" style="position:relative">
+          <div class="ptr"><div class="sp"></div><span>Pull to refresh…</span></div>
+          <div class="scroll-area" style="margin-top:24px">
+            <div class="row" style="border-radius:14px;border:1px solid var(--gf-line-5);opacity:.5">
+              <div class="av">SC</div>
+              <div class="col"><div class="pn">Siam Cement</div><div class="sm">Invoice paid</div></div>
+              <div class="meta">5m</div>
+            </div>
+            <div class="row" style="border-radius:14px;border:1px solid var(--gf-line-5);opacity:.5">
+              <div class="av" style="background:linear-gradient(135deg,#5AC8FA,#2DAE4B)">NT</div>
+              <div class="col"><div class="pn">Nattapong T.</div><div class="sm">Mentioned you in #design</div></div>
+              <div class="meta">12m</div>
+            </div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="ptag">Pull to refresh</div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar"><span class="time">9:41</span><span class="icons"><svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+        <div class="topbar"><div class="tt">Receipts</div></div>
+        <div class="content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;gap:14px">
+          <div style="width:80px;height:80px;border-radius:24px;background:var(--gf-primary-wash);display:flex;align-items:center;justify-content:center;color:var(--gf-primary)">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M7 3h10v18l-2.5-2-2.5 2-2.5-2-2.5 2z"/><path d="M9 9h6M9 13h4" stroke-linecap="round"/></svg>
+          </div>
+          <div style="font-size:18px;font-weight:700;color:var(--gf-fg-1);letter-spacing:-.01em">No receipts yet</div>
+          <div style="font-size:14px;color:var(--gf-fg-4);line-height:1.5">Snap a photo of any expense and we'll extract the details automatically.</div>
+          <button class="btn p" style="margin-top:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l2-2h4l2 2"/></svg>Take photo</button>
+          <button class="btn text" style="margin-top:-4px">Upload from library</button>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <div class="ptag">Empty state</div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+</body></html>

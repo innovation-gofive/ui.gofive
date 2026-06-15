@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- @dsCard group="Type" name="Typeface" subtitle="4 weights + usage guidance per weight" viewport="700x320" -->
+<html><head><meta charset="utf-8"><title>Gofive — Typeface</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin:0; background:#fff; color: var(--gf-fg-1); font-family: var(--gf-font-family); }
+  .wrap { padding: 22px 24px; }
+  .head { display:flex; align-items:baseline; gap:12px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--gf-line-4); }
+  .head .n { font-size:16px; font-weight:600; letter-spacing:-0.01em; }
+  .head .m { font-size:11px; color: var(--gf-fg-5); }
+
+  .row {
+    display:grid; grid-template-columns: 48px 1fr 210px; gap: 16px; align-items:center;
+    padding: 12px 0; border-bottom: 1px solid var(--gf-line-5);
+  }
+  .row:last-child { border-bottom: 0; }
+  .w {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+    color: var(--gf-fg-5); font-family: var(--gf-font-mono); text-transform: uppercase;
+  }
+  .sample {
+    font-size: 26px; letter-spacing: -0.005em; line-height: 1.15;
+    color: var(--gf-fg-1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .use { font-size: 11px; color: var(--gf-fg-4); line-height: 1.4; }
+  .use b { color: var(--gf-fg-2); font-weight: 600; }
+  .use .tok { font-family: var(--gf-font-mono); font-size: 10px; color: var(--gf-fg-5); }
+
+  .w400 { font-weight: 400; } .w500 { font-weight: 500; }
+  .w600 { font-weight: 600; } .w700 { font-weight: 700; }
+</style></head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <span class="n">Gofive</span>
+      <span class="m">Custom family · 4 weights · woff2 · default body 14 / 1.45</span>
+    </div>
+
+    <div class="row">
+      <div class="w">400</div>
+      <div class="sample w400">Aa  The quick brown fox — 2026</div>
+      <div class="use"><b>Text</b> — body copy, tables, helper text, descriptions. <span class="tok">default</span></div>
+    </div>
+    <div class="row">
+      <div class="w">500</div>
+      <div class="sample w500">Aa  The quick brown fox — 2026</div>
+      <div class="use"><b>Medium</b> — field labels, menu items, meta chips, nav (resting).</div>
+    </div>
+    <div class="row">
+      <div class="w">600</div>
+      <div class="sample w600">Aa  The quick brown fox — 2026</div>
+      <div class="use"><b>Semi Bold</b> — buttons, active nav, card titles, section headers, KPI numbers.</div>
+    </div>
+    <div class="row">
+      <div class="w">700</div>
+      <div class="sample w700">Aa  The quick brown fox — 2026</div>
+      <div class="use"><b>Bold</b> — H1/H2 display, hero numbers, dialog titles. Use sparingly.</div>
+    </div>
+  </div>
+</body></html>

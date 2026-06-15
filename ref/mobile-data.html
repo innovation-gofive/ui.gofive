@@ -1,0 +1,229 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Mobile: Data & Overlay" subtitle="List · Cards · Avatar · Attachment · Dialog · Calendar · Tabs · Tooltip" -->
+<html lang="en"><head><meta charset="utf-8"><title>Gofive — Mobile Data &amp; Overlay</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;background:#E8E8ED;color:var(--gf-fg-1);font-family:var(--gf-font-family);-webkit-font-smoothing:antialiased}
+.wrap{padding:24px;display:flex;flex-wrap:wrap;gap:24px;justify-content:center}
+.phone{width:320px;height:660px;border-radius:42px;background:#0E0E14;padding:10px;box-shadow:0 18px 40px rgba(20,20,43,.25);position:relative;flex-shrink:0}
+.screen{width:100%;height:100%;border-radius:32px;background:#FFFFFF;overflow:hidden;position:relative;display:flex;flex-direction:column;color:#1C1C22}
+.notch{position:absolute;top:18px;left:50%;transform:translateX(-50%);width:110px;height:30px;border-radius:18px;background:#0E0E14;z-index:5}
+.statusbar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px 8px;font-size:14px;font-weight:600;z-index:1}
+.home-ind{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;width:120px;height:4px;border-radius:999px;background:#0E0E14}
+.ptag{text-align:center;margin-top:10px;font-size:10.5px;color:#8A8A96;font-family:var(--gf-font-mono)}
+.tbar{display:flex;align-items:center;gap:8px;padding:8px 16px 12px;border-bottom:1px solid #ECECF1}
+.tbar .back{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:#383842}
+.tbar .tt{font-size:17px;font-weight:700;flex:1;text-align:center}
+.tbar .act{color:#F88411;font-weight:600;font-size:15px}
+.content{flex:1;overflow:auto}
+.scroll{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.lbl{font-size:10.5px;color:#8A8A96;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+
+/* Table / list rows */
+.list-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #ECECF1}
+.list-row .av{width:40px;height:40px;border-radius:999px;background:linear-gradient(135deg,#FFB057,#F05B2F);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.list-row .col{flex:1;min-width:0}
+.list-row .nm{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-row .sm{font-size:12.5px;color:#6A6A7C;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-row .meta{font-size:12px;color:#A5A5B6;flex-shrink:0}
+.list-row .chev{color:#BCBCC8}
+.st{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+.st.ok{background:#E8F7EE;color:#00875F}
+.st.wn{background:#FFF4DC;color:#8A6200}
+
+/* Card mobile */
+.mcard{background:#FFFFFF;border:1px solid #ECECF1;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.mcard h3{margin:0;font-size:16px;font-weight:700}
+.mcard p{margin:0;font-size:13px;color:#6A6A7C;line-height:1.45}
+.mcard .stat{display:flex;align-items:baseline;gap:8px;margin-top:4px}
+.mcard .stat .v{font-size:28px;font-weight:700;letter-spacing:-.02em}
+.mcard .stat .d{font-size:12px;color:#00875F;font-weight:600}
+.mcard .bar{height:5px;background:#ECECF1;border-radius:999px;overflow:hidden}
+.mcard .bar > span{display:block;height:100%;background:#F88411;border-radius:999px}
+
+/* Avatar */
+.av-row{display:flex;gap:14px;align-items:center}
+.av-lg{width:56px;height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#fff;flex-shrink:0;position:relative}
+.av-lg .dot{position:absolute;right:1px;bottom:1px;width:12px;height:12px;border-radius:999px;background:#00C291;border:2.5px solid #fff}
+.av-stack{display:flex}
+.av-stack .av-sm{width:32px;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px;color:#fff;border:2.5px solid #fff;margin-left:-10px}
+.av-stack .av-sm:first-child{margin-left:0}
+
+/* Attachment */
+.file{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #ECECF1;border-radius:12px}
+.file .fi{width:40px;height:48px;border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding:4px;color:#fff;font-size:10px;font-weight:700}
+.file .fi.pdf{background:#E6443C}
+.file .fi.xls{background:#1E8449}
+.file .fi.img{background:#A24AC4}
+.file .col{flex:1;min-width:0}
+.file .fnm{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file .fsub{font-size:12px;color:#83839A;margin-top:2px}
+
+/* Tooltip */
+.tip{position:relative;background:#1F1F28;color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;max-width:260px;margin:0 auto}
+.tip::after{content:"";position:absolute;bottom:-6px;left:50%;margin-left:-6px;width:12px;height:12px;background:#1F1F28;transform:rotate(45deg)}
+
+/* Dialog overlay */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:3;border-radius:32px}
+.dlg{position:absolute;left:20px;right:20px;top:50%;transform:translateY(-50%);z-index:4;background:#fff;border-radius:18px;padding:24px 20px;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.dlg .dic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.dlg .dic.dg{background:#FCE7E9;color:#E11D35}
+.dlg .dic.ok{background:#E8F7EE;color:#00875F}
+.dlg h3{margin:0 0 6px;font-size:17px;font-weight:700;text-align:center}
+.dlg p{margin:0 0 18px;font-size:14px;color:#52525F;text-align:center;line-height:1.5}
+.dlg .btns{display:flex;flex-direction:column;gap:8px}
+.dlg .btn{height:48px;padding:0 20px;border-radius:12px;font-size:15px;font-weight:600;border:0;width:100%;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.dlg .btn.p{background:#F88411;color:#fff}
+.dlg .btn.dg{background:#E11D35;color:#fff}
+.dlg .btn.g{background:#F6F6F8;color:#383842}
+
+/* Action sheet */
+.sheet{position:absolute;left:10px;right:10px;bottom:10px;z-index:4;display:flex;flex-direction:column;gap:8px}
+.sheet .group{background:rgba(255,255,255,.97);border-radius:14px;overflow:hidden;backdrop-filter:blur(20px)}
+.sheet .ai{padding:16px;text-align:center;font-size:17px;color:#F88411;background:transparent;border:0;width:100%;font-family:inherit;font-weight:500}
+.sheet .ai + .ai{border-top:1px solid rgba(60,60,67,.18)}
+.sheet .ai.dg{color:#E11D35}
+.sheet .ai.cancel{font-weight:700}
+
+/* Bottom nav */
+.bnav{position:absolute;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:1px solid #ECECF1;padding:8px 4px 22px}
+.bnav .nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#A5A5B6}
+.bnav .nv.a{color:#F88411}
+.bnav .nv .ic{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+
+/* Calendar mini */
+.cal-head{display:flex;align-items:center;justify-content:space-between;padding:8px 0 10px}
+.cal-head .mn{font-weight:600;font-size:15px}
+.cal-head .nav{display:flex;gap:8px}
+.cal-head .nav button{width:28px;height:28px;border-radius:7px;border:0;background:#F6F6F8;color:#383842;display:flex;align-items:center;justify-content:center}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:2px}
+.cg .wd{font-size:11px;color:#A5A5B6;padding:6px 0;font-weight:600}
+.cg .d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;border-radius:999px;color:#1C1C22}
+.cg .d.muted{color:#BCBCC8}
+.cg .d.today{background:#F88411;color:#fff;font-weight:700}
+.cg .d.sel{background:#FFF4E5;color:#F88411;font-weight:600}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:1px solid #ECECF1}
+.tabs .t{flex:1;text-align:center;padding:12px 8px;font-size:13.5px;color:#83839A;font-weight:500;border-bottom:2px solid transparent}
+.tabs .t.a{color:#F88411;font-weight:600;border-color:#F88411}
+</style>
+</head><body>
+<div class="wrap">
+
+<!-- Table / List -->
+<div>
+<div class="phone"><div class="notch"></div><div class="screen">
+  <div class="statusbar"><span>9:41</span><span class="icons"><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+  <div class="tbar"><div class="tt">Employees</div><div class="act">+ Add</div></div>
+  <div class="content">
+    <div class="list-row"><div class="av">PK</div><div class="col"><div class="nm">Ploy Kittisak</div><div class="sm">Admin · People Ops</div></div><span class="st ok">Active</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>
+    <div class="list-row"><div class="av" style="background:linear-gradient(135deg,#5AC8FA,#2DAE4B)">NT</div><div class="col"><div class="nm">Nattapong T.</div><div class="sm">Manager · Engineering</div></div><span class="st ok">Active</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>
+    <div class="list-row"><div class="av" style="background:linear-gradient(135deg,#FFB057,#F05B2F)">CR</div><div class="col"><div class="nm">Chayaphon R.</div><div class="sm">Member · Design</div></div><span class="st wn">Invited</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>
+    <div class="list-row"><div class="av" style="background:linear-gradient(135deg,#C471ED,#F64F95)">AW</div><div class="col"><div class="nm">Arisa Wongsuk</div><div class="sm">Member · Marketing</div></div><span class="st ok">Active</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>
+    <div class="list-row"><div class="av" style="background:linear-gradient(135deg,#43D8B8,#1E8E8C)">SP</div><div class="col"><div class="nm">Siriporn P.</div><div class="sm">Member · Finance</div></div><span class="st ok">Active</span><svg class="chev" width="16" height="16" viewBox="0 0 16 16"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div>
+  </div>
+  <div class="bnav">
+    <div class="nv a"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1V10z"/></svg></div>Home</div>
+    <div class="nv"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/></svg></div>Tasks</div>
+    <div class="nv"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4" stroke-linecap="round"/></svg></div>Search</div>
+    <div class="nv"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9" r="3.5"/><path d="M5 20a7 7 0 0114 0" stroke-linecap="round"/></svg></div>Profile</div>
+  </div>
+  <div class="home-ind"></div>
+</div></div>
+<div class="ptag">Table / List · Bottom Nav</div>
+</div>
+
+<!-- Cards + Avatar -->
+<div>
+<div class="phone"><div class="notch"></div><div class="screen">
+  <div class="statusbar"><span>9:41</span><span class="icons"><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+  <div class="tbar"><div class="tt">Dashboard</div></div>
+  <div class="content"><div class="scroll">
+    <div class="mcard"><h3>Active employees</h3><p>Compared to last month</p><div class="stat"><span class="v">248</span><span class="d">+12</span></div><div class="bar"><span style="width:78%"></span></div></div>
+    <div class="mcard"><h3>Payroll — May</h3><p>62% completed</p><div class="stat"><span class="v">฿ 4.82M</span></div><div class="bar"><span style="width:62%"></span></div></div>
+
+    <div class="lbl" style="margin-top:6px">Avatars</div>
+    <div class="av-row">
+      <div class="av-lg" style="background:linear-gradient(135deg,#FFB057,#F05B2F)">PK<span class="dot"></span></div>
+      <div style="flex:1"><div style="font-size:15px;font-weight:600">Ploy Kittisak</div><div style="font-size:12.5px;color:#6A6A7C">Admin · People Ops</div></div>
+    </div>
+    <div class="lbl" style="margin-top:6px">Avatar stack</div>
+    <div class="av-stack">
+      <div class="av-sm" style="background:#F88411">PK</div>
+      <div class="av-sm" style="background:#116DFC">NT</div>
+      <div class="av-sm" style="background:#2DAE4B">CR</div>
+      <div class="av-sm" style="background:#5E5EED">AW</div>
+      <div class="av-sm" style="background:#DFDFE8;color:#52525F">+6</div>
+    </div>
+
+    <div class="lbl" style="margin-top:10px">Attachments</div>
+    <div class="file"><div class="fi pdf">PDF</div><div class="col"><div class="fnm">handbook-2025.pdf</div><div class="fsub">2.4 MB · uploaded 2m ago</div></div></div>
+    <div class="file"><div class="fi xls">XLS</div><div class="col"><div class="fnm">headcount-report.xlsx</div><div class="fsub">6.8 MB · uploading 60%</div></div></div>
+  </div></div>
+  <div class="home-ind"></div>
+</div></div>
+<div class="ptag">Cards · Avatar · Attachment</div>
+</div>
+
+<!-- Dialog + Sheet -->
+<div>
+<div class="phone"><div class="notch"></div><div class="screen">
+  <div class="statusbar"><span>9:41</span><span class="icons"><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+  <div class="tbar"><div class="tt">Invoice</div></div>
+  <div class="content"><div class="scroll"><div class="mcard"><h3>SCG</h3><p style="font-size:12px">Issued May 12 · Due Jun 11</p><div class="stat"><span class="v">฿ 137K</span></div></div></div></div>
+  <div class="scrim"></div>
+  <div class="dlg">
+    <div class="dic dg"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13"/></svg></div>
+    <h3>ลบใบแจ้งหนี้?</h3>
+    <p>INV-2024-0412 จะถูกลบถาวร ไม่สามารถกู้คืนได้</p>
+    <div class="btns"><button class="btn dg">ลบถาวร</button><button class="btn g">ยกเลิก</button></div>
+  </div>
+  <div class="home-ind"></div>
+</div></div>
+<div class="ptag">Dialog</div>
+</div>
+
+<!-- Calendar + Tabs + Tooltip -->
+<div>
+<div class="phone"><div class="notch"></div><div class="screen">
+  <div class="statusbar"><span>9:41</span><span class="icons"><svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="2.5" stroke="currentColor" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1" fill="currentColor"/></svg></span></div>
+  <div class="tbar"><div class="tt">Calendar</div></div>
+  <div class="tabs"><div class="t">Day</div><div class="t a">Month</div><div class="t">Year</div></div>
+  <div class="content"><div class="scroll" style="padding-top:8px">
+    <div class="cal-head">
+      <span class="mn">May 2026</span>
+      <div class="nav"><button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button><button><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></button></div>
+    </div>
+    <div class="cg">
+      <div class="wd">Su</div><div class="wd">Mo</div><div class="wd">Tu</div><div class="wd">We</div><div class="wd">Th</div><div class="wd">Fr</div><div class="wd">Sa</div>
+      <div class="d muted">26</div><div class="d muted">27</div><div class="d muted">28</div><div class="d muted">29</div><div class="d muted">30</div><div class="d">1</div><div class="d">2</div>
+      <div class="d">3</div><div class="d">4</div><div class="d">5</div><div class="d">6</div><div class="d">7</div><div class="d sel">8</div><div class="d">9</div>
+      <div class="d">10</div><div class="d">11</div><div class="d">12</div><div class="d">13</div><div class="d">14</div><div class="d">15</div><div class="d">16</div>
+      <div class="d">17</div><div class="d">18</div><div class="d">19</div><div class="d">20</div><div class="d">21</div><div class="d">22</div><div class="d">23</div>
+      <div class="d">24</div><div class="d">25</div><div class="d">26</div><div class="d today">27</div><div class="d">28</div><div class="d">29</div><div class="d">30</div>
+      <div class="d">31</div>
+    </div>
+
+    <div class="lbl" style="margin-top:12px">Tooltip</div>
+    <div class="tip">กด ⌘K เพื่อเปิด Quick Switcher จากที่ไหนก็ได้</div>
+
+    <div class="lbl" style="margin-top:16px">Picker trigger</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border:1.5px solid #DFDFE8;border-radius:12px;font-size:14px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        8 May 2026
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border:1.5px solid #DFDFE8;border-radius:12px;font-size:14px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        09:30
+      </div>
+    </div>
+  </div></div>
+  <div class="home-ind"></div>
+</div></div>
+<div class="ptag">Calendar · Tabs · Tooltip · Picker</div>
+</div>
+
+</div>
+</body></html>
