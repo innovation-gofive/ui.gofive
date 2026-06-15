@@ -28,7 +28,7 @@ export default function Home() {
 
       <DocH2 id="installation">Installation</DocH2>
       <p className="mt-4 leading-7 text-muted-foreground">Add the GoFive registry to your project once:</p>
-      <CodeBlock code={`npx shadcn@latest registry add @gofive=${siteConfig.registryUrl}`} className="mt-4" />
+      <CodeBlock code={`npx shadcn@latest registry add @gofive=${siteConfig.registryUrl}/r/{name}.json`} className="mt-4" />
 
       <DocH2 id="components">Components</DocH2>
       <p className="mt-4 leading-7 text-muted-foreground">Browse the available components:</p>
