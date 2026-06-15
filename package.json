@@ -39,12 +39,5 @@
   "overrides": {
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@tailwindcss/oxide",
-      "sharp",
-      "unrs-resolver"
-    ]
   }
 }

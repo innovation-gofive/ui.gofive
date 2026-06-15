@@ -1,12 +1,11 @@
 # syntax=docker/dockerfile:1
 
 FROM node:22-alpine AS base
-RUN corepack enable
 WORKDIR /app
 
 FROM base AS deps
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm ci
 
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
@@ -15,7 +14,7 @@ COPY . .
 ARG NEXT_PUBLIC_REGISTRY_URL
 ENV NEXT_PUBLIC_REGISTRY_URL=$NEXT_PUBLIC_REGISTRY_URL
 
-RUN node scripts/set-registry-url.mjs && pnpm build
+RUN node scripts/set-registry-url.mjs && npm run build
 
 FROM base AS runner
 ENV NODE_ENV=development
