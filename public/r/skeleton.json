@@ -7,7 +7,8 @@
     {
       "path": "registry/new-york/ui/skeleton.tsx",
       "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\n// ── Animation CSS (React 19 style hoisting deduplicates via href) ──\nconst SKELETON_CSS = `\n  .gf-skeleton{background:linear-gradient(90deg,#ECECF0 25%,#F4F4F6 50%,#ECECF0 75%);background-size:200% 100%;animation:gf-skeleton-shim 1.5s linear infinite;}\n  @keyframes gf-skeleton-shim{to{background-position:-200% 0;}}\n  .gf-skeleton-pulse{background:#ECECF0;animation:gf-skeleton-pulse 1.5s ease-in-out infinite;}\n  @keyframes gf-skeleton-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}\n`\n\nexport type SkeletonVariant = \"shimmer\" | \"pulse\"\n\nexport interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {\n  variant?: SkeletonVariant\n  /** Render as a circle (e.g. avatar placeholder). */\n  circle?: boolean\n}\n\nfunction Skeleton({\n  variant = \"shimmer\",\n  circle = false,\n  className,\n  ...props\n}: SkeletonProps) {\n  return (\n    <>\n      <style href=\"gf-skeleton\" precedence=\"low\">{SKELETON_CSS}</style>\n      <div\n        data-slot=\"skeleton\"\n        aria-hidden\n        className={cn(\n          variant === \"shimmer\" ? \"gf-skeleton\" : \"gf-skeleton-pulse\",\n          circle ? \"rounded-full\" : \"rounded-md\",\n          className,\n        )}\n        {...props}\n      />\n    </>\n  )\n}\n\nexport { Skeleton }\n",
-      "type": "registry:ui"
+      "type": "registry:ui",
+      "target": "@ui/gofive/skeleton.tsx"
     }
   ],
   "type": "registry:ui"

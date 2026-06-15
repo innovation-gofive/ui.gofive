@@ -24,7 +24,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/tag-badge.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/tag-badge.tsx"
         }
       ]
     },
@@ -43,7 +44,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/typography.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/typography.tsx"
         }
       ]
     },
@@ -71,7 +73,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/avatar.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/avatar.tsx"
         }
       ]
     },
@@ -87,7 +90,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/checkbox.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/checkbox.tsx"
         }
       ]
     },
@@ -103,7 +107,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/radio-group.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/radio-group.tsx"
         }
       ]
     },
@@ -118,7 +123,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/switch.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/switch.tsx"
         }
       ]
     },
@@ -133,7 +139,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/progress.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/progress.tsx"
         }
       ]
     },
@@ -145,7 +152,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/spinner.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/spinner.tsx"
         }
       ]
     },
@@ -160,7 +168,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/rating.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/rating.tsx"
         }
       ]
     },
@@ -175,7 +184,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/tooltip.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/tooltip.tsx"
         }
       ]
     },
@@ -191,7 +201,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/toast.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/toast.tsx"
         }
       ]
     },
@@ -207,7 +218,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/dialog.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/dialog.tsx"
         }
       ]
     },
@@ -223,7 +235,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/sheet.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/sheet.tsx"
         }
       ]
     },
@@ -238,7 +251,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/drawer.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/drawer.tsx"
         }
       ]
     },
@@ -253,7 +267,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/filter.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/filter.tsx"
         }
       ]
     },
@@ -268,7 +283,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/search.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/search.tsx"
         }
       ]
     },
@@ -283,7 +299,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/attachment.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/attachment.tsx"
         }
       ]
     },
@@ -299,7 +316,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/calendar.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/calendar.tsx"
         }
       ]
     },
@@ -314,7 +332,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/scheduler.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/scheduler.tsx"
         }
       ]
     },
@@ -333,7 +352,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/datetime-picker.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/datetime-picker.tsx"
         }
       ]
     },
@@ -349,7 +369,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/picker.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/picker.tsx"
         }
       ]
     },
@@ -365,7 +386,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/media-picker.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/media-picker.tsx"
         }
       ]
     },
@@ -381,7 +403,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/menubar.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/menubar.tsx"
         }
       ]
     },
@@ -397,7 +420,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/context-menu.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/context-menu.tsx"
         }
       ]
     },
@@ -412,7 +436,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/stepper.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/stepper.tsx"
         }
       ]
     },
@@ -424,7 +449,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/skeleton.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/skeleton.tsx"
         }
       ]
     },
@@ -436,7 +462,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/empty-state.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/empty-state.tsx"
         }
       ]
     },
@@ -451,7 +478,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/alert.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/alert.tsx"
         }
       ]
     },
@@ -466,7 +494,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/validation.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/validation.tsx"
         }
       ]
     },
@@ -478,7 +507,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/scale.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/scale.tsx"
         }
       ]
     },
@@ -493,7 +523,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/input.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/input.tsx"
         }
       ]
     },
@@ -505,7 +536,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/textarea.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/textarea.tsx"
         }
       ]
     },
@@ -517,7 +549,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/otp-input.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/otp-input.tsx"
         }
       ]
     },
@@ -532,7 +565,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/slider.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/slider.tsx"
         }
       ]
     },
@@ -547,7 +581,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/segmented.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/segmented.tsx"
         }
       ]
     },
@@ -563,7 +598,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/select.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/select.tsx"
         }
       ]
     },
@@ -578,7 +614,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/tag-input.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/tag-input.tsx"
         }
       ]
     },
@@ -594,7 +631,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/tree-select.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/tree-select.tsx"
         }
       ]
     },
@@ -610,7 +648,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/person-picker.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/person-picker.tsx"
         }
       ]
     },
@@ -622,7 +661,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/tabs.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/tabs.tsx"
         }
       ]
     },
@@ -634,7 +674,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/navbar.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/navbar.tsx"
         }
       ]
     },
@@ -646,7 +687,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/bottom-nav.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/bottom-nav.tsx"
         }
       ]
     },
@@ -658,7 +700,8 @@
       "files": [
         {
           "path": "registry/new-york/ui/sidebar.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "@ui/gofive/sidebar.tsx"
         }
       ]
     },

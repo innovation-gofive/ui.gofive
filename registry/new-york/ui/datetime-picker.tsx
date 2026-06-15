@@ -12,7 +12,7 @@ import {
   MONTHS_SHORT,
   isSameDay,
   startOfDay,
-} from "@/registry/new-york/ui/calendar"
+} from "./calendar"
 
 // ── Formatting helpers ─────────────────────────────────────────────
 function formatDate(d: Date): string {

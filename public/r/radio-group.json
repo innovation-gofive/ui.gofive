@@ -11,7 +11,8 @@
     {
       "path": "registry/new-york/ui/radio-group.tsx",
       "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { RadioGroup as RadioGroupPrimitive } from \"radix-ui\"\n\nimport { cn } from \"@/lib/utils\"\n\nfunction RadioGroup({\n  className,\n  ...props\n}: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {\n  return (\n    <RadioGroupPrimitive.Root\n      data-slot=\"radio-group\"\n      className={cn(\"grid gap-2.5\", className)}\n      {...props}\n    />\n  )\n}\n\nfunction RadioGroupItem({\n  className,\n  ...props\n}: React.ComponentProps<typeof RadioGroupPrimitive.Item>) {\n  return (\n    <RadioGroupPrimitive.Item\n      data-slot=\"radio-group-item\"\n      className={cn(\n        \"peer inline-flex size-[18px] shrink-0 items-center justify-center rounded-full border-[1.5px] border-input bg-background outline-none transition-[border-color,box-shadow]\",\n        \"hover:border-primary\",\n        \"focus-visible:border-primary focus-visible:ring-ring/50 focus-visible:ring-[3px]\",\n        \"data-[state=checked]:border-primary\",\n        \"disabled:cursor-not-allowed disabled:border-input disabled:bg-muted disabled:data-[state=checked]:border-muted-foreground\",\n        \"[&[data-disabled]_[data-slot=radio-group-dot]]:bg-muted-foreground\",\n        className\n      )}\n      {...props}\n    >\n      <RadioGroupPrimitive.Indicator\n        data-slot=\"radio-group-indicator\"\n        className=\"flex items-center justify-center\"\n      >\n        <span data-slot=\"radio-group-dot\" className=\"size-2 rounded-full bg-primary\" />\n      </RadioGroupPrimitive.Indicator>\n    </RadioGroupPrimitive.Item>\n  )\n}\n\nexport { RadioGroup, RadioGroupItem }\n",
-      "type": "registry:ui"
+      "type": "registry:ui",
+      "target": "@ui/gofive/radio-group.tsx"
     }
   ],
   "type": "registry:ui"
