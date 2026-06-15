@@ -227,7 +227,7 @@
       "name": "search",
       "type": "registry:ui",
       "title": "Search",
-      "description": "A styled search input with leading icon, optional command-K hint and clear button, plus a controlled command palette with grouped, keyboard-navigable results.",
+      "description": "A styled search input with leading icon, command-K hint and clear button, a scope toggle and recent-search pills, a grouped results dropdown with highlighting, avatars, colored icon tiles and keyboard hints, loading-skeleton and no-results states, plus a controlled command palette with keyboard-navigable results.",
       "dependencies": ["lucide-react"],
       "files": [
         {
@@ -293,11 +293,24 @@
       "name": "picker",
       "type": "registry:ui",
       "title": "Picker",
-      "description": "Composable color, emoji, and icon pickers that each pair a trigger with a Radix Popover panel, with raw grids exported for inline use.",
+      "description": "Composable color, emoji, and icon pickers that each pair a trigger with a Radix Popover panel — the color picker adds hue/alpha sliders, a hex field and recent swatches, the emoji picker adds category tabs and a name/shortcode/unicode preview, and the icon picker adds outline/solid/duotone style variants — with raw grids exported for inline use.",
       "dependencies": ["radix-ui", "lucide-react"],
       "files": [
         {
           "path": "registry/new-york/ui/picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "media-picker",
+      "type": "registry:ui",
+      "title": "Media Picker",
+      "description": "A file & media picker with Library, Upload, From URL, and Unsplash tabs — a searchable thumbnail grid with single-select check, a drag-and-drop upload zone, a URL field with live preview, and a Cancel / Insert footer, available as a popover or a standalone panel.",
+      "dependencies": ["radix-ui", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/ui/media-picker.tsx",
           "type": "registry:ui"
         }
       ]
@@ -514,6 +527,54 @@
       "files": [
         {
           "path": "registry/new-york/ui/person-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Navigation tabs in four looks — underline, soft pill, segmented, and vertical — with optional count badges, driven by controlled or uncontrolled state.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "navbar",
+      "type": "registry:ui",
+      "title": "Navbar",
+      "description": "A top application bar composed of brand, primary nav items with an active state, a flexible spacer, trailing icon actions, and an avatar slot.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/navbar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "bottom-nav",
+      "type": "registry:ui",
+      "title": "Bottom Navigation",
+      "description": "A mobile bottom navigation bar whose active item tints its label and shows a soft primary pill behind the icon.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/bottom-nav.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "description": "A vertical navigation panel with brand, section labels, items with icons and count badges, and nested sub-items, plus a collapsed icon-only rail variant.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/sidebar.tsx",
           "type": "registry:ui"
         }
       ]

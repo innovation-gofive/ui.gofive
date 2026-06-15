@@ -12,7 +12,15 @@ import {
 } from "lucide-react"
 import {
   SearchInput,
+  SearchScope,
+  RecentSearches,
   CommandPalette,
+  SearchResults,
+  SearchGroup,
+  SearchResult,
+  SearchFooter,
+  SearchSkeleton,
+  SearchEmpty,
   type SearchItem,
 } from "@/registry/new-york/ui/search"
 import { Button } from "@/components/ui/button"
@@ -28,6 +36,10 @@ const toc = [
   { title: "Examples", href: "#examples" },
   { title: "Search input", href: "#input", depth: 1 },
   { title: "With ⌘K hint", href: "#kbd-hint", depth: 1 },
+  { title: "Scope toggle", href: "#scope", depth: 1 },
+  { title: "Recent & suggestions", href: "#recent", depth: 1 },
+  { title: "Grouped results", href: "#results", depth: 1 },
+  { title: "Loading & empty", href: "#states", depth: 1 },
   { title: "Command palette", href: "#command-palette", depth: 1 },
   { title: "API Reference", href: "#api-reference" },
 ]
@@ -90,7 +102,7 @@ export default function SearchPage() {
     <DocPage
       breadcrumb={["Components", "Search"]}
       title="Search"
-      description="A styled search input with a leading icon, optional ⌘K hint and clear button, plus a controlled command palette with grouped, keyboard-navigable results."
+      description="A search input with scope toggle and recent-search pills, a grouped results dropdown with highlighting, avatars and keyboard hints, loading and no-results states, plus a controlled command palette."
       toc={toc}
     >
       <DocH2 id="installation">Installation</DocH2>
@@ -137,6 +149,137 @@ export default function SearchPage() {
         </div>
       </ComponentPreview>
 
+      <DocH3 id="scope">Scope toggle</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        A segmented toggle for narrowing what to search. Controlled or uncontrolled.
+      </p>
+      <ComponentPreview
+        className="min-h-[100px]"
+        code={`<SearchScope
+  scopes={["Everything", "People", "Documents", "Tasks", "Conversations"]}
+  defaultValue="Everything"
+/>`}
+      >
+        <SearchScope
+          scopes={["Everything", "People", "Documents", "Tasks", "Conversations"]}
+          defaultValue="Everything"
+        />
+      </ComponentPreview>
+
+      <DocH3 id="recent">Recent & suggestions</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        The empty-query state: recent-search pills above grouped quick actions inside a results panel.
+      </p>
+      <ComponentPreview className="min-h-[260px]">
+        <SearchResults className="w-full max-w-[520px]">
+          <RecentSearches
+            items={["Q1 headcount", "Ploy Kittisak", "brand guidelines", "payroll export march"]}
+          />
+          <SearchGroup label="Jump to" count="quick actions">
+            <SearchResult item={ITEMS[0]} />
+            <SearchResult item={ITEMS[1]} />
+            <SearchResult item={ITEMS[2]} />
+          </SearchGroup>
+        </SearchResults>
+      </ComponentPreview>
+
+      <DocH3 id="results">Grouped results</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Results grouped by type with query highlighting, avatars, colored icon tiles, an active row, and a footer with keyboard hints.
+      </p>
+      <ComponentPreview className="min-h-[380px]">
+        <SearchResults
+          className="w-full max-w-[520px]"
+          footer={<SearchFooter count={6} />}
+        >
+          <SearchGroup label="People" count={2}>
+            <SearchResult
+              query="Onb"
+              item={{
+                id: "p1",
+                group: "People",
+                title: "Nattanan Onboun",
+                subtitle: "nattanan.o@gofive.co.th · Engineering",
+                meta: "#PPL-104",
+                avatar: { initials: "NO" },
+              }}
+            />
+            <SearchResult
+              item={{
+                id: "p2",
+                group: "People",
+                title: "Onboarding committee",
+                subtitle: "Group · 8 members",
+                meta: "group",
+                avatar: { initials: "OC", className: "from-[#FFB057] to-[#F05B2F]" },
+              }}
+            />
+          </SearchGroup>
+          <SearchGroup label="Documents" count={3}>
+            <SearchResult
+              active
+              query="Onb"
+              item={{
+                id: "d1",
+                group: "Documents",
+                title: "Onboarding handbook — 2025 edition",
+                subtitle: "PDF · 2.4 MB · Updated 2 days ago",
+                icon: <FileText />,
+                iconClassName: "bg-[#FFE4E9] text-[#E6443C]",
+              }}
+            />
+            <SearchResult
+              query="onb"
+              item={{
+                id: "d2",
+                group: "Documents",
+                title: "Remote onboarding checklist",
+                subtitle: "Doc · shared by Chayaphon R.",
+                icon: <FileText />,
+                iconClassName: "bg-[#E7F0FF] text-[#116DFC]",
+              }}
+            />
+          </SearchGroup>
+          <SearchGroup label="Tasks" count={1}>
+            <SearchResult
+              query="onb"
+              item={{
+                id: "t1",
+                group: "Tasks",
+                title: "Revise onboarding email templates",
+                subtitle: "Due Apr 18 · assigned to you",
+                meta: "T-284",
+                icon: <CheckSquare />,
+                iconClassName: "bg-[#FFF4BF] text-[#8A6200]",
+              }}
+            />
+          </SearchGroup>
+        </SearchResults>
+      </ComponentPreview>
+
+      <DocH3 id="states">Loading & empty</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        A shimmering skeleton while results load, and a rich no-results state with optional actions.
+      </p>
+      <ComponentPreview className="min-h-[260px]">
+        <div className="grid w-full max-w-[640px] grid-cols-1 gap-4 sm:grid-cols-2">
+          <SearchResults>
+            <SearchSkeleton rows={3} />
+          </SearchResults>
+          <SearchResults>
+            <SearchEmpty
+              query="qwerpayroll"
+              actions={
+                <>
+                  <Button variant="outline" size="sm">Clear search</Button>
+                  <Button size="sm">Search all workspaces</Button>
+                </>
+              }
+            />
+          </SearchResults>
+        </div>
+      </ComponentPreview>
+
       <DocH3 id="command-palette">Command palette</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">
         A controlled overlay with grouped results, highlight on match, and ↑/↓/↵ keyboard navigation.
@@ -157,6 +300,63 @@ export default function SearchPage() {
         { prop: "containerClassName", type: "string", default: "—", desc: "Class applied to the outer wrapper (width, etc.)" },
       ]} />
 
+      <DocH3 id="api-searchscope">SearchScope</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">Segmented toggle for narrowing the search scope.</p>
+      <PropsTable rows={[
+        { prop: "scopes", type: "string[]", default: "—", desc: "Scope labels rendered as segments" },
+        { prop: "value", type: "string", default: "—", desc: "Controlled active scope" },
+        { prop: "defaultValue", type: "string", default: "scopes[0]", desc: "Initial scope when uncontrolled" },
+        { prop: "onValueChange", type: "(scope: string) => void", default: "—", desc: "Fires when a scope is selected" },
+      ]} />
+
+      <DocH3 id="api-recentsearches">RecentSearches</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">Pills of recent query terms shown in the empty-query state.</p>
+      <PropsTable rows={[
+        { prop: "items", type: "string[]", default: "—", desc: "Recent query terms (renders nothing when empty)" },
+        { prop: "label", type: "string", default: '"Recent searches"', desc: "Section heading; pass empty string to hide" },
+        { prop: "onSelect", type: "(term: string) => void", default: "—", desc: "Fires when a pill is clicked" },
+      ]} />
+
+      <DocH3 id="api-searchresults">SearchResults</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">Bordered dropdown panel that wraps groups, skeletons, or the empty state, with an optional footer.</p>
+      <PropsTable rows={[
+        { prop: "footer", type: "ReactNode", default: "—", desc: "Footer rendered below the body (e.g. <SearchFooter />)" },
+        { prop: "children", type: "ReactNode", default: "—", desc: "Groups, recent searches, skeleton, or empty state" },
+        { prop: "className", type: "string", default: "—", desc: "Class applied to the panel (width, etc.)" },
+      ]} />
+
+      <DocH3 id="api-searchresult">SearchResult</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">A single result row with icon or avatar, highlighted title, subtitle, and meta.</p>
+      <PropsTable rows={[
+        { prop: "item", type: "SearchItem", default: "—", desc: "The result to render" },
+        { prop: "query", type: "string", default: '""', desc: "Query used to highlight matches in the title" },
+        { prop: "active", type: "boolean", default: "false", desc: "Primary-tinted active/selected styling with ↵ hint" },
+        { prop: "onSelect", type: "(item: SearchItem) => void", default: "—", desc: "Fires when the row is clicked" },
+      ]} />
+
+      <DocH3 id="api-searchfooter">SearchFooter</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">Keyboard-hint row with an optional result count.</p>
+      <PropsTable rows={[
+        { prop: "count", type: "number", default: "—", desc: "Result count shown on the right" },
+        { prop: "hints", type: "ReactNode", default: "↑↓ / ↵ / ⌘↵", desc: "Hint content shown on the left" },
+      ]} />
+
+      <DocH3 id="api-searchskeleton">SearchSkeleton</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">Shimmering placeholder rows shown while results load.</p>
+      <PropsTable rows={[
+        { prop: "rows", type: "number", default: "3", desc: "Number of placeholder rows" },
+        { prop: "label", type: "string", default: '"Searching…"', desc: "Section heading; pass empty string to hide" },
+      ]} />
+
+      <DocH3 id="api-searchempty">SearchEmpty</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">No-results state with illustration, copy, and an action slot.</p>
+      <PropsTable rows={[
+        { prop: "query", type: "string", default: "—", desc: "Echoed in the default title (No results for “…”)" },
+        { prop: "title", type: "ReactNode", default: "—", desc: "Override the default title" },
+        { prop: "description", type: "ReactNode", default: '"Try a different keyword…"', desc: "Secondary line" },
+        { prop: "actions", type: "ReactNode", default: "—", desc: "Buttons shown below the copy" },
+      ]} />
+
       <DocH3 id="api-commandpalette">CommandPalette</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">Controlled overlay that filters and groups <code className="font-mono text-xs">items</code>.</p>
       <PropsTable rows={[
@@ -165,7 +365,7 @@ export default function SearchPage() {
         { prop: "items", type: "SearchItem[]", default: "—", desc: "Searchable items; grouped by their group field" },
         { prop: "placeholder", type: "string", default: '"Type a command or search…"', desc: "Input placeholder" },
         { prop: "onSelect", type: "(item: SearchItem) => void", default: "—", desc: "Fires when an item is chosen via click or ↵" },
-        { prop: "emptyMessage", type: "string", default: '"No results found."', desc: "Shown when nothing matches the query" },
+        { prop: "emptyMessage", type: "string", default: "—", desc: "Title shown when nothing matches the query" },
       ]} />
 
       <DocH3 id="api-searchitem">SearchItem</DocH3>
@@ -177,6 +377,8 @@ export default function SearchPage() {
         { prop: "subtitle", type: "string", default: "—", desc: "Secondary line" },
         { prop: "meta", type: "string", default: "—", desc: "Trailing mono text (id, shortcut, type)" },
         { prop: "icon", type: "ReactNode", default: "—", desc: "Leading icon" },
+        { prop: "iconClassName", type: "string", default: "—", desc: "Extra classes for the icon tile (e.g. colored backgrounds)" },
+        { prop: "avatar", type: "{ initials, className? }", default: "—", desc: "Initials avatar shown instead of the icon tile" },
         { prop: "keywords", type: "string", default: "—", desc: "Extra text matched against the query but not shown" },
       ]} />
     </DocPage>

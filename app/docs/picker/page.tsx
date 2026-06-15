@@ -32,7 +32,7 @@ export default function PickerPage() {
     <DocPage
       breadcrumb={["Components", "Picker"]}
       title="Picker"
-      description="Composable color, emoji, and icon pickers — each pairs a trigger with a Popover panel, with selected items marked by a ring and check, plus raw grids for inline use."
+      description="Composable color, emoji, and icon pickers — each pairs a trigger with a Popover panel. The color picker has hue/alpha sliders, a hex field and recent swatches; the emoji picker has category tabs and a name/shortcode/unicode preview; the icon picker has outline/solid/duotone style variants — plus raw grids for inline use."
       toc={toc}
     >
       <DocH2 id="installation">Installation</DocH2>
@@ -49,19 +49,19 @@ export default function PickerPage() {
 
       <DocH3 id="color">Color picker</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">
-        A grid of color swatches with a ring + check on the selected swatch, opened from a trigger swatch.
+        Swatch grid plus hue and alpha sliders, an editable hex field with opacity, and a row of recent colors, opened from a trigger swatch.
       </p>
       <ColorExample />
 
       <DocH3 id="emoji">Emoji picker</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">
-        Searchable emoji grid with category headers, in a Popover.
+        Searchable emoji grid with category tabs, scroll-synced headers, and a preview footer showing the name, shortcode, and unicode codepoint.
       </p>
       <EmojiExample />
 
       <DocH3 id="icon">Icon picker</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">
-        A curated grid of lucide icons with search, in a Popover.
+        A curated grid of lucide icons with search and an outline / solid / duotone style switch, in a Popover.
       </p>
       <IconExample />
 
@@ -77,8 +77,9 @@ export default function PickerPage() {
       <p className="mt-2 text-sm text-muted-foreground">Trigger swatch that opens a swatch grid in a Popover.</p>
       <PropsTable rows={[
         { prop: "value", type: "string", default: "—", desc: "Selected color (hex). Controlled." },
-        { prop: "onChange", type: "(color: string) => void", default: "—", desc: "Called with the chosen hex color" },
+        { prop: "onChange", type: "(color: string) => void", default: "—", desc: "Called with the chosen hex (8-digit when alpha < 100%)" },
         { prop: "colors", type: "readonly string[]", default: "DEFAULT_COLORS", desc: "Swatch palette to render" },
+        { prop: "recent", type: "readonly string[]", default: "DEFAULT_RECENT_COLORS", desc: "Recent swatches; auto-tracked when uncontrolled" },
         { prop: "align", type: '"start" | "center" | "end"', default: '"start"', desc: "Popover alignment" },
       ]} />
 
@@ -95,7 +96,9 @@ export default function PickerPage() {
       <PropsTable rows={[
         { prop: "value", type: "string", default: "—", desc: "Currently selected emoji" },
         { prop: "onSelect", type: "(emoji: string) => void", default: "—", desc: "Called with the chosen emoji" },
-        { prop: "categories", type: "EmojiCategory[]", default: "DEFAULT_EMOJIS", desc: "Emoji set grouped by category" },
+        { prop: "categories", type: "EmojiCategory[]", default: "DEFAULT_EMOJIS", desc: "Emoji set grouped by category (each has an icon tab)" },
+        { prop: "recent", type: "string[]", default: "[]", desc: "Recently used emoji shown under a clock tab" },
+        { prop: "meta", type: "EmojiMeta", default: "DEFAULT_EMOJI_META", desc: "Name / shortcode lookup for the preview footer" },
         { prop: "trigger", type: "ReactNode", default: "—", desc: "Custom trigger element" },
         { prop: "align", type: '"start" | "center" | "end"', default: '"start"', desc: "Popover alignment" },
       ]} />
@@ -114,6 +117,9 @@ export default function PickerPage() {
         { prop: "value", type: "string", default: "—", desc: "Name of the selected icon" },
         { prop: "onSelect", type: "(name: string, icon: LucideIcon) => void", default: "—", desc: "Called with the icon name and component" },
         { prop: "icons", type: "IconEntry[]", default: "DEFAULT_ICONS", desc: "Curated icon set (~24 lucide icons)" },
+        { prop: "variant", type: '"outline" | "solid" | "duotone"', default: '"outline"', desc: "Render style; controlled when set" },
+        { prop: "onVariantChange", type: "(variant: IconVariant) => void", default: "—", desc: "Called when the style switch changes" },
+        { prop: "iconSize", type: "number", default: "24", desc: "Size shown in the footer label" },
         { prop: "align", type: '"start" | "center" | "end"', default: '"start"', desc: "Popover alignment" },
       ]} />
 

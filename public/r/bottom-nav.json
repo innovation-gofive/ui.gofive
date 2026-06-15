@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bottom-nav",
+  "title": "Bottom Navigation",
+  "description": "A mobile bottom navigation bar whose active item tints its label and shows a soft primary pill behind the icon.",
+  "files": [
+    {
+      "path": "registry/new-york/ui/bottom-nav.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\n// ── BottomNav (mobile bottom navigation) ───────────────────────────\n// A mobile-style bottom navigation bar. The active item tints its label\n// and shows a soft primary pill behind the icon.\n//   <BottomNav>\n//     <BottomNavItem icon={<Home />} label=\"Home\" active />\n//     <BottomNavItem icon={<Search />} label=\"Search\" />\n//   </BottomNav>\nfunction BottomNav({\n  className,\n  ...props\n}: React.HTMLAttributes<HTMLElement>) {\n  return (\n    <nav\n      data-slot=\"bottom-nav\"\n      className={cn(\n        \"flex gap-0.5 rounded-2xl border border-border bg-background p-1.5\",\n        className,\n      )}\n      {...props}\n    />\n  )\n}\n\nexport interface BottomNavItemProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement> {\n  icon: React.ReactNode\n  label: React.ReactNode\n  active?: boolean\n}\n\nfunction BottomNavItem({\n  icon,\n  label,\n  active,\n  className,\n  ...props\n}: BottomNavItemProps) {\n  return (\n    <button\n      type=\"button\"\n      data-slot=\"bottom-nav-item\"\n      data-active={active}\n      aria-current={active ? \"page\" : undefined}\n      className={cn(\n        \"flex flex-1 flex-col items-center gap-1 rounded-xl py-2 text-[10.5px] font-medium text-muted-foreground transition-colors\",\n        \"data-[active=true]:text-primary\",\n        className,\n      )}\n      {...props}\n    >\n      <span\n        data-slot=\"bottom-nav-icon\"\n        className={cn(\n          \"flex items-center justify-center rounded-full px-3.5 py-1 transition-colors [&_svg]:size-[18px]\",\n          active && \"bg-primary/10\",\n        )}\n      >\n        {icon}\n      </span>\n      {label}\n    </button>\n  )\n}\n\nexport { BottomNav, BottomNavItem }\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

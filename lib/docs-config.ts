@@ -42,6 +42,11 @@ import {
   Tags,
   FolderTree,
   UsersRound,
+  AppWindow,
+  PanelsTopLeft,
+  PanelLeft,
+  Smartphone,
+  ImagePlus,
 } from "lucide-react"
 
 export interface NavItem {
@@ -99,8 +104,18 @@ export const docsNav: NavGroup[] = [
       { title: "DateTime Picker", href: "/docs/datetime-picker", icon: CalendarClock },
       { title: "Scheduler", href: "/docs/scheduler", icon: CalendarDays },
       { title: "Picker", href: "/docs/picker", icon: Palette },
+      { title: "Media Picker", href: "/docs/media-picker", icon: ImagePlus },
       { title: "Menubar", href: "/docs/menubar", icon: Menu },
       { title: "Context Menu", href: "/docs/context-menu", icon: MousePointerClick },
+    ],
+  },
+  {
+    title: "Navigation",
+    items: [
+      { title: "Tabs", href: "/docs/tabs", icon: AppWindow },
+      { title: "Navbar", href: "/docs/navbar", icon: PanelsTopLeft },
+      { title: "Sidebar", href: "/docs/sidebar", icon: PanelLeft },
+      { title: "Bottom Navigation", href: "/docs/bottom-nav", icon: Smartphone },
     ],
   },
   {
