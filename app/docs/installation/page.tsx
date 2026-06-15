@@ -20,7 +20,7 @@ export default function InstallationPage() {
       <p className="mt-4 leading-7 text-muted-foreground">
         Register the GoFive namespace in your project. You only need to do this once.
       </p>
-      <CodeBlock code={`npx shadcn@latest registry add @gofive=${siteConfig.registryUrl}/r/all.json`} className="mt-4" />
+      <CodeBlock code={`npx shadcn@latest registry add @gofive=${siteConfig.registryUrl}/r/{name}.json`} className="mt-4" />
 
       <DocH2 id="add-a-component">Add a component</DocH2>
       <p className="mt-4 leading-7 text-muted-foreground">
