@@ -6,7 +6,6 @@ import {
   AddFilterChip,
   FilterBar,
   FilterButton,
-  FilterClear,
   SegmentedControl,
   FilterBuilder,
   FilterBuilderHeader,
