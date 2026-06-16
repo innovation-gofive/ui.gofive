@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "gofive-ui": {
+      "source": "innovation-gofive/ui.gofive",
+      "sourceType": "github",
+      "skillPath": "skills/gofive-ui/SKILL.md",
+      "computedHash": "5a8b7548016cae9e980fdf87a79c8f426e9f418d31bfd6e01405aea262dd1a7c"
+    }
+  }
+}
