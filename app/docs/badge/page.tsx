@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Clock, AlertTriangle, X, Sparkles, Play, ArrowRight, Star } from "lucide-react"
+import { Check, Clock, AlertTriangle, X, Sparkles, Play, ArrowRight, Star, Loader2 } from "lucide-react"
 import { Tag, TagDot, TagIcon, TypingTag, BadgeCount, AvatarChip } from "@/registry/new-york/ui/tag-badge"
 import { DocPage, DocH2, DocH3 } from "@/components/docs/doc-page"
 import { InstallTabs } from "@/components/docs/install-tabs"
@@ -99,7 +99,7 @@ export default function BadgePage() {
           <div className="flex flex-wrap items-center gap-2">
             <Tag color="info" variant="soft" animation="spin"><TagIcon><Clock /></TagIcon>Syncing…</Tag>
             <Tag color="neutral" variant="outline" animation="spin"><TagIcon><Clock /></TagIcon>Processing</Tag>
-            <Tag color="success" variant="solid" animation="spin"><TagIcon><Check /></TagIcon>Saving</Tag>
+            <Tag color="info" variant="solid" animation="spin"><TagIcon><Loader2 /></TagIcon>Saving</Tag>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Tag color="info" variant="solid" animation="shimmer"><TagIcon><Sparkles /></TagIcon>NEW</Tag>
