@@ -24,6 +24,18 @@ npx shadcn@latest add @gofive/all
 
 ---
 
+## AI Agent Skill
+
+Using an AI coding agent (Claude Code, Cursor, …)? Install the **GoFive UI** agent skill so your agent knows the full catalog, the correct `@gofive/*` install commands, import paths, props, and theming:
+
+```bash
+npx skills add innovation-gofive/ui.gofive@gofive-ui
+```
+
+Then just ask — e.g. *"add a GoFive status tag and a date picker"* — and the agent runs the right commands and imports. Discover it with `npx skills find gofive`. See [`skills/gofive-ui/README.md`](skills/gofive-ui/README.md) for details and manual install.
+
+---
+
 ## Components
 
 ### GoFive Font
@@ -31,7 +43,7 @@ npx shadcn@latest add @gofive/all
 Custom font family with four weights.
 
 ```bash
-npx shadcn@latest add @gofive/gofive-font
+npx shadcn@latest add @gofive/fonts
 ```
 
 This installs `lib/gofive-font.css` into your project. Import it in your root layout:
@@ -63,10 +75,10 @@ body {
 Semantic status tags, count badges, avatar chips, and typing indicators.
 
 ```bash
-npx shadcn@latest add @gofive/tag-badge
+npx shadcn@latest add @gofive/badge
 ```
 
-This installs `components/ui/tag-badge.tsx`. Requires `lucide-react` for icons.
+This installs `components/ui/gofive/tag-badge.tsx`. Requires `lucide-react` for icons.
 
 #### Exports
 
