@@ -47,6 +47,7 @@ import {
   PanelLeft,
   Smartphone,
   ImagePlus,
+  Sparkles,
 } from "lucide-react"
 
 export interface NavItem {
@@ -67,6 +68,12 @@ export const docsNav: NavGroup[] = [
     items: [
       { title: "Introduction", href: "/", icon: BookOpen },
       { title: "Installation", href: "/docs/installation", icon: Download },
+    ],
+  },
+  {
+    title: "AI Agents",
+    items: [
+      { title: "Agent Skill", href: "/docs/agent-skill", icon: Sparkles },
     ],
   },
   {
