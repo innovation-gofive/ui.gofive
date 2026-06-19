@@ -12,7 +12,7 @@ export function SiteHeader() {
         {siteConfig.name}
       </Link>
       <nav className="ml-2 hidden items-center gap-5 text-sm md:flex">
-        <Link href="/docs/installation" className="text-foreground/70 transition-colors hover:text-foreground">
+        <Link href="/docs/introduction" className="text-foreground/70 transition-colors hover:text-foreground">
           Docs
         </Link>
         <Link href="/docs/badge" className="text-foreground/70 transition-colors hover:text-foreground">

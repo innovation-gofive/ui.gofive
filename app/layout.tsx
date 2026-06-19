@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import type { CSSProperties } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { SiteHeader } from "@/components/docs/site-header";
-import { AppSidebar } from "@/components/docs/app-sidebar";
 
 const goFive = localFont({
   src: [
@@ -28,19 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={goFive.variable}>
-      <body className="antialiased">
-        <SidebarProvider
-          style={{ "--header-height": "3.5rem" } as CSSProperties}
-        >
-          <AppSidebar />
-          <SidebarInset className="min-w-0">
-            <SiteHeader />
-            <div className="mx-auto flex w-full max-w-6xl flex-1 px-4 lg:px-8">
-              {children}
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

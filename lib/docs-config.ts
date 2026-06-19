@@ -66,7 +66,7 @@ export const docsNav: NavGroup[] = [
   {
     title: "Get Started",
     items: [
-      { title: "Introduction", href: "/", icon: BookOpen },
+      { title: "Introduction", href: "/docs/introduction", icon: BookOpen },
       { title: "Installation", href: "/docs/installation", icon: Download },
     ],
   },
