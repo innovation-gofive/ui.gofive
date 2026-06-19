@@ -149,7 +149,7 @@ export const docsNav: NavGroup[] = [
 ]
 
 export const siteConfig = {
-  name: "GoFive Registry",
+  name: "GoFive Components",
   description: "A custom shadcn registry by GoFive.",
   // Override per deployment with NEXT_PUBLIC_REGISTRY_URL (e.g. your Coolify URL).
   registryUrl:

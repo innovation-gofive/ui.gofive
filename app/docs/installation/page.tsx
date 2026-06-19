@@ -13,7 +13,7 @@ export default function InstallationPage() {
     <DocPage
       breadcrumb={["Docs", "Installation"]}
       title="Installation"
-      description="How to set up the GoFive registry and install components."
+      description="How to set up the GoFive components and install them."
       toc={toc}
     >
       <DocH2 id="add-the-registry">Add the registry</DocH2>
