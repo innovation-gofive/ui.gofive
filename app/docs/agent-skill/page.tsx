@@ -9,6 +9,7 @@ const toc = [
   { title: "How it works", href: "#how-it-works" },
   { title: "Component priority", href: "#priority", depth: 1 },
   { title: "Example prompts", href: "#examples" },
+  { title: "Migrate command", href: "#migrate" },
   { title: "Manual install", href: "#manual" },
 ]
 
@@ -107,11 +108,32 @@ export default function AgentSkillPage() {
         <li>&ldquo;Switch the theme to the <code className="rounded bg-muted px-1.5 py-0.5 text-sm">venio</code> brand palette.&rdquo;</li>
       </ul>
 
+      <DocH2 id="migrate">Migrate command</DocH2>
+      <p className="mt-4 leading-7 text-muted-foreground">
+        Already have a UI built on shadcn/ui, MUI, Ant Design, Chakra, or custom components? Install
+        the companion <strong>GoFive Migrate</strong> skill to get a{" "}
+        <code className="rounded bg-muted px-1.5 py-0.5 text-sm">/gofive-migrate</code> slash command
+        that swaps your existing components for GoFive equivalents — it checks the required
+        dependencies, installs the GoFive targets, and rewrites imports and props. Anything with no
+        GoFive equivalent (Button, Card, …) is reported as skipped rather than broken.
+      </p>
+      <CodeBlock code={`npx skills add innovation-gofive/ui.gofive@gofive-migrate`} className="mt-4" />
+      <p className="mt-4 leading-7 text-muted-foreground">Then run it from any project:</p>
+      <CodeBlock
+        code={`/gofive-migrate badge      # migrate one component\n/gofive-migrate            # scan and migrate the whole project`}
+        className="mt-4"
+      />
+      <p className="mt-4 leading-7 text-muted-foreground">
+        It always proposes a plan and waits for your confirmation before editing files. Commit or
+        stash your work first so the rewrite is easy to review.
+      </p>
+
       <DocH2 id="manual">Manual install</DocH2>
       <p className="mt-4 leading-7 text-muted-foreground">
         Prefer not to use the CLI? Copy the{" "}
-        <code className="rounded bg-muted px-1.5 py-0.5 text-sm">skills/gofive-ui</code> folder from
-        the registry repo into your project&rsquo;s{" "}
+        <code className="rounded bg-muted px-1.5 py-0.5 text-sm">skills/gofive-ui</code> (or{" "}
+        <code className="rounded bg-muted px-1.5 py-0.5 text-sm">skills/gofive-migrate</code>) folder
+        from the registry repo into your project&rsquo;s{" "}
         <code className="rounded bg-muted px-1.5 py-0.5 text-sm">.claude/skills/</code> (or{" "}
         <code className="rounded bg-muted px-1.5 py-0.5 text-sm">.agents/skills/</code>) directory.
       </p>

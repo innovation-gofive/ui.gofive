@@ -153,6 +153,6 @@ export const siteConfig = {
   description: "A custom shadcn registry by GoFive.",
   // Override per deployment with NEXT_PUBLIC_REGISTRY_URL (e.g. your Coolify URL).
   registryUrl:
-    process.env.NEXT_PUBLIC_REGISTRY_URL ?? "https://registry.gofive.co.th",
+    process.env.NEXT_PUBLIC_REGISTRY_URL ?? "https://ui.coolify.tks.co.th",
   github: "https://gofive.co.th",
 }

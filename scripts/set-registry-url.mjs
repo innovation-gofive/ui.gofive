@@ -12,7 +12,7 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-const OLD = "https://registry.gofive.co.th";
+const OLD = "https://ui.coolify.tks.co.th";
 const next = process.env.NEXT_PUBLIC_REGISTRY_URL;
 
 if (!next) {

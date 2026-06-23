@@ -34,6 +34,21 @@ npx skills add innovation-gofive/ui.gofive@gofive-ui
 
 Then just ask — e.g. *"add a GoFive status tag and a date picker"* — and the agent runs the right commands and imports. Discover it with `npx skills find gofive`. See [`skills/gofive-ui/README.md`](skills/gofive-ui/README.md) for details and manual install.
 
+### Migrate command — `/gofive-migrate`
+
+Already have a UI built on shadcn/ui, MUI, Ant Design, Chakra, or custom components? Install the **GoFive Migrate** skill to get a `/gofive-migrate` slash command that swaps your existing components for GoFive equivalents — it checks the required dependencies, installs the GoFive targets, and rewrites imports and props (and reports anything with no GoFive equivalent instead of breaking it):
+
+```bash
+npx skills add innovation-gofive/ui.gofive@gofive-migrate
+```
+
+```
+/gofive-migrate badge      # migrate one component
+/gofive-migrate            # scan and migrate the whole project
+```
+
+See [`skills/gofive-migrate/README.md`](skills/gofive-migrate/README.md) for details.
+
 ---
 
 ## Components
