@@ -1,29 +1,61 @@
-import Link from "next/link"
-import { siteConfig } from "@/lib/docs-config"
+"use client"
 
-export function SiteHeader() {
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+
+import { mainNav, isMainNavActive } from "@/lib/docs-config"
+import {
+  Navbar,
+  NavbarNav,
+  NavbarItem,
+  NavbarSpacer,
+  NavbarIconButton,
+} from "@/registry/new-york/ui/navbar"
+
+export function SiteHeader({
+  sidebarCollapsed = false,
+  onToggleSidebar,
+}: {
+  sidebarCollapsed?: boolean
+  onToggleSidebar?: () => void
+}) {
+  const pathname = usePathname()
+  const router = useRouter()
+
   return (
-    <header className="sticky top-0 z-50 flex h-(--header-height) w-full items-center gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {/* TODO(gofive-migrate): Removed shadcn's SidebarTrigger (and its divider) —
-          the Gofive sidebar has no provider/collapse, so there's no toggle and no
-          mobile drawer. The mobile brand link below remains. */}
-      <Link href="/" className="font-bold tracking-tight md:hidden">
-        {siteConfig.name}
-      </Link>
-      <nav className="ml-2 hidden items-center gap-5 text-sm md:flex">
-        <Link href="/" className="text-foreground/70 transition-colors hover:text-foreground">
-          Home
-        </Link>
-        <Link href="/docs/introduction" className="text-foreground/70 transition-colors hover:text-foreground">
-          Docs
-        </Link>
-        <Link href="/docs/badge" className="text-foreground/70 transition-colors hover:text-foreground">
-          Components
-        </Link>
-        <Link href="/blocks" className="text-foreground/70 transition-colors hover:text-foreground">
-          Blocks
-        </Link>
-      </nav>
-    </header>
+    // Floating Gofive Navbar inside the docs app shell — mirrors AppTopbar's
+    // gutter (components/blocks/app-shell.tsx). The shell is h-svh/overflow-hidden,
+    // so this shrink-0 bar stays put while the content column below scrolls.
+    <div className="shrink-0 px-4 pt-3 sm:px-6 lg:px-8">
+      <Navbar>
+        {/* Collapse toggle + separator, leading the bar. Re-adds the sidebar
+            toggle that the Gofive sidebar dropped (desktop sidebar only). */}
+        <div className="hidden items-center gap-2 md:flex">
+          <NavbarIconButton
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-pressed={sidebarCollapsed}
+            onClick={onToggleSidebar}
+          >
+            {sidebarCollapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
+          </NavbarIconButton>
+          <div className="h-6 w-px shrink-0 bg-border" aria-hidden />
+        </div>
+        <NavbarNav className="hidden md:flex">
+          {mainNav.map((item) => (
+            // TODO(gofive-migrate): NavbarItem is a <button>, not a Next <Link>.
+            // router.push() loses prefetch, open-in-new-tab, and right-click —
+            // restore a real link if those matter.
+            <NavbarItem
+              key={item.href}
+              active={isMainNavActive(item.href, pathname)}
+              onClick={() => router.push(item.href)}
+            >
+              {item.title}
+            </NavbarItem>
+          ))}
+        </NavbarNav>
+        <NavbarSpacer />
+      </Navbar>
+    </div>
   )
 }
