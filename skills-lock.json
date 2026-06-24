@@ -1,11 +1,17 @@
 {
   "version": 1,
   "skills": {
+    "gofive-migrate": {
+      "source": "innovation-gofive/ui.gofive",
+      "sourceType": "github",
+      "skillPath": "skills/gofive-migrate/SKILL.md",
+      "computedHash": "eff8ef6afa4a90d12376613249ed38c48edbb08dc30c1d6ade4c256a6f48afb3"
+    },
     "gofive-ui": {
       "source": "innovation-gofive/ui.gofive",
       "sourceType": "github",
       "skillPath": "skills/gofive-ui/SKILL.md",
-      "computedHash": "5a8b7548016cae9e980fdf87a79c8f426e9f418d31bfd6e01405aea262dd1a7c"
+      "computedHash": "742c2f319f2cca0a65f15db8f33db0e03d73c3cfdd0fe3937c8664713d8138e2"
     }
   }
 }
