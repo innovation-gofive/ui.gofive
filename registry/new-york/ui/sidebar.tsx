@@ -86,7 +86,7 @@ function SidebarItem({
       data-active={active}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] text-foreground/80 transition-colors hover:bg-muted",
+        "flex w-full shrink-0 items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] text-foreground/80 transition-colors hover:bg-muted",
         "data-[active=true]:bg-primary/10 data-[active=true]:font-semibold data-[active=true]:text-primary",
         "[&_svg]:size-4 [&_svg]:shrink-0",
         className,
@@ -177,7 +177,7 @@ function SidebarRailItem({
       data-active={active}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex size-11 items-center justify-center rounded-[10px] text-muted-foreground transition-colors hover:bg-muted",
+        "flex size-11 shrink-0 items-center justify-center rounded-[10px] text-muted-foreground transition-colors hover:bg-muted",
         "data-[active=true]:bg-primary/10 data-[active=true]:text-primary",
         "[&_svg]:size-[18px]",
         className,
@@ -194,7 +194,7 @@ function SidebarSeparator({
   return (
     <div
       data-slot="sidebar-separator"
-      className={cn("my-1 h-px w-7 self-center bg-border", className)}
+      className={cn("my-1 h-px w-7 shrink-0 self-center bg-border", className)}
       {...props}
     />
   )

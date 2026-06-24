@@ -148,6 +148,24 @@ export const docsNav: NavGroup[] = [
   },
 ]
 
+// Primary header navigation — shared by the home `SiteNav` and the docs
+// `SiteHeader` so both top bars always render the exact same items.
+export const mainNav: { title: string; href: string }[] = [
+  { title: "Home", href: "/" },
+  { title: "Docs", href: "/docs/introduction" },
+  { title: "AI Agent", href: "/docs/agent-skill" },
+  { title: "Components", href: "/docs/badge" },
+  { title: "Blocks", href: "/blocks" },
+  { title: "Theming", href: "/docs/colors" },
+]
+
+// Active-state matcher for `mainNav` items — exact match for the root, and
+// prefix match for sub-routes (e.g. `/docs/badge` stays active on its children).
+export function isMainNavActive(href: string, pathname: string): boolean {
+  if (href === "/") return pathname === "/"
+  return pathname === href || pathname.startsWith(href + "/")
+}
+
 export const siteConfig = {
   name: "Gofive Components",
   description: "A custom shadcn registry by Gofive.",
