@@ -18,12 +18,12 @@ export default function AgentSkillPage() {
     <DocPage
       breadcrumb={["Skills", "Agent Skill"]}
       title="Agent Skill"
-      description="Teach your AI coding agent to install and use GoFive components correctly."
+      description="Teach your AI coding agent to install and use Gofive components correctly."
       toc={toc}
     >
       <DocH2 id="overview">Overview</DocH2>
       <p className="mt-4 leading-7 text-muted-foreground">
-        <strong>GoFive UI</strong> is an{" "}
+        <strong>Gofive UI</strong> is an{" "}
         <a
           href="https://skills.sh"
           target="_blank"
@@ -33,7 +33,7 @@ export default function AgentSkillPage() {
           agent skill
         </a>{" "}
         that teaches AI coding agents (Claude Code, Cursor, and others) how to install and use
-        GoFive components correctly — the right{" "}
+        Gofive components correctly — the right{" "}
         <code className="rounded bg-muted px-1.5 py-0.5 text-sm">@gofive/*</code> install commands,
         import paths, exports, props, and theming — instead of guessing. It covers all 45
         components, the theme with runtime <code className="rounded bg-muted px-1.5 py-0.5 text-sm">data-brand</code>{" "}
@@ -53,7 +53,7 @@ export default function AgentSkillPage() {
 
       <DocH3 id="requirements">Requirements</DocH3>
       <p className="mt-4 leading-7 text-muted-foreground">
-        Before using GoFive components, the skill verifies your project is a{" "}
+        Before using Gofive components, the skill verifies your project is a{" "}
         <strong>React</strong> app, has <strong>shadcn</strong> configured (a{" "}
         <code className="rounded bg-muted px-1.5 py-0.5 text-sm">components.json</code> at the root —
         run <code className="rounded bg-muted px-1.5 py-0.5 text-sm">npx shadcn@latest init</code> if
@@ -63,11 +63,11 @@ export default function AgentSkillPage() {
 
       <DocH3 id="register">Register the registry</DocH3>
       <p className="mt-4 leading-7 text-muted-foreground">
-        The skill installs components through the shadcn CLI, so register the GoFive namespace once
+        The skill installs components through the shadcn CLI, so register the Gofive namespace once
         (see <a href="/docs/installation" className="font-medium underline underline-offset-4">Installation</a>):
       </p>
       <CodeBlock
-        code={`npx shadcn@latest registry add @gofive=https://ui.coolify.tks.co.th/r/{name}.json`}
+        code={`npx shadcn@latest registry add @gofive=https://ui.go5.online/r/{name}.json`}
         className="mt-4"
       />
 
@@ -85,16 +85,16 @@ export default function AgentSkillPage() {
       </p>
       <ol className="mt-4 list-decimal space-y-2 pl-6 leading-7 text-muted-foreground">
         <li>
-          <strong className="text-foreground">GoFive UI first</strong> — use a GoFive component
+          <strong className="text-foreground">Gofive UI first</strong> — use a Gofive component
           whenever one fits.
         </li>
         <li>
-          <strong className="text-foreground">Plain shadcn/ui next</strong> — only when GoFive has
+          <strong className="text-foreground">Plain shadcn/ui next</strong> — only when Gofive has
           nothing suitable.
         </li>
         <li>
           <strong className="text-foreground">Build custom last</strong> — only when neither
-          registry has it, matching the GoFive theme tokens so it fits the design system.
+          registry has it, matching the Gofive theme tokens so it fits the design system.
         </li>
       </ol>
 
@@ -103,19 +103,19 @@ export default function AgentSkillPage() {
         After installing, just describe what you need:
       </p>
       <ul className="mt-4 list-disc space-y-2 pl-6 leading-7 text-muted-foreground">
-        <li>&ldquo;Add a GoFive status tag and a date picker to this form.&rdquo;</li>
-        <li>&ldquo;Use the GoFive sheet for the details panel.&rdquo;</li>
+        <li>&ldquo;Add a Gofive status tag and a date picker to this form.&rdquo;</li>
+        <li>&ldquo;Use the Gofive sheet for the details panel.&rdquo;</li>
         <li>&ldquo;Switch the theme to the <code className="rounded bg-muted px-1.5 py-0.5 text-sm">venio</code> brand palette.&rdquo;</li>
       </ul>
 
       <DocH2 id="migrate">Migrate command</DocH2>
       <p className="mt-4 leading-7 text-muted-foreground">
         Already have a UI built on shadcn/ui, MUI, Ant Design, Chakra, or custom components? Install
-        the companion <strong>GoFive Migrate</strong> skill to get a{" "}
+        the companion <strong>Gofive Migrate</strong> skill to get a{" "}
         <code className="rounded bg-muted px-1.5 py-0.5 text-sm">/gofive-migrate</code> slash command
-        that swaps your existing components for GoFive equivalents — it checks the required
-        dependencies, installs the GoFive targets, and rewrites imports and props. Anything with no
-        GoFive equivalent (Button, Card, …) is reported as skipped rather than broken.
+        that swaps your existing components for Gofive equivalents — it checks the required
+        dependencies, installs the Gofive targets, and rewrites imports and props. Anything with no
+        Gofive equivalent (Button, Card, …) is reported as skipped rather than broken.
       </p>
       <CodeBlock code={`npx skills add innovation-gofive/ui.gofive@gofive-migrate`} className="mt-4" />
       <p className="mt-4 leading-7 text-muted-foreground">Then run it from any project:</p>

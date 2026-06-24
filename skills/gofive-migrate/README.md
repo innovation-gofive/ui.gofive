@@ -1,11 +1,11 @@
-# GoFive Migrate — Agent Skill (slash command)
+# Gofive Migrate — Agent Skill (slash command)
 
-A user-invoked `/gofive-migrate` command for AI coding agents (Claude Code, …) that **migrates existing UI components in a React project to their GoFive equivalents** (`@gofive/*`) — it gates on the required dependencies, detects what you're using, installs the GoFive targets via the shadcn CLI, and rewrites imports and props.
+A user-invoked `/gofive-migrate` command for AI coding agents (Claude Code, …) that **migrates existing UI components in a React project to their Gofive equivalents** (`@gofive/*`) — it gates on the required dependencies, detects what you're using, installs the Gofive targets via the shadcn CLI, and rewrites imports and props.
 
 ## What it does
 
 ```
-/gofive-migrate badge      # migrate just the badge → GoFive Tag
+/gofive-migrate badge      # migrate just the badge → Gofive Tag
 /gofive-migrate            # scan the whole project and migrate everything mappable
 ```
 
@@ -13,11 +13,11 @@ The command will:
 1. **Gate on dependencies** — React, `components.json`, Tailwind v4, and the `@gofive` registry. If anything is missing it stops and tells you what to fix.
 2. **Auto-detect** components from shadcn/ui, other libraries (MUI / Ant Design / Chakra), or your own custom components.
 3. **Propose a plan** (what maps, what gets skipped, what needs install) and **wait for your OK** before editing.
-4. **Install** the GoFive targets (`npx shadcn add @gofive/<name>`).
+4. **Install** the Gofive targets (`npx shadcn add @gofive/<name>`).
 5. **Rewrite** imports + props, flagging anything that needs manual review with `// TODO(gofive-migrate)`.
 6. **Verify** (typecheck / build) and print a summary.
 
-It never deletes components that have no GoFive equivalent (e.g. Button, Card) — those are reported as skipped.
+It never deletes components that have no Gofive equivalent (e.g. Button, Card) — those are reported as skipped.
 
 ## Install
 
@@ -37,12 +37,12 @@ npx skills find gofive
 
 **Manual install:** copy this `gofive-migrate/` folder into your project's `.claude/skills/` (or `.agents/skills/`) directory.
 
-## Prerequisite — register the GoFive registry
+## Prerequisite — register the Gofive registry
 
-Migration installs components via the shadcn CLI, so your project must register the GoFive registry once (the command checks this and reminds you):
+Migration installs components via the shadcn CLI, so your project must register the Gofive registry once (the command checks this and reminds you):
 
 ```bash
-npx shadcn@latest registry add @gofive=https://ui.coolify.tks.co.th/r/{name}.json
+npx shadcn@latest registry add @gofive=https://ui.go5.online/r/{name}.json
 ```
 
 Your project must be a shadcn project (`components.json` present — run `npx shadcn@latest init` if not) using React + Tailwind CSS v4.
@@ -60,4 +60,4 @@ npx skills add innovation-gofive/ui.gofive@gofive-ui
 ## Contents
 
 - `SKILL.md` — the `/gofive-migrate` command: dependency gate, detect, map, install, rewrite, verify.
-- `references/migration-map.md` — source → GoFive mapping, import/export exceptions, and prop deltas.
+- `references/migration-map.md` — source → Gofive mapping, import/export exceptions, and prop deltas.

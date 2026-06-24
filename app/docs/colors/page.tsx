@@ -186,7 +186,7 @@ export default function ColorsPage() {
     <DocPage
       breadcrumb={["Theming", "Colors"]}
       title="Colors"
-      description="The GoFive color system — a shared neutral ramp, per-product brand primaries, and semantic palettes (Success / Warning / Danger / Info) tuned to each product's hue. Shipped as a shadcn registry:theme."
+      description="The Gofive color system — a shared neutral ramp, per-product brand primaries, and semantic palettes (Success / Warning / Danger / Info) tuned to each product's hue. Shipped as a shadcn registry:theme."
       toc={toc}
     >
       <DocH2 id="installation">Installation</DocH2>

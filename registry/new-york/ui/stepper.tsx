@@ -5,7 +5,7 @@ import { Check } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-// ── GoFive tokens ──────────────────────────────────────────────────
+// ── Gofive tokens ──────────────────────────────────────────────────
 const PRIMARY = "#0A66E0"
 const LINE = "#D4D4D8"
 const UPCOMING_BG = "#F4F4F5"

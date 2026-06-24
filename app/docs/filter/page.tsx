@@ -45,7 +45,7 @@ export default function FilterPage() {
     <DocPage
       breadcrumb={["Components", "Filter"]}
       title="Filter"
-      description="Toggleable filter chips, a dropdown-driven filter bar, an advanced AND/OR condition builder, saved views, an applied-result summary, and a segmented control — with a GoFive accent for active and has-value states."
+      description="Toggleable filter chips, a dropdown-driven filter bar, an advanced AND/OR condition builder, saved views, an applied-result summary, and a segmented control — with a Gofive accent for active and has-value states."
       toc={toc}
     >
       <DocH2 id="installation">Installation</DocH2>
@@ -133,7 +133,7 @@ export default function FilterPage() {
       <DocH3 id="api-filterchip">FilterChip</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">Toggleable chip with optional count and dismiss action.</p>
       <PropsTable rows={[
-        { prop: "active", type: "boolean", default: "false", desc: "Selected / has-value state — applies the GoFive accent" },
+        { prop: "active", type: "boolean", default: "false", desc: "Selected / has-value state — applies the Gofive accent" },
         { prop: "count", type: "number", default: "—", desc: "Optional count pill rendered after the label" },
         { prop: "onDismiss", type: "() => void", default: "—", desc: "If provided, renders a trailing × that calls this handler" },
         { prop: "onClick", type: "() => void", default: "—", desc: "Fires when the chip body is clicked (toggle the filter here)" },

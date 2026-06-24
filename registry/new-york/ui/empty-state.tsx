@@ -4,7 +4,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-// ── GoFive semantic tones for the illustration tile ────────────────
+// ── Gofive semantic tones for the illustration tile ────────────────
 export type EmptyStateTone = "neutral" | "success" | "warn" | "danger" | "info"
 
 const TONE: Record<EmptyStateTone, { bg: string; fg: string }> = {

@@ -13,12 +13,12 @@ export default function InstallationPage() {
     <DocPage
       breadcrumb={["Docs", "Installation"]}
       title="Installation"
-      description="How to set up the GoFive components and install them."
+      description="How to set up the Gofive components and install them."
       toc={toc}
     >
       <DocH2 id="add-the-registry">Add the registry</DocH2>
       <p className="mt-4 leading-7 text-muted-foreground">
-        Register the GoFive namespace in your project. You only need to do this once.
+        Register the Gofive namespace in your project. You only need to do this once.
       </p>
       <CodeBlock code={`npx shadcn@latest registry add @gofive=${siteConfig.registryUrl}/r/{name}.json`} className="mt-4" />
 
@@ -30,7 +30,7 @@ export default function InstallationPage() {
 
       <DocH2 id="install-everything">Install everything</DocH2>
       <p className="mt-4 leading-7 text-muted-foreground">
-        Install every GoFive component, theme, and font in one command:
+        Install every Gofive component, theme, and font in one command:
       </p>
       <CodeBlock code={`npx shadcn@latest add @gofive/all`} className="mt-4" />
     </DocPage>

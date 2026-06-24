@@ -19,8 +19,8 @@ const toc = [
 export default function FontsPage() {
   return (
     <DocPage
-      breadcrumb={["Components", "GoFive Font"]}
-      title="GoFive Font"
+      breadcrumb={["Components", "Gofive Font"]}
+      title="Gofive Font"
       description="Custom font family — Text (400), Medium (500), SemiBold (600), Bold (700)."
       toc={toc}
     >
@@ -34,7 +34,7 @@ export default function FontsPage() {
 import "@/lib/gofive-font.css"
 
 // globals.css
-body { font-family: "GoFive", sans-serif; }`}
+body { font-family: "Gofive", sans-serif; }`}
       />
 
       <DocH2 id="weights">Weights</DocH2>

@@ -26,12 +26,12 @@ export default function Home() {
               className="inline-flex items-center gap-1.5 rounded-full border bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted"
             >
               <Sparkles className="size-3.5 text-primary" />
-              Built for the GoFive Design System
+              Built for the Gofive Design System
               <ArrowRight className="size-3.5" />
             </Link>
 
             <h1 className="mt-6 max-w-3xl text-balance text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              The component layer of the GoFive Design System
+              The component layer of the Gofive Design System
             </h1>
             <p className="mt-5 max-w-xl text-balance text-base text-muted-foreground sm:text-lg">
               {siteConfig.name} is a custom shadcn registry — production-ready components,
@@ -66,7 +66,7 @@ export default function Home() {
                 {componentCount}+ components, ready to drop in
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Every piece ships with GoFive theming, sizes, and states. Hover to play —
+                Every piece ships with Gofive theming, sizes, and states. Hover to play —
                 click through for docs and code.
               </p>
             </div>
@@ -88,7 +88,7 @@ export default function Home() {
           <p>
             Built by{" "}
             <a href={siteConfig.github} target="_blank" rel="noreferrer" className="font-medium text-foreground underline underline-offset-4">
-              GoFive
+              Gofive
             </a>
             . Powered by{" "}
             <a href="https://ui.shadcn.com" target="_blank" rel="noreferrer" className="font-medium text-foreground underline underline-offset-4">

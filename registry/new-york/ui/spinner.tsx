@@ -4,7 +4,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-// ── GoFive semantic color tokens ───────────────────────────────────
+// ── Gofive semantic color tokens ───────────────────────────────────
 export type SpinnerColor = "primary" | "success" | "warn" | "danger" | "info" | "current"
 export type SpinnerSize = "sm" | "md" | "lg"
 

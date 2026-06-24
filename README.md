@@ -1,13 +1,13 @@
-# GoFive Registry
+# Gofive Registry
 
-Custom [shadcn](https://ui.shadcn.com) component registry by GoFive — plug-and-play UI components for any React + Tailwind project.
+Custom [shadcn](https://ui.shadcn.com) component registry by Gofive — plug-and-play UI components for any React + Tailwind project.
 
 ## Setup
 
-Register the GoFive registry once in your project:
+Register the Gofive registry once in your project:
 
 ```bash
-npx shadcn@latest registry add @gofive=https://ui.coolify.tks.co.th/r/{name}.json
+npx shadcn@latest registry add @gofive=https://ui.go5.online/r/{name}.json
 ```
 
 After that, install any component with:
@@ -26,17 +26,17 @@ npx shadcn@latest add @gofive/all
 
 ## AI Agent Skill
 
-Using an AI coding agent (Claude Code, Cursor, …)? Install the **GoFive UI** agent skill so your agent knows the full catalog, the correct `@gofive/*` install commands, import paths, props, and theming:
+Using an AI coding agent (Claude Code, Cursor, …)? Install the **Gofive UI** agent skill so your agent knows the full catalog, the correct `@gofive/*` install commands, import paths, props, and theming:
 
 ```bash
 npx skills add innovation-gofive/ui.gofive@gofive-ui
 ```
 
-Then just ask — e.g. *"add a GoFive status tag and a date picker"* — and the agent runs the right commands and imports. Discover it with `npx skills find gofive`. See [`skills/gofive-ui/README.md`](skills/gofive-ui/README.md) for details and manual install.
+Then just ask — e.g. *"add a Gofive status tag and a date picker"* — and the agent runs the right commands and imports. Discover it with `npx skills find gofive`. See [`skills/gofive-ui/README.md`](skills/gofive-ui/README.md) for details and manual install.
 
 ### Migrate command — `/gofive-migrate`
 
-Already have a UI built on shadcn/ui, MUI, Ant Design, Chakra, or custom components? Install the **GoFive Migrate** skill to get a `/gofive-migrate` slash command that swaps your existing components for GoFive equivalents — it checks the required dependencies, installs the GoFive targets, and rewrites imports and props (and reports anything with no GoFive equivalent instead of breaking it):
+Already have a UI built on shadcn/ui, MUI, Ant Design, Chakra, or custom components? Install the **Gofive Migrate** skill to get a `/gofive-migrate` slash command that swaps your existing components for Gofive equivalents — it checks the required dependencies, installs the Gofive targets, and rewrites imports and props (and reports anything with no Gofive equivalent instead of breaking it):
 
 ```bash
 npx skills add innovation-gofive/ui.gofive@gofive-migrate
@@ -53,7 +53,7 @@ See [`skills/gofive-migrate/README.md`](skills/gofive-migrate/README.md) for det
 
 ## Components
 
-### GoFive Font
+### Gofive Font
 
 Custom font family with four weights.
 
@@ -72,7 +72,7 @@ Then use the font in your CSS:
 
 ```css
 body {
-  font-family: "GoFive", sans-serif;
+  font-family: "Gofive", sans-serif;
 }
 ```
 

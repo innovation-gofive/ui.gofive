@@ -39,7 +39,7 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
-  /* GoFive — semantic colors (brand-tunable) */
+  /* Gofive — semantic colors (brand-tunable) */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-success-soft: var(--success-soft);
@@ -57,7 +57,7 @@
   --color-info-soft: var(--info-soft);
   --color-info-soft-foreground: var(--info-soft-foreground);
 
-  /* GoFive — neutral ramp (ink → surface) */
+  /* Gofive — neutral ramp (ink → surface) */
   --color-gf-fg-1: var(--gf-fg-1);
   --color-gf-fg-2: var(--gf-fg-2);
   --color-gf-fg-3: var(--gf-fg-3);
@@ -78,7 +78,7 @@
 }
 
 /* ============================================================
-   GoFive theme — base (Gofive · empeo · Calendio · Orange)
+   Gofive theme — base (Gofive · empeo · Calendio · Orange)
    Brand/semantic tokens are overridable per product via
    [data-brand="…"] blocks further down.
    ============================================================ */
@@ -140,7 +140,7 @@
   --info-soft: #ddeafc;
   --info-soft-foreground: #063f89;
 
-  /* shadcn destructive maps to GoFive danger */
+  /* shadcn destructive maps to Gofive danger */
   --destructive: var(--danger);
   --destructive-foreground: var(--danger-foreground);
 

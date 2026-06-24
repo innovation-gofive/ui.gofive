@@ -2,13 +2,13 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "datetime-picker",
   "title": "DateTime Picker",
-  "description": "Popover-based date, time, and combined date-time pickers built on the GoFive Calendar, with controlled state and no external date library.",
+  "description": "Popover-based date, time, and combined date-time pickers built on the Gofive Calendar, with controlled state and no external date library.",
   "dependencies": [
     "radix-ui",
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://ui.coolify.tks.co.th/r/calendar.json"
+    "https://ui.go5.online/r/calendar.json"
   ],
   "files": [
     {

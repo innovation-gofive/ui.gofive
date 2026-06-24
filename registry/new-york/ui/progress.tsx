@@ -5,7 +5,7 @@ import { Progress as ProgressPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
-// ── GoFive semantic color tokens ───────────────────────────────────
+// ── Gofive semantic color tokens ───────────────────────────────────
 export type ProgressColor = "primary" | "success" | "warn" | "danger" | "info"
 export type ProgressSize = "sm" | "md" | "lg"
 

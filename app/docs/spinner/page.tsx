@@ -52,7 +52,7 @@ export default function SpinnerPage() {
       </ComponentPreview>
 
       <DocH3 id="colors">Colors</DocH3>
-      <p className="mt-2 text-sm text-muted-foreground">Semantic intents map to the GoFive palette.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Semantic intents map to the Gofive palette.</p>
       <ComponentPreview>
         <div className="flex items-center gap-6">
           <Spinner color="primary" />

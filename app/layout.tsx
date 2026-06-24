@@ -14,7 +14,7 @@ const goFive = localFont({
 
 export const metadata: Metadata = {
   title: "The Component of Gofive Design System - gofive/ui",
-  description: "A custom shadcn registry by GoFive.",
+  description: "A custom shadcn registry by Gofive.",
 };
 
 export default function RootLayout({

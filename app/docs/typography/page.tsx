@@ -37,7 +37,7 @@ export default function TypographyPage() {
     <DocPage
       breadcrumb={["Components", "Typography"]}
       title="Typography"
-      description="The GoFive type scale — Display, H1–H3, Body Lg, Body, Small, and Caption — driven by a single variant-based component with 400 / 500 / 600 / 700 weight overrides."
+      description="The Gofive type scale — Display, H1–H3, Body Lg, Body, Small, and Caption — driven by a single variant-based component with 400 / 500 / 600 / 700 weight overrides."
       toc={toc}
     >
       <DocH2 id="installation">Installation</DocH2>

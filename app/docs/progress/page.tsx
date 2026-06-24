@@ -24,7 +24,7 @@ export default function ProgressPage() {
     <DocPage
       breadcrumb={["Components", "Progress"]}
       title="Progress"
-      description="A linear progress bar built on Radix Progress with GoFive semantic colors and three sizes — for uploads, completion meters, and loading states."
+      description="A linear progress bar built on Radix Progress with Gofive semantic colors and three sizes — for uploads, completion meters, and loading states."
       toc={toc}
     >
       <DocH2 id="installation">Installation</DocH2>
@@ -45,7 +45,7 @@ export default function ProgressPage() {
       <DocH2 id="examples">Examples</DocH2>
 
       <DocH3 id="colors">Colors</DocH3>
-      <p className="mt-2 text-sm text-muted-foreground">Semantic intents map to the GoFive palette.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Semantic intents map to the Gofive palette.</p>
       <ComponentPreview>
         <div className="flex w-full max-w-sm flex-col gap-4">
           <Progress value={72} color="primary" />

@@ -46,7 +46,7 @@ export default function AlertPage() {
       <DocH2 id="examples">Examples</DocH2>
 
       <DocH3 id="statuses">Statuses</DocH3>
-      <p className="mt-2 text-sm text-muted-foreground">Four semantic intents map to the GoFive palette.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Four semantic intents map to the Gofive palette.</p>
       <ComponentPreview>
         <div className="w-full max-w-xl mx-auto flex flex-col gap-2.5">
           <Alert status="info">

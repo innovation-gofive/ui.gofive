@@ -97,7 +97,7 @@ export default function SchedulerPage() {
       <DocH3 id="variants">Event variants</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">
         Each event takes an optional <code>variant</code> — <code>default</code>{" "}
-        (GoFive primary), <code>success</code>, <code>warning</code>, or{" "}
+        (Gofive primary), <code>success</code>, <code>warning</code>, or{" "}
         <code>info</code> — applied to the chip, week block, and agenda dot.
       </p>
       <CodeBlock

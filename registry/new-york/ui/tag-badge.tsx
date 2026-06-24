@@ -3,7 +3,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-// ── GoFive semantic color tokens ───────────────────────────────────
+// ── Gofive semantic color tokens ───────────────────────────────────
 export type TagColor = "success" | "warn" | "danger" | "info" | "neutral"
 export type TagVariant = "soft" | "solid" | "outline"
 export type TagSize = "sm" | "md" | "lg"

@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-// ── GoFive type scale ──────────────────────────────────────────────
+// ── Gofive type scale ──────────────────────────────────────────────
 // Display / H1–H3 / Body Lg / Body / Small / Caption — default body 14.
 const typographyVariants = cva("", {
   variants: {

@@ -13,7 +13,7 @@ import {
 
 import { cn } from "@/lib/utils"
 
-// ── GoFive semantic status palette ─────────────────────────────────
+// ── Gofive semantic status palette ─────────────────────────────────
 export type ToastStatus = "success" | "warning" | "danger" | "info" | "neutral"
 
 type StatusTokens = {

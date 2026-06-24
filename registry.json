@@ -6,8 +6,8 @@
     {
       "name": "theme",
       "type": "registry:theme",
-      "title": "GoFive Theme",
-      "description": "GoFive color system — neutral ramp, base orange brand, and per-product semantic palettes (Success/Warning/Danger/Info). Switch product palette at runtime via data-brand (empeo, calendio, venio, desk, shipx, salesbear, etaxgo, emconnect). Includes light and dark mode.",
+      "title": "Gofive Theme",
+      "description": "Gofive color system — neutral ramp, base orange brand, and per-product semantic palettes (Success/Warning/Danger/Info). Switch product palette at runtime via data-brand (empeo, calendio, venio, desk, shipx, salesbear, etaxgo, emconnect). Includes light and dark mode.",
       "files": [
         {
           "path": "registry/new-york/theme/gofive-theme.css",
@@ -33,9 +33,9 @@
       "name": "typography",
       "type": "registry:ui",
       "title": "Typography",
-      "description": "GoFive type scale — Display, H1–H3, Body Lg, Body, Small, and Caption with 400/500/600/700 weight overrides, rendered through a single variant-driven component.",
+      "description": "Gofive type scale — Display, H1–H3, Body Lg, Body, Small, and Caption with 400/500/600/700 weight overrides, rendered through a single variant-driven component.",
       "registryDependencies": [
-        "https://ui.coolify.tks.co.th/r/fonts.json"
+        "https://ui.go5.online/r/fonts.json"
       ],
       "dependencies": [
         "class-variance-authority",
@@ -52,8 +52,8 @@
     {
       "name": "fonts",
       "type": "registry:lib",
-      "title": "GoFive Font",
-      "description": "GoFive custom font family — Text (400), Medium (500), SemiBold (600), Bold (700)",
+      "title": "Gofive Font",
+      "description": "Gofive custom font family — Text (400), Medium (500), SemiBold (600), Bold (700)",
       "files": [
         {
           "path": "registry/new-york/lib/gofive-font.css",
@@ -132,7 +132,7 @@
       "name": "progress",
       "type": "registry:ui",
       "title": "Progress",
-      "description": "A linear progress bar built on Radix Progress plus a circular ProgressRing, both with GoFive semantic colors; the bar offers three track sizes and the ring takes a custom diameter and center content.",
+      "description": "A linear progress bar built on Radix Progress plus a circular ProgressRing, both with Gofive semantic colors; the bar offers three track sizes and the ring takes a custom diameter and center content.",
       "dependencies": [
         "radix-ui"
       ],
@@ -260,7 +260,7 @@
       "name": "filter",
       "type": "registry:ui",
       "title": "Filter",
-      "description": "Toggleable filter chips, a dropdown-driven filter bar, an advanced AND/OR condition builder, saved views, an applied-result summary, and a segmented control with a GoFive accent for active and has-value states.",
+      "description": "Toggleable filter chips, a dropdown-driven filter bar, an advanced AND/OR condition builder, saved views, an applied-result summary, and a segmented control with a Gofive accent for active and has-value states.",
       "dependencies": [
         "lucide-react"
       ],
@@ -341,9 +341,9 @@
       "name": "datetime-picker",
       "type": "registry:ui",
       "title": "DateTime Picker",
-      "description": "Popover-based date, time, and combined date-time pickers built on the GoFive Calendar, with controlled state and no external date library.",
+      "description": "Popover-based date, time, and combined date-time pickers built on the Gofive Calendar, with controlled state and no external date library.",
       "registryDependencies": [
-        "https://ui.coolify.tks.co.th/r/calendar.json"
+        "https://ui.go5.online/r/calendar.json"
       ],
       "dependencies": [
         "radix-ui",
@@ -516,7 +516,7 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "A GoFive text field with default, error, success, disabled, and read-only states, xs–lg sizes, filled and underline variants, leading/trailing icons, prefix/suffix affixes, a clear button, plus PasswordInput reveal toggle and NumberInput stepper.",
+      "description": "A Gofive text field with default, error, success, disabled, and read-only states, xs–lg sizes, filled and underline variants, leading/trailing icons, prefix/suffix affixes, a clear button, plus PasswordInput reveal toggle and NumberInput stepper.",
       "dependencies": [
         "lucide-react"
       ],
@@ -558,7 +558,7 @@
       "name": "slider",
       "type": "registry:ui",
       "title": "Slider",
-      "description": "A range slider built on Radix with a GoFive primary fill, single or two-thumb selection, steps, vertical orientation, and an optional value label.",
+      "description": "A range slider built on Radix with a Gofive primary fill, single or two-thumb selection, steps, vertical orientation, and an optional value label.",
       "dependencies": [
         "radix-ui"
       ],
@@ -708,54 +708,54 @@
     {
       "name": "all",
       "type": "registry:ui",
-      "title": "GoFive — All Components",
-      "description": "Installs every GoFive component, theme, and font in one command via npx shadcn add @gofive/all.",
+      "title": "Gofive — All Components",
+      "description": "Installs every Gofive component, theme, and font in one command via npx shadcn add @gofive/all.",
       "registryDependencies": [
-        "https://ui.coolify.tks.co.th/r/theme.json",
-        "https://ui.coolify.tks.co.th/r/badge.json",
-        "https://ui.coolify.tks.co.th/r/typography.json",
-        "https://ui.coolify.tks.co.th/r/fonts.json",
-        "https://ui.coolify.tks.co.th/r/avatar.json",
-        "https://ui.coolify.tks.co.th/r/checkbox.json",
-        "https://ui.coolify.tks.co.th/r/radio-group.json",
-        "https://ui.coolify.tks.co.th/r/switch.json",
-        "https://ui.coolify.tks.co.th/r/progress.json",
-        "https://ui.coolify.tks.co.th/r/spinner.json",
-        "https://ui.coolify.tks.co.th/r/rating.json",
-        "https://ui.coolify.tks.co.th/r/tooltip.json",
-        "https://ui.coolify.tks.co.th/r/toast.json",
-        "https://ui.coolify.tks.co.th/r/dialog.json",
-        "https://ui.coolify.tks.co.th/r/sheet.json",
-        "https://ui.coolify.tks.co.th/r/drawer.json",
-        "https://ui.coolify.tks.co.th/r/filter.json",
-        "https://ui.coolify.tks.co.th/r/search.json",
-        "https://ui.coolify.tks.co.th/r/attachment.json",
-        "https://ui.coolify.tks.co.th/r/calendar.json",
-        "https://ui.coolify.tks.co.th/r/scheduler.json",
-        "https://ui.coolify.tks.co.th/r/datetime-picker.json",
-        "https://ui.coolify.tks.co.th/r/picker.json",
-        "https://ui.coolify.tks.co.th/r/media-picker.json",
-        "https://ui.coolify.tks.co.th/r/menubar.json",
-        "https://ui.coolify.tks.co.th/r/context-menu.json",
-        "https://ui.coolify.tks.co.th/r/stepper.json",
-        "https://ui.coolify.tks.co.th/r/skeleton.json",
-        "https://ui.coolify.tks.co.th/r/empty-state.json",
-        "https://ui.coolify.tks.co.th/r/alert.json",
-        "https://ui.coolify.tks.co.th/r/validation.json",
-        "https://ui.coolify.tks.co.th/r/scale.json",
-        "https://ui.coolify.tks.co.th/r/input.json",
-        "https://ui.coolify.tks.co.th/r/textarea.json",
-        "https://ui.coolify.tks.co.th/r/otp-input.json",
-        "https://ui.coolify.tks.co.th/r/slider.json",
-        "https://ui.coolify.tks.co.th/r/segmented.json",
-        "https://ui.coolify.tks.co.th/r/select.json",
-        "https://ui.coolify.tks.co.th/r/tag-input.json",
-        "https://ui.coolify.tks.co.th/r/tree-select.json",
-        "https://ui.coolify.tks.co.th/r/person-picker.json",
-        "https://ui.coolify.tks.co.th/r/tabs.json",
-        "https://ui.coolify.tks.co.th/r/navbar.json",
-        "https://ui.coolify.tks.co.th/r/bottom-nav.json",
-        "https://ui.coolify.tks.co.th/r/sidebar.json"
+        "https://ui.go5.online/r/theme.json",
+        "https://ui.go5.online/r/badge.json",
+        "https://ui.go5.online/r/typography.json",
+        "https://ui.go5.online/r/fonts.json",
+        "https://ui.go5.online/r/avatar.json",
+        "https://ui.go5.online/r/checkbox.json",
+        "https://ui.go5.online/r/radio-group.json",
+        "https://ui.go5.online/r/switch.json",
+        "https://ui.go5.online/r/progress.json",
+        "https://ui.go5.online/r/spinner.json",
+        "https://ui.go5.online/r/rating.json",
+        "https://ui.go5.online/r/tooltip.json",
+        "https://ui.go5.online/r/toast.json",
+        "https://ui.go5.online/r/dialog.json",
+        "https://ui.go5.online/r/sheet.json",
+        "https://ui.go5.online/r/drawer.json",
+        "https://ui.go5.online/r/filter.json",
+        "https://ui.go5.online/r/search.json",
+        "https://ui.go5.online/r/attachment.json",
+        "https://ui.go5.online/r/calendar.json",
+        "https://ui.go5.online/r/scheduler.json",
+        "https://ui.go5.online/r/datetime-picker.json",
+        "https://ui.go5.online/r/picker.json",
+        "https://ui.go5.online/r/media-picker.json",
+        "https://ui.go5.online/r/menubar.json",
+        "https://ui.go5.online/r/context-menu.json",
+        "https://ui.go5.online/r/stepper.json",
+        "https://ui.go5.online/r/skeleton.json",
+        "https://ui.go5.online/r/empty-state.json",
+        "https://ui.go5.online/r/alert.json",
+        "https://ui.go5.online/r/validation.json",
+        "https://ui.go5.online/r/scale.json",
+        "https://ui.go5.online/r/input.json",
+        "https://ui.go5.online/r/textarea.json",
+        "https://ui.go5.online/r/otp-input.json",
+        "https://ui.go5.online/r/slider.json",
+        "https://ui.go5.online/r/segmented.json",
+        "https://ui.go5.online/r/select.json",
+        "https://ui.go5.online/r/tag-input.json",
+        "https://ui.go5.online/r/tree-select.json",
+        "https://ui.go5.online/r/person-picker.json",
+        "https://ui.go5.online/r/tabs.json",
+        "https://ui.go5.online/r/navbar.json",
+        "https://ui.go5.online/r/bottom-nav.json",
+        "https://ui.go5.online/r/sidebar.json"
       ],
       "files": []
     }

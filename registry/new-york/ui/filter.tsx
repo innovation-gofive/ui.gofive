@@ -4,7 +4,7 @@ import * as React from "react"
 import { ChevronDown, Filter as FilterIcon, Plus, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-// ── GoFive primary accent (active / has-value states) ──────────────
+// ── Gofive primary accent (active / has-value states) ──────────────
 const ACCENT = {
   border: "#F88411",
   wash: "#FFF1E3",

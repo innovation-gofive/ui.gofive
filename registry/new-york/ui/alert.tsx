@@ -12,7 +12,7 @@ import {
 
 import { cn } from "@/lib/utils"
 
-// ── GoFive semantic status palette (inline info bar / banner) ──────
+// ── Gofive semantic status palette (inline info bar / banner) ──────
 export type AlertStatus = "info" | "success" | "warn" | "danger"
 
 type StatusTokens = {

@@ -20,14 +20,14 @@ export default function IntroductionPage() {
       toc={toc}
     >
       <p className="leading-7 text-muted-foreground">
-        GoFive Components is a custom{" "}
+        Gofive Components is a custom{" "}
         <a href="https://ui.shadcn.com" className="font-medium text-foreground underline underline-offset-4">shadcn</a>{" "}
         registry — a collection of components, fonts, and design tokens you can install straight
         into any project with the shadcn CLI.
       </p>
 
       <DocH2 id="installation">Installation</DocH2>
-      <p className="mt-4 leading-7 text-muted-foreground">Add the GoFive components to your project once:</p>
+      <p className="mt-4 leading-7 text-muted-foreground">Add the Gofive components to your project once:</p>
       <CodeBlock code={`npx shadcn@latest registry add @gofive=${siteConfig.registryUrl}/r/{name}.json`} className="mt-4" />
 
       <DocH2 id="components">Components</DocH2>

@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "input",
   "title": "Input",
-  "description": "A GoFive text field with default, error, success, disabled, and read-only states, xs–lg sizes, filled and underline variants, leading/trailing icons, prefix/suffix affixes, a clear button, plus PasswordInput reveal toggle and NumberInput stepper.",
+  "description": "A Gofive text field with default, error, success, disabled, and read-only states, xs–lg sizes, filled and underline variants, leading/trailing icons, prefix/suffix affixes, a clear button, plus PasswordInput reveal toggle and NumberInput stepper.",
   "dependencies": [
     "lucide-react"
   ],

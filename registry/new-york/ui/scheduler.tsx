@@ -5,9 +5,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-// ── GoFive palette ─────────────────────────────────────────────────
+// ── Gofive palette ─────────────────────────────────────────────────
 // The brand accent and semantic event colors are hard-coded (as in the
-// other GoFive components) so the calendar looks right regardless of the
+// other Gofive components) so the calendar looks right regardless of the
 // consuming app's --primary token.
 const PRIMARY = "#F88411"
 
@@ -127,7 +127,7 @@ export interface SchedulerProps {
   onDateChange?: (date: Date) => void
   /** Fired when an event is clicked in any view. */
   onEventClick?: (event: SchedulerEvent) => void
-  /** First column of the week. Defaults to Monday to match the GoFive design. */
+  /** First column of the week. Defaults to Monday to match the Gofive design. */
   weekStartsOn?: 0 | 1
   /** First/last hour shown in the week time-grid. */
   dayStartHour?: number

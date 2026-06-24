@@ -31,7 +31,7 @@ export default function DateTimePickerPage() {
     <DocPage
       breadcrumb={["Components", "DateTime Picker"]}
       title="DateTime Picker"
-      description="Popover-based date, time, and combined date-time pickers built on the GoFive Calendar — controlled, dependency-free, and themeable."
+      description="Popover-based date, time, and combined date-time pickers built on the Gofive Calendar — controlled, dependency-free, and themeable."
       toc={toc}
     >
       <DocH2 id="installation">Installation</DocH2>

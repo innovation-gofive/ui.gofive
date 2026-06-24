@@ -15,7 +15,7 @@ const SIZE: Record<AvatarSize, string> = {
   xl: "size-[72px] text-2xl",
 }
 
-// ── GoFive status palette (semantic) ────────────────────────────────
+// ── Gofive status palette (semantic) ────────────────────────────────
 export type AvatarStatus = "online" | "away" | "busy" | "offline"
 
 const STATUS_COLOR: Record<AvatarStatus, string> = {

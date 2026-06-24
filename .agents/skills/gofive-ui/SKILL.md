@@ -1,29 +1,29 @@
 ---
 name: gofive-ui
-description: Install and use GoFive UI components (the shadcn registry @gofive/*) in a React + Tailwind app. Use when adding or using GoFive components — tags, badges, avatars, inputs, dialogs, sheets, drawers, pickers, date/time, select, toasts, tabs, nav, sidebar, theme/brand colors — or when the user mentions "@gofive", "GoFive component", or any component below by name.
+description: Install and use Gofive UI components (the shadcn registry @gofive/*) in a React + Tailwind app. Use when adding or using Gofive components — tags, badges, avatars, inputs, dialogs, sheets, drawers, pickers, date/time, select, toasts, tabs, nav, sidebar, theme/brand colors — or when the user mentions "@gofive", "Gofive component", or any component below by name.
 ---
 
-# GoFive UI
+# Gofive UI
 
-GoFive is a [shadcn](https://ui.shadcn.com) component registry: 45 plug-and-play React + Tailwind components, a theme with runtime product-brand switching, and a custom font. Components are installed into the consumer's own codebase via the shadcn CLI (you own the source — no runtime package dependency).
+Gofive is a [shadcn](https://ui.shadcn.com) component registry: 45 plug-and-play React + Tailwind components, a theme with runtime product-brand switching, and a custom font. Components are installed into the consumer's own codebase via the shadcn CLI (you own the source — no runtime package dependency).
 
-## Component priority — GoFive first (always)
+## Component priority — Gofive first (always)
 
 When the task needs any UI element, pick the source in **this order**:
 
-1. **GoFive UI first.** Scan the **Catalog** table below. If GoFive has a component that fits (a tag, dialog, date picker, select, …), use it — `npx shadcn@latest add @gofive/<name>`.
-2. **Plain shadcn/ui next.** Only if GoFive has nothing suitable, use a standard shadcn component (`npx shadcn@latest add <name>`).
-3. **Build custom last.** Only if neither registry has it. Match the GoFive theme tokens (`references/theme.md`) — semantic colors (`primary`, `success`, …) and the `--gf-*` neutral ramp — so it fits the design system.
+1. **Gofive UI first.** Scan the **Catalog** table below. If Gofive has a component that fits (a tag, dialog, date picker, select, …), use it — `npx shadcn@latest add @gofive/<name>`.
+2. **Plain shadcn/ui next.** Only if Gofive has nothing suitable, use a standard shadcn component (`npx shadcn@latest add <name>`).
+3. **Build custom last.** Only if neither registry has it. Match the Gofive theme tokens (`references/theme.md`) — semantic colors (`primary`, `success`, …) and the `--gf-*` neutral ramp — so it fits the design system.
 
-Never hand-roll something GoFive already provides.
+Never hand-roll something Gofive already provides.
 
 ## 0. Preflight — verify the project (do this first)
 
-Before installing or using any GoFive component, confirm the project meets all three requirements. If any fails, **stop and tell the user what's missing instead of proceeding.**
+Before installing or using any Gofive component, confirm the project meets all three requirements. If any fails, **stop and tell the user what's missing instead of proceeding.**
 
 1. **React project** — `package.json` lists `react` in dependencies (a Next.js / Vite / etc. React app).
 2. **shadcn configured** — a `components.json` exists at the project root. If not, run `npx shadcn@latest init` first.
-3. **Tailwind CSS v4** — `package.json` has `tailwindcss` at version `^4` (and the global stylesheet uses `@import "tailwindcss"`). GoFive's theme targets Tailwind v4; do not proceed on v3.
+3. **Tailwind CSS v4** — `package.json` has `tailwindcss` at version `^4` (and the global stylesheet uses `@import "tailwindcss"`). Gofive's theme targets Tailwind v4; do not proceed on v3.
 
 Quick check:
 ```bash
@@ -35,10 +35,10 @@ Only when **all three pass** do you continue to setup and installation below.
 
 ## 1. One-time registry setup
 
-The project must be a shadcn project (has a `components.json`). If not, run `npx shadcn@latest init` first. Then register the GoFive registry once:
+The project must be a shadcn project (has a `components.json`). If not, run `npx shadcn@latest init` first. Then register the Gofive registry once:
 
 ```bash
-npx shadcn@latest registry add @gofive=https://ui.coolify.tks.co.th/r/{name}.json
+npx shadcn@latest registry add @gofive=https://ui.go5.online/r/{name}.json
 ```
 
 Requires React + Tailwind CSS. Most components also need `lucide-react` (icons) and/or `radix-ui`; the shadcn CLI installs each component's npm dependencies automatically on `add`.
@@ -68,8 +68,8 @@ For theming, brand palettes, fonts, and typography, read `references/theme.md`.
 
 | Install | Title | Import from |
 |---|---|---|
-| `@gofive/theme` | GoFive Theme | `app/gofive-theme.css` (CSS) |
-| `@gofive/fonts` | GoFive Font | `lib/gofive-font.css` (CSS) |
+| `@gofive/theme` | Gofive Theme | `app/gofive-theme.css` (CSS) |
+| `@gofive/fonts` | Gofive Font | `lib/gofive-font.css` (CSS) |
 | `@gofive/typography` | Typography | `@/components/ui/gofive/typography` |
 | `@gofive/avatar` | Avatar | `@/components/ui/gofive/avatar` |
 | `@gofive/badge` | Tag & Badge | `@/components/ui/gofive/tag-badge` |

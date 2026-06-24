@@ -103,19 +103,19 @@ export function ComponentShowcase() {
         </div>
       </ShowcaseCard>
 
-      <ShowcaseCard title="Segmented Control" href="/docs/segmented" className="sm:col-span-2">
+      <ShowcaseCard title="Slider" href="/docs/slider">
+        <div className="w-full max-w-[220px]">
+          <Slider defaultValue={[40]} showValue />
+        </div>
+      </ShowcaseCard>
+
+      <ShowcaseCard title="Segmented Control" href="/docs/segmented">
         <Segmented defaultValue="month">
           <SegmentedItem value="day">Day</SegmentedItem>
           <SegmentedItem value="week">Week</SegmentedItem>
           <SegmentedItem value="month">Month</SegmentedItem>
           <SegmentedItem value="year">Year</SegmentedItem>
         </Segmented>
-      </ShowcaseCard>
-
-      <ShowcaseCard title="Slider" href="/docs/slider">
-        <div className="w-full max-w-[220px]">
-          <Slider defaultValue={[40]} showValue />
-        </div>
       </ShowcaseCard>
 
       <ShowcaseCard title="Stepper" href="/docs/stepper" className="sm:col-span-2">

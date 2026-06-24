@@ -1,6 +1,6 @@
 // Rewrites the registry's own origin inside the built static files.
 //
-// The registry items in public/r/*.json reference each other (and the GoFive
+// The registry items in public/r/*.json reference each other (and the Gofive
 // fonts) by ABSOLUTE url, so those urls must match the domain the registry is
 // actually served from — otherwise `npx shadcn add` can't resolve cross
 // dependencies and @font-face urls 404.
@@ -12,7 +12,7 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-const OLD = "https://ui.coolify.tks.co.th";
+const OLD = "https://ui.go5.online";
 const next = process.env.NEXT_PUBLIC_REGISTRY_URL;
 
 if (!next) {

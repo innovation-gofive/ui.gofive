@@ -1,13 +1,13 @@
-# GoFive UI — Agent Skill
+# Gofive UI — Agent Skill
 
-An [agent skill](https://skills.sh) that teaches AI coding agents (Claude Code, Cursor, etc.) how to install and use [GoFive](https://gofive.co.th) UI components correctly — the right `npx shadcn add @gofive/*` commands, import paths, exports, props, and theming — instead of guessing.
+An [agent skill](https://skills.sh) that teaches AI coding agents (Claude Code, Cursor, etc.) how to install and use [Gofive](https://gofive.co.th) UI components correctly — the right `npx shadcn add @gofive/*` commands, import paths, exports, props, and theming — instead of guessing.
 
 ## What it does
 
 Once installed, ask your agent things like:
 
-> "Add a GoFive status tag and a date picker to this form."
-> "Use the GoFive sheet for the details panel."
+> "Add a Gofive status tag and a date picker to this form."
+> "Use the Gofive sheet for the details panel."
 > "Switch the theme to the `venio` brand palette."
 
 The agent will run the correct install commands (`npx shadcn add @gofive/badge`, `@gofive/datetime-picker`, …) and import from the right paths (`@/components/ui/gofive/tag-badge`, …) with accurate props.
@@ -32,12 +32,12 @@ npx skills find gofive
 
 **Manual install:** copy this `gofive-ui/` folder into your project's `.claude/skills/` (or `.agents/skills/`) directory.
 
-## Prerequisite — register the GoFive registry
+## Prerequisite — register the Gofive registry
 
-The skill installs components via the shadcn CLI, so your project must register the GoFive registry once (the skill reminds the agent of this, but you can do it up front):
+The skill installs components via the shadcn CLI, so your project must register the Gofive registry once (the skill reminds the agent of this, but you can do it up front):
 
 ```bash
-npx shadcn@latest registry add @gofive=https://ui.coolify.tks.co.th/r/{name}.json
+npx shadcn@latest registry add @gofive=https://ui.go5.online/r/{name}.json
 ```
 
 Your project must be a shadcn project (`components.json` present — run `npx shadcn@latest init` if not) using React + Tailwind CSS.

@@ -1,4 +1,4 @@
-# GoFive theme, brands, fonts & typography
+# Gofive theme, brands, fonts & typography
 
 ## Theme — `@gofive/theme`
 
@@ -14,11 +14,11 @@ Installs `app/gofive-theme.css`. Import it in your global stylesheet **after** t
 @import "./gofive-theme.css";
 ```
 
-The theme defines CSS variables consumed by every GoFive component. It includes light and dark mode (`.dark` class on an ancestor / `<html>`).
+The theme defines CSS variables consumed by every Gofive component. It includes light and dark mode (`.dark` class on an ancestor / `<html>`).
 
 ## Runtime brand switching — `data-brand`
 
-GoFive ships per-product semantic palettes. Switch the active palette at runtime by setting `data-brand` on `<html>` (or any ancestor). Omit it for the base GoFive (orange) palette.
+Gofive ships per-product semantic palettes. Switch the active palette at runtime by setting `data-brand` on `<html>` (or any ancestor). Omit it for the base Gofive (orange) palette.
 
 ```html
 <html data-brand="venio"> … </html>
@@ -60,12 +60,12 @@ Installs `lib/gofive-font.css` (weights: Text 400, Medium 500, SemiBold 600, Bol
 import "@/lib/gofive-font.css"
 ```
 ```css
-body { font-family: "GoFive", sans-serif; }
+body { font-family: "Gofive", sans-serif; }
 ```
 
 ## Typography — `@gofive/typography`
 
-Depends on `@gofive/fonts` (the shadcn CLI pulls it in automatically). A single variant-driven component for the GoFive type scale:
+Depends on `@gofive/fonts` (the shadcn CLI pulls it in automatically). A single variant-driven component for the Gofive type scale:
 
 ```tsx
 import { Typography } from "@/components/ui/gofive/typography"

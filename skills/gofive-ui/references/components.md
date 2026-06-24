@@ -1,4 +1,4 @@
-# GoFive components reference
+# Gofive components reference
 
 Every component: install command, import path, exported names (exact), key props, and a minimal usage snippet. Install with `npx shadcn@latest add @gofive/<name>` **before** importing. All components are client components (`"use client"`).
 
@@ -341,7 +341,7 @@ Props: `steps: StepItem[]`, `current`, `orientation?: "horizontal" | "vertical"`
 `import { Navbar, NavbarBrand, NavbarNav, NavbarItem, NavbarSpacer, NavbarActions, NavbarIconButton } from "@/components/ui/gofive/navbar"`
 ```tsx
 <Navbar>
-  <NavbarBrand>GoFive</NavbarBrand>
+  <NavbarBrand>Gofive</NavbarBrand>
   <NavbarNav><NavbarItem active>Home</NavbarItem><NavbarItem>Docs</NavbarItem></NavbarNav>
   <NavbarSpacer /><NavbarActions><NavbarIconButton><Bell /></NavbarIconButton></NavbarActions>
 </Navbar>
@@ -361,7 +361,7 @@ Props: `steps: StepItem[]`, `current`, `orientation?: "horizontal" | "vertical"`
 `SidebarRail`/`SidebarRailItem` give the collapsed icon-only variant.
 ```tsx
 <Sidebar>
-  <SidebarBrand>GoFive</SidebarBrand>
+  <SidebarBrand>Gofive</SidebarBrand>
   <SidebarLabel>Main</SidebarLabel>
   <SidebarItem icon={<Home />} active>Home</SidebarItem>
 </Sidebar>
