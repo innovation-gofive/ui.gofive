@@ -496,17 +496,26 @@ function WeekView({
 
                 {dayEvents.map((e) => {
                   const top = (hourFloat(e.start) - dayStartHour) * hourHeight
-                  const height = Math.max(
-                    (hourFloat(e.end) - hourFloat(e.start)) * hourHeight,
-                    22,
-                  )
+                  const rawHeight =
+                    (hourFloat(e.end) - hourFloat(e.start)) * hourHeight
+                  const height = Math.max(rawHeight, 22)
+                  // Short events (≈30 min at the default hour height) are too
+                  // shallow for a stacked time + title without the title
+                  // overflowing and being clipped, so render them on one line.
+                  const compact = rawHeight < 40
                   const s = EVENT_STYLES[e.variant ?? "default"]
                   return (
                     <button
                       key={e.id}
                       type="button"
                       onClick={() => onEventClick?.(e)}
-                      className="absolute inset-x-1 overflow-hidden rounded-md px-1.5 py-1 text-left text-[11.5px] leading-tight"
+                      title={e.title}
+                      className={cn(
+                        "absolute inset-x-1 flex overflow-hidden rounded-md px-1.5 text-left leading-tight",
+                        compact
+                          ? "items-baseline gap-1.5 py-0.5 text-[11px]"
+                          : "flex-col py-1 text-[11.5px]",
+                      )}
                       style={{
                         top: Math.max(top, 0),
                         height,
@@ -515,10 +524,17 @@ function WeekView({
                         borderLeft: `2px solid ${s.border}`,
                       }}
                     >
-                      <span className="block text-[10px] text-muted-foreground">
+                      <span
+                        className={cn(
+                          "text-[10px] text-muted-foreground",
+                          compact && "shrink-0",
+                        )}
+                      >
                         {clock12(e.start)}
                       </span>
-                      <span className="truncate font-medium">{e.title}</span>
+                      <span className="min-w-0 truncate font-medium">
+                        {e.title}
+                      </span>
                     </button>
                   )
                 })}
