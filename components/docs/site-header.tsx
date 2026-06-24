@@ -1,13 +1,12 @@
 import Link from "next/link"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
 import { siteConfig } from "@/lib/docs-config"
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 flex h-(--header-height) w-full items-center gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <SidebarTrigger className="-ml-1" />
-      <Separator orientation="vertical" className="mr-1 h-5!" />
+      {/* TODO(gofive-migrate): Removed shadcn's SidebarTrigger (and its divider) —
+          the Gofive sidebar has no provider/collapse, so there's no toggle and no
+          mobile drawer. The mobile brand link below remains. */}
       <Link href="/" className="font-bold tracking-tight md:hidden">
         {siteConfig.name}
       </Link>

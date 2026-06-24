@@ -1,50 +1,40 @@
 "use client"
 
-import { Fragment } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarSeparator,
-} from "@/components/ui/sidebar"
+  SidebarItem,
+  SidebarLabel,
+} from "@/registry/new-york/ui/sidebar"
 import { docsNav } from "@/lib/docs-config"
 
 export function AppSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarContent>
-        {docsNav.map((group, index) => (
-          <Fragment key={group.title}>
-            {index > 0 && <SidebarSeparator className="mx-0" />}
-            <SidebarGroup>
-              <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {group.items.map(item => (
-                    <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.title}>
-                        <Link href={item.href}>
-                          {item.icon && <item.icon />}
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </Fragment>
-        ))}
-      </SidebarContent>
+    <Sidebar className="m-3 h-[calc(100svh-1.5rem)] w-64 shrink-0 overflow-y-auto max-md:hidden">
+      {docsNav.map(group => (
+        <div key={group.title} className="flex flex-col gap-0.5">
+          <SidebarLabel>{group.title}</SidebarLabel>
+          {group.items.map(item => {
+            // TODO(gofive-migrate): Gofive's SidebarItem renders a <button>, not an
+            // <a>, so navigation goes through router.push instead of the old
+            // SidebarMenuButton asChild + next/link. Prefetch, middle-click /
+            // open-in-new-tab, and the collapsed-mode hover tooltip are lost.
+            return (
+              <SidebarItem
+                key={item.href}
+                icon={item.icon ? <item.icon /> : undefined}
+                active={pathname === item.href}
+                onClick={() => router.push(item.href)}
+              >
+                {item.title}
+              </SidebarItem>
+            )
+          })}
+        </div>
+      ))}
     </Sidebar>
   )
 }

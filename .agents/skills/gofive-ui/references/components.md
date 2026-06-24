@@ -55,9 +55,9 @@ Props: `size?: "sm" | "md" | "lg"`, `checked`, `onCheckedChange`.
 
 ### Slider — `@gofive/slider`
 `import { Slider } from "@/components/ui/gofive/slider"`
-Props (Radix-based): `value`/`defaultValue` (array), `min`, `max`, `step`, `orientation`, `showLabel`.
+Props (Radix-based): `value`/`defaultValue` (array), `min`, `max`, `step`, `orientation`, `showValue`.
 ```tsx
-<Slider defaultValue={[40]} max={100} step={1} showLabel />
+<Slider defaultValue={[40]} max={100} step={1} showValue />
 <Slider defaultValue={[20, 80]} max={100} />   {/* two-thumb range */}
 ```
 
