@@ -128,16 +128,15 @@ function IndeterminateExample() {
 
   return (
     <ComponentPreview>
-      <button
-        type="button"
-        className="flex items-center gap-2.5 text-sm"
-        onClick={() =>
-          setChecked(c => (c === false ? true : c === true ? "indeterminate" : false))
-        }
-      >
-        <Checkbox checked={checked} />
+      <label className="flex items-center gap-2.5 text-sm">
+        <Checkbox
+          checked={checked}
+          onCheckedChange={() =>
+            setChecked(c => (c === false ? true : c === true ? "indeterminate" : false))
+          }
+        />
         State: {checked === "indeterminate" ? "indeterminate" : checked ? "checked" : "unchecked"}
-      </button>
+      </label>
     </ComponentPreview>
   )
 }

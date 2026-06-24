@@ -25,7 +25,10 @@ export function InstallTabs({ component }: { component: string }) {
       </TabsList>
       {MANAGERS.map(m => (
         <TabsContent key={m} value={m}>
-          <CodeBlock code={`${RUNNER[m]} shadcn@latest add ${component}`} />
+          <CodeBlock
+            language="bash"
+            code={`${RUNNER[m]} shadcn@latest add ${component}`}
+          />
         </TabsContent>
       ))}
     </Tabs>

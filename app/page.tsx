@@ -52,6 +52,7 @@ export default function Home() {
 
             <div className="mt-8 w-full max-w-xl text-left">
               <CodeBlock
+                language="bash"
                 code={`npx shadcn@latest registry add @gofive=${siteConfig.registryUrl}/r/{name}.json`}
               />
             </div>
@@ -99,6 +100,7 @@ export default function Home() {
           <nav className="flex items-center gap-5">
             <Link href="/docs/introduction" className="transition-colors hover:text-foreground">Docs</Link>
             <Link href="/docs/badge" className="transition-colors hover:text-foreground">Components</Link>
+            <Link href="/blocks" className="transition-colors hover:text-foreground">Blocks</Link>
             <Link href="/docs/colors" className="transition-colors hover:text-foreground">Theming</Link>
           </nav>
         </div>

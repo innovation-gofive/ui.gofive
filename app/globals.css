@@ -379,3 +379,52 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ============================================================
+   Shiki code blocks (dual theme: github-light / github-dark)
+   defaultColor:false emits --shiki-light / --shiki-dark per token.
+   Light mode uses --shiki-light; .dark swaps to --shiki-dark.
+   ============================================================ */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+
+/* The wrapper owns the border / radius / clipping; the Shiki <pre> owns
+   padding, scrolling and font. --font-geist-mono is undefined in this repo,
+   so a real monospace fallback chain is required here. */
+.shiki {
+  margin: 0;
+  padding: 0.875rem 1rem;
+  overflow-x: auto;
+  font-family: var(
+    --font-mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    "Liberation Mono",
+    monospace
+  );
+  font-size: 13px;
+  line-height: 1.6;
+  border-radius: inherit;
+  background-color: var(--shiki-light-bg);
+}
+
+.dark .shiki {
+  background-color: var(--shiki-dark-bg);
+}
+
+/* When a filename header is present, square off the top of the code <pre>. */
+.code-block-has-header .shiki {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

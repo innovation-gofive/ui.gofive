@@ -13,6 +13,9 @@ export function SiteNav() {
           <Link href="/docs/badge" className="text-foreground/70 transition-colors hover:text-foreground">
             Components
           </Link>
+          <Link href="/blocks" className="text-foreground/70 transition-colors hover:text-foreground">
+            Blocks
+          </Link>
           <Link href="/docs/colors" className="text-foreground/70 transition-colors hover:text-foreground">
             Theming
           </Link>
