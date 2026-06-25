@@ -35,7 +35,13 @@ function Sidebar({ collapsed = false, className, ...props }: SidebarProps) {
         data-slot="sidebar"
         data-collapsed={collapsed}
         className={cn(
-          "flex flex-col gap-0.5 overflow-x-hidden rounded-xl border border-border bg-background p-2.5",
+          // `relative`: when collapsed, item/brand labels become `sr-only`
+          // (position: absolute). Without a positioned ancestor they resolve
+          // against the document, and their static positions down a tall,
+          // scrolling rail inflate the page height — phantom blank scroll below
+          // the layout. Making the aside their containing block lets its own
+          // overflow clip them instead.
+          "relative flex flex-col gap-0.5 overflow-x-hidden rounded-xl border border-border bg-background p-2.5",
           "transition-[width,padding] duration-300 ease-in-out",
           // Collapsed → match <SidebarRail>: centered icon column, tighter gap.
           collapsed ? "w-16 items-center gap-1 p-2" : "w-60",
