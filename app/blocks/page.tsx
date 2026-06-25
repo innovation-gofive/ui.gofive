@@ -2,7 +2,6 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 import { blocks } from "@/lib/blocks"
-import { siteConfig } from "@/lib/docs-config"
 import { SiteNav } from "@/components/home/site-nav"
 import { BlockPreview } from "@/components/blocks/block-preview"
 
