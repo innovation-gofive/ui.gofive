@@ -40,6 +40,7 @@ function EmptyState({
       data-slot="empty-state"
       className={cn(
         "flex flex-col items-center gap-2.5 px-5 py-8 text-center",
+        "animate-in fade-in-0 zoom-in-95 duration-300 motion-reduce:animate-none",
         className,
       )}
       {...props}

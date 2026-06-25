@@ -74,12 +74,23 @@ function Avatar({
 // ── AvatarImage ─────────────────────────────────────────────────────
 function AvatarImage({
   className,
+  onLoadingStatusChange,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+  // Radix mounts the image only once it has loaded; fade it in from there.
+  const [loaded, setLoaded] = React.useState(false)
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
-      className={cn("size-full rounded-full object-cover", className)}
+      className={cn(
+        "size-full rounded-full object-cover opacity-0 transition-opacity duration-300 motion-reduce:transition-none",
+        loaded && "opacity-100",
+        className,
+      )}
+      onLoadingStatusChange={(status) => {
+        setLoaded(status === "loaded")
+        onLoadingStatusChange?.(status)
+      }}
       {...props}
     />
   )
@@ -180,7 +191,7 @@ function AvatarGroup({
     <AvatarContext.Provider value={size}>
       <div
         data-slot="avatar-group"
-        className={cn("flex items-center", className)}
+        className={cn("group flex items-center", className)}
         {...props}
       >
         {visible.map((child, i) => (
@@ -188,7 +199,12 @@ function AvatarGroup({
             key={i}
             className={cn(
               "rounded-full ring-2 ring-card",
-              i > 0 && OVERLAP[size],
+              // Spread apart slightly on hover so overlapped avatars separate.
+              i > 0 &&
+                cn(
+                  OVERLAP[size],
+                  "transition-[margin] duration-200 ease-out group-hover:ml-0.5",
+                ),
             )}
           >
             {React.isValidElement(child)
@@ -200,7 +216,13 @@ function AvatarGroup({
           </div>
         ))}
         {overflow > 0 && (
-          <div className={cn("rounded-full ring-2 ring-card", OVERLAP[size])}>
+          <div
+            className={cn(
+              "rounded-full ring-2 ring-card",
+              OVERLAP[size],
+              "transition-[margin] duration-200 ease-out group-hover:ml-0.5",
+            )}
+          >
             <Avatar size={size}>
               <AvatarFallback>+{overflow}</AvatarFallback>
             </Avatar>

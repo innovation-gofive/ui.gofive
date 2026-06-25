@@ -51,7 +51,7 @@ function Checkbox({
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
-        className="flex items-center justify-center text-current"
+        className="flex items-center justify-center text-current animate-in zoom-in-50 fade-in-0 duration-150 motion-reduce:animate-none"
       >
         {indeterminate ? (
           <Minus className="stroke-[3.5]" />

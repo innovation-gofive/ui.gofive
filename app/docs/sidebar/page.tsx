@@ -1,11 +1,14 @@
 "use client"
 
+import { useState } from "react"
 import {
   BarChart3,
   CalendarDays,
   FileText,
   HelpCircle,
   LayoutDashboard,
+  PanelLeftClose,
+  PanelLeftOpen,
   Settings,
   Users,
 } from "lucide-react"
@@ -21,6 +24,7 @@ import {
   SidebarRailItem,
   SidebarSeparator,
 } from "@/registry/new-york/ui/sidebar"
+import { Button } from "@/registry/new-york/ui/button"
 import { DocPage, DocH2, DocH3 } from "@/components/docs/doc-page"
 import { InstallTabs } from "@/components/docs/install-tabs"
 import { CodeBlock } from "@/components/docs/code-block"
@@ -32,9 +36,32 @@ const toc = [
   { title: "Usage", href: "#usage" },
   { title: "Examples", href: "#examples" },
   { title: "Full sidebar", href: "#full-sidebar", depth: 1 },
+  { title: "Collapsible", href: "#collapsible", depth: 1 },
   { title: "Collapsed rail", href: "#collapsed-rail", depth: 1 },
   { title: "API Reference", href: "#api-reference" },
 ]
+
+function CollapsibleSidebar() {
+  const [collapsed, setCollapsed] = useState(false)
+  return (
+    <div className="flex items-start gap-4">
+      <Sidebar collapsed={collapsed}>
+        <SidebarBrand logo="E">empeo</SidebarBrand>
+        <SidebarItem icon={<LayoutDashboard />} title="Dashboard">Dashboard</SidebarItem>
+        <SidebarItem icon={<CalendarDays />} active title="Calendar">Calendar</SidebarItem>
+        <SidebarItem icon={<Users />} badge={12} title="Employees">Employees</SidebarItem>
+        <SidebarItem icon={<FileText />} title="Records">Records</SidebarItem>
+        <SidebarLabel>Insights</SidebarLabel>
+        <SidebarItem icon={<BarChart3 />} title="Reports">Reports</SidebarItem>
+        <SidebarItem icon={<Settings />} title="Settings">Settings</SidebarItem>
+      </Sidebar>
+      <Button variant="outline" size="sm" onClick={() => setCollapsed((c) => !c)}>
+        {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
+        {collapsed ? "Expand" : "Collapse"}
+      </Button>
+    </div>
+  )
+}
 
 function FullSidebar() {
   return (
@@ -119,6 +146,22 @@ export default function SidebarDocPage() {
         <FullSidebar />
       </ComponentPreview>
 
+      <DocH3 id="collapsible">Collapsible</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">Drive the <code>collapsed</code> prop from your own state — the panel animates down to an icon-only rail: items become centered icon buttons and section labels turn into dividers between groups. Add a <code>title</code> to each item for a tooltip when narrow.</p>
+      <CodeBlock
+        className="mt-4"
+        code={`const [collapsed, setCollapsed] = React.useState(false)
+
+<Sidebar collapsed={collapsed}>
+  <SidebarBrand logo="E">empeo</SidebarBrand>
+  <SidebarItem icon={<LayoutDashboard />} title="Dashboard">Dashboard</SidebarItem>
+  <SidebarItem icon={<Users />} badge={12} title="Employees">Employees</SidebarItem>
+</Sidebar>`}
+      />
+      <ComponentPreview>
+        <CollapsibleSidebar />
+      </ComponentPreview>
+
       <DocH3 id="collapsed-rail">Collapsed rail</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">An icon-only rail for the collapsed state, with separators and tooltips via <code>aria-label</code>/<code>title</code>.</p>
       <ComponentPreview>
@@ -128,6 +171,7 @@ export default function SidebarDocPage() {
       <DocH2 id="api-reference">API Reference</DocH2>
       <DocH3 id="api-sidebar">Sidebar</DocH3>
       <PropsTable rows={[
+        { prop: "collapsed", type: "boolean", default: "false", desc: "Collapse to an icon-only rail — width and labels animate" },
         { prop: "children", type: "ReactNode", default: "—", desc: "Brand, labels, items, and sub-groups" },
         { prop: "className", type: "string", default: "—", desc: "Additional classes" },
       ]} />
