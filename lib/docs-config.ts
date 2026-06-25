@@ -172,5 +172,4 @@ export const siteConfig = {
   // Override per deployment with NEXT_PUBLIC_REGISTRY_URL (e.g. your Coolify URL).
   registryUrl:
     process.env.NEXT_PUBLIC_REGISTRY_URL ?? "https://ui.go5.online",
-  github: "https://gofive.co.th",
 }
