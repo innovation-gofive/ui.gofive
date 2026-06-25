@@ -66,8 +66,8 @@ export default function BlocksPage() {
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-3 px-4 py-8 text-sm text-muted-foreground sm:flex-row lg:px-8">
           <p>
             Built by{" "}
-            <a href={siteConfig.github} target="_blank" rel="noreferrer" className="font-medium text-foreground underline underline-offset-4">
-              Gofive
+            <a target="_blank" rel="noreferrer" className="font-medium text-foreground underline underline-offset-4">
+              Innovation & AI Team, Gofive
             </a>
             . Powered by{" "}
             <a href="https://ui.shadcn.com" target="_blank" rel="noreferrer" className="font-medium text-foreground underline underline-offset-4">
