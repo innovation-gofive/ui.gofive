@@ -44,10 +44,17 @@ function StepCircle({ index, status }: { index: number; status: StepStatus }) {
 
   return (
     <span
-      className="z-[1] flex size-7 shrink-0 items-center justify-center rounded-full border-[1.5px] text-[13px] font-semibold"
+      className="z-[1] flex size-7 shrink-0 items-center justify-center rounded-full border-[1.5px] text-[13px] font-semibold transition-[background-color,border-color,color] duration-300 motion-reduce:transition-none"
       style={style}
     >
-      {status === "done" ? <Check className="size-4" strokeWidth={3} /> : index + 1}
+      {status === "done" ? (
+        <Check
+          className="size-4 animate-in zoom-in-50 duration-200 motion-reduce:animate-none"
+          strokeWidth={3}
+        />
+      ) : (
+        index + 1
+      )}
     </span>
   )
 }
@@ -73,9 +80,17 @@ function Stepper({
             <div key={i} className="relative flex gap-3 pb-5 last:pb-0">
               {!isLast && (
                 <span
-                  className="absolute top-7 bottom-1 left-[13px] w-0.5"
-                  style={{ backgroundColor: i < current ? PRIMARY : LINE }}
-                />
+                  className="absolute top-7 bottom-1 left-[13px] w-0.5 overflow-hidden"
+                  style={{ backgroundColor: LINE }}
+                >
+                  <span
+                    className="block w-full transition-[height] duration-500 ease-out motion-reduce:transition-none"
+                    style={{
+                      height: i < current ? "100%" : "0%",
+                      backgroundColor: PRIMARY,
+                    }}
+                  />
+                </span>
               )}
               <StepCircle index={i} status={status} />
               <div className="pt-0.5">
@@ -120,9 +135,17 @@ function Stepper({
             </div>
             {!isLast && (
               <span
-                className="mx-2 h-0.5 min-w-5 flex-1 rounded-full"
-                style={{ backgroundColor: i < current ? PRIMARY : LINE }}
-              />
+                className="mx-2 h-0.5 min-w-5 flex-1 overflow-hidden rounded-full"
+                style={{ backgroundColor: LINE }}
+              >
+                <span
+                  className="block h-full rounded-full transition-[width] duration-500 ease-out motion-reduce:transition-none"
+                  style={{
+                    width: i < current ? "100%" : "0%",
+                    backgroundColor: PRIMARY,
+                  }}
+                />
+              </span>
             )}
           </React.Fragment>
         )

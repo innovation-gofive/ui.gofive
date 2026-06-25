@@ -88,25 +88,98 @@ const LIST_CLASSES: Record<TabsVariant, string> = {
 
 function TabsList({
   className,
+  children,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const { variant } = useTabsContext("TabsList")
+  const { variant, value } = useTabsContext("TabsList")
+  const listRef = React.useRef<HTMLDivElement>(null)
+  const [indicator, setIndicator] = React.useState<{
+    left: number
+    top: number
+    width: number
+    height: number
+  } | null>(null)
+
+  // The underline/pill variants get a single element that slides under the
+  // active trigger instead of each trigger toggling its own border/background.
+  const hasIndicator = variant === "underline" || variant === "pill"
+
+  React.useLayoutEffect(() => {
+    if (!hasIndicator) return
+    const list = listRef.current
+    if (!list) return
+
+    const measure = () => {
+      const active = list.querySelector<HTMLElement>(
+        '[data-slot="tabs-trigger"][data-state="active"]',
+      )
+      if (!active) {
+        setIndicator(null)
+        return
+      }
+      setIndicator({
+        left: active.offsetLeft,
+        top: active.offsetTop,
+        width: active.offsetWidth,
+        height: active.offsetHeight,
+      })
+    }
+
+    measure()
+    // Re-measure when the list or any trigger changes size (badges loading,
+    // container resize, font swaps).
+    const ro = new ResizeObserver(measure)
+    ro.observe(list)
+    list
+      .querySelectorAll('[data-slot="tabs-trigger"]')
+      .forEach((el) => ro.observe(el))
+    return () => ro.disconnect()
+  }, [hasIndicator, value, variant, children])
+
   return (
     <div
+      ref={listRef}
       role="tablist"
       data-slot="tabs-list"
       data-variant={variant}
-      className={cn(LIST_CLASSES[variant], className)}
+      className={cn(hasIndicator && "relative", LIST_CLASSES[variant], className)}
       {...props}
-    />
+    >
+      {hasIndicator && indicator && (
+        <span
+          aria-hidden
+          data-slot="tabs-indicator"
+          className={cn(
+            "pointer-events-none absolute z-0 transition-[transform,width,height] duration-200 ease-out motion-reduce:transition-none",
+            variant === "underline" && "bottom-0 left-0 h-0.5 rounded-full bg-primary",
+            variant === "pill" && "top-0 left-0 rounded-md bg-background shadow-sm",
+          )}
+          style={
+            variant === "pill"
+              ? {
+                  width: indicator.width,
+                  height: indicator.height,
+                  transform: `translate(${indicator.left}px, ${indicator.top}px)`,
+                }
+              : {
+                  width: indicator.width,
+                  transform: `translateX(${indicator.left}px)`,
+                }
+          }
+        />
+      )}
+      {children}
+    </div>
   )
 }
 
 // ── TabsTrigger ────────────────────────────────────────────────────
 const TRIGGER_CLASSES: Record<TabsVariant, string> = {
+  // underline + pill no longer draw their own active border/background —
+  // <TabsList> renders a single sliding indicator behind the active trigger.
   underline:
-    "-mb-px gap-1.5 border-b-2 border-transparent px-4 py-2.5 text-[13.5px] font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:font-semibold data-[state=active]:text-primary",
-  pill: "gap-1.5 rounded-md px-3.5 py-2 text-[13px] font-medium text-muted-foreground hover:text-foreground data-[state=active]:bg-background data-[state=active]:font-semibold data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+    "-mb-px gap-1.5 border-b-2 border-transparent px-4 py-2.5 text-[13.5px] font-medium text-muted-foreground hover:text-foreground data-[state=active]:font-semibold data-[state=active]:text-primary",
+  pill: "gap-1.5 rounded-md px-3.5 py-2 text-[13px] font-medium text-muted-foreground hover:text-foreground data-[state=active]:font-semibold data-[state=active]:text-foreground",
   segmented:
     "gap-1.5 border-r border-border px-4 py-2 text-[13px] text-foreground last:border-r-0 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
   vertical:
@@ -143,7 +216,7 @@ function TabsTrigger({
         if (!e.defaultPrevented) setValue(value)
       }}
       className={cn(
-        "inline-flex items-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 [&_svg]:size-4 [&_svg]:shrink-0",
+        "relative z-[1] inline-flex items-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 [&_svg]:size-4 [&_svg]:shrink-0",
         TRIGGER_CLASSES[variant],
         className,
       )}
@@ -180,7 +253,15 @@ function TabsContent({ value, className, ...props }: TabsContentProps) {
   const { value: current } = useTabsContext("TabsContent")
   if (current !== value) return null
   return (
-    <div role="tabpanel" data-slot="tabs-content" className={className} {...props} />
+    <div
+      role="tabpanel"
+      data-slot="tabs-content"
+      className={cn(
+        "animate-in fade-in-0 slide-in-from-bottom-1 duration-200 motion-reduce:animate-none",
+        className,
+      )}
+      {...props}
+    />
   )
 }
 

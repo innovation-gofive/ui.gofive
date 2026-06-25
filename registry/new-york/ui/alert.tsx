@@ -47,15 +47,36 @@ function Alert({
 }: AlertProps) {
   const s = STATUS[status]
   const Icon = s.icon
+  const [closing, setClosing] = React.useState(false)
+
+  // Dismiss: play an exit animation, then unmount via onClose. When the user
+  // prefers reduced motion there is no animation to wait on, so close at once.
+  const handleClose = () => {
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      onClose?.()
+      return
+    }
+    setClosing(true)
+  }
+
   return (
     <div
       role="status"
       data-slot="alert"
       className={cn(
         "flex items-start gap-2.5 rounded-lg border-l-[3px] px-3.5 py-2.5 text-[13px]",
+        closing
+          ? "animate-out fade-out-0 slide-out-to-top-1 fill-mode-forwards duration-200"
+          : "animate-in fade-in-0 slide-in-from-top-1 duration-200 motion-reduce:animate-none",
         className,
       )}
       style={{ backgroundColor: s.soft, borderLeftColor: s.accent, color: s.text }}
+      onAnimationEnd={(e) => {
+        if (closing && e.target === e.currentTarget) onClose?.()
+      }}
       {...props}
     >
       {icon !== null && (
@@ -67,7 +88,7 @@ function Alert({
       {onClose && (
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Dismiss"
           className="-mr-1 shrink-0 opacity-60 transition-opacity hover:opacity-100 [&_svg]:size-4"
           style={{ color: s.text }}

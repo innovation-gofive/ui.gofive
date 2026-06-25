@@ -21,6 +21,7 @@ import { InstallTabs } from "@/components/docs/install-tabs"
 import { CodeBlock } from "@/components/docs/code-block"
 import { ComponentPreview } from "@/components/docs/component-preview"
 import { PropsTable } from "@/components/docs/props-table"
+import { cn } from "@/lib/utils"
 
 const toc = [
   { title: "Installation", href: "#installation" },
@@ -32,8 +33,18 @@ const toc = [
   { title: "API Reference", href: "#api-reference" },
 ]
 
-const TriggerArea = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex h-[140px] w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground select-none">
+const TriggerArea = ({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div">) => (
+  <div
+    {...props}
+    className={cn(
+      "flex h-[140px] w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground select-none",
+      className
+    )}
+  >
     {children}
   </div>
 )

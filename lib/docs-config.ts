@@ -155,8 +155,8 @@ export const mainNav: { title: string; href: string }[] = [
   { title: "Docs", href: "/docs/introduction" },
   { title: "AI Agent", href: "/docs/agent-skill" },
   { title: "Components", href: "/docs/badge" },
+    { title: "Theming", href: "/docs/colors" },
   { title: "Blocks", href: "/blocks" },
-  { title: "Theming", href: "/docs/colors" },
 ]
 
 // Active-state matcher for `mainNav` items — exact match for the root, and
