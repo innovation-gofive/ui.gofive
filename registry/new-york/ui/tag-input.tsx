@@ -116,7 +116,7 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           <span
             key={`${tag}-${i}`}
             data-slot="tag-input-chip"
-            className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-xs font-semibold text-primary"
+            className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-xs font-semibold text-primary animate-in fade-in-0 zoom-in-95 duration-150 motion-reduce:animate-none"
           >
             {tag}
             <button

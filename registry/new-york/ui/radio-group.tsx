@@ -40,7 +40,10 @@ function RadioGroupItem({
         data-slot="radio-group-indicator"
         className="flex items-center justify-center"
       >
-        <span data-slot="radio-group-dot" className="size-2 rounded-full bg-primary" />
+        <span
+          data-slot="radio-group-dot"
+          className="size-2 rounded-full bg-primary animate-in zoom-in-50 fade-in-0 duration-150 motion-reduce:animate-none"
+        />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )
