@@ -697,6 +697,9 @@
       "type": "registry:ui",
       "title": "Sidebar",
       "description": "A vertical navigation panel with brand, section labels, items with icons and count badges, and nested sub-items, plus a collapsed icon-only rail variant.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/tooltip.json"
+      ],
       "files": [
         {
           "path": "registry/new-york/ui/sidebar.tsx",

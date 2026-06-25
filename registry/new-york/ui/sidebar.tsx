@@ -3,6 +3,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
 
 // ── Sidebar context ────────────────────────────────────────────────
 // Shares the collapsed state down to brand, labels, and items so the whole
@@ -122,7 +123,7 @@ function SidebarItem({
   ...props
 }: SidebarItemProps) {
   const { collapsed } = useSidebar()
-  return (
+  const button = (
     <button
       type="button"
       data-slot="sidebar-item"
@@ -160,6 +161,26 @@ function SidebarItem({
       )}
     </button>
   )
+
+  // Collapsed → the label is sr-only, so surface it (and any badge) as a
+  // tooltip on hover/focus. Expanded items show their label inline already.
+  if (collapsed) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
+        <TooltipContent side="right" sideOffset={8} className="flex items-center gap-2">
+          {children}
+          {badge != null && (
+            <span className="inline-flex items-center justify-center rounded-full bg-background/20 px-1.5 text-[10.5px] font-semibold">
+              {badge}
+            </span>
+          )}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  return button
 }
 
 function SidebarSub({
