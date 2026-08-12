@@ -459,7 +459,8 @@ function TreeMultiSelect({
           <div data-slot="tree-children" className="relative">
             <span
               className="absolute bottom-1 top-0 w-px bg-border"
-              style={{ left: depth * 18 + 31 }}
+              // centred on the parent checkbox, clear of the children's boxes
+              style={{ left: depth * 18 + 15 }}
               aria-hidden
             />
             {node.children!.map((child) => renderNode(child, depth + 1))}
