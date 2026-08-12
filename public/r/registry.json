@@ -732,7 +732,7 @@
       "name": "sidebar",
       "type": "registry:ui",
       "title": "Sidebar",
-      "description": "A vertical navigation panel with brand, section labels, items with icons and count badges, and nested sub-items, plus a collapsed icon-only rail variant.",
+      "description": "A vertical navigation panel with brand, section labels, items with icons and count badges, nested sub-items, a pin toggle that keeps it expanded, a bottom-anchored footer, and a collapsed icon-only rail variant.",
       "registryDependencies": [
         "https://ui.go5.online/r/tooltip.json"
       ],
@@ -742,6 +742,9 @@
           "type": "registry:ui",
           "target": "@ui/gofive/sidebar.tsx"
         }
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {

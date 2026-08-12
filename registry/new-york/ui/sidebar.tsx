@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { Circle, CircleDot } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
@@ -9,10 +10,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
 // Shares the collapsed state down to brand, labels, and items so the whole
 // panel can animate between the full view and an icon-only rail as one tree —
 // a smooth width transition instead of swapping in a separate <SidebarRail>.
-type SidebarContextValue = { collapsed: boolean }
+type SidebarContextValue = {
+  collapsed: boolean
+  pinnable: boolean
+  togglePin: () => void
+}
 
 const SidebarContext = React.createContext<SidebarContextValue>({
   collapsed: false,
+  pinnable: false,
+  togglePin: () => {},
 })
 
 function useSidebar() {
@@ -26,25 +33,43 @@ function useSidebar() {
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** Collapse to an icon-only rail — width and labels animate. */
   collapsed?: boolean
+  /** Initial state when `collapsed` is left uncontrolled. */
+  defaultCollapsed?: boolean
+  onCollapsedChange?: (collapsed: boolean) => void
+  /** Show the pin toggle in <SidebarBrand> — pinned keeps the panel expanded. */
+  pinnable?: boolean
 }
 
-function Sidebar({ collapsed = false, className, ...props }: SidebarProps) {
+function Sidebar({
+  collapsed: collapsedProp,
+  defaultCollapsed = false,
+  onCollapsedChange,
+  pinnable = false,
+  className,
+  ...props
+}: SidebarProps) {
+  const [internal, setInternal] = React.useState(defaultCollapsed)
+  const collapsed = collapsedProp ?? internal
+
+  const togglePin = () => {
+    if (collapsedProp === undefined) setInternal(!collapsed)
+    onCollapsedChange?.(!collapsed)
+  }
+
   return (
-    <SidebarContext.Provider value={{ collapsed }}>
+    <SidebarContext.Provider value={{ collapsed, pinnable, togglePin }}>
       <aside
         data-slot="sidebar"
         data-collapsed={collapsed}
         className={cn(
-          // `relative`: when collapsed, item/brand labels become `sr-only`
-          // (position: absolute). Without a positioned ancestor they resolve
-          // against the document, and their static positions down a tall,
-          // scrolling rail inflate the page height — phantom blank scroll below
-          // the layout. Making the aside their containing block lets its own
-          // overflow clip them instead.
+          // Labels stay in the flow and fade out; `overflow-x-hidden` clips
+          // them as the rail narrows. Nothing switches to `display`/`sr-only`
+          // mid-animation, so width is the only thing that moves.
           "relative flex flex-col gap-0.5 overflow-x-hidden rounded-xl border border-border bg-background p-2.5",
-          "transition-[width,padding] duration-300 ease-in-out",
-          // Collapsed → match <SidebarRail>: centered icon column, tighter gap.
-          collapsed ? "w-16 items-center gap-1 p-2" : "w-60",
+          "transition-[width] duration-300 ease-in-out",
+          // Padding is constant across states: p-2.5 leaves exactly 44px of
+          // content in the 64px rail, which is the collapsed item size.
+          collapsed ? "w-16 gap-1" : "w-60",
           className,
         )}
         {...props}
@@ -60,28 +85,57 @@ export interface SidebarBrandProps
 }
 
 function SidebarBrand({ logo, className, children, ...props }: SidebarBrandProps) {
-  const { collapsed } = useSidebar()
+  const { collapsed, pinnable, togglePin } = useSidebar()
+
+  const mark = logo != null && (
+    <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary text-[13px] font-bold text-primary-foreground">
+      {logo}
+    </span>
+  )
+
   return (
     <div
       data-slot="sidebar-brand"
-      className={cn("mb-1.5 flex items-center gap-2 p-2.5", collapsed && "p-2", className)}
+      className={cn("mb-1.5 flex items-center gap-2 p-2.5", className)}
       {...props}
     >
-      {logo != null && (
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary text-[13px] font-bold text-primary-foreground">
-          {logo}
-        </span>
+      {/* Collapsed hides the pin button, so the mark takes over as the way back. */}
+      {pinnable && collapsed ? (
+        <button
+          type="button"
+          onClick={togglePin}
+          aria-label="Expand sidebar"
+          className="outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 rounded-lg"
+        >
+          {mark}
+        </button>
+      ) : (
+        mark
       )}
-      {/* sr-only when collapsed: removed from flow so the logo centers, but the
-          name stays in the a11y tree. */}
       <span
         className={cn(
-          "truncate text-sm font-bold text-foreground",
-          collapsed && "sr-only",
+          "flex-1 truncate text-sm font-bold text-foreground transition-opacity duration-200",
+          collapsed && "opacity-0",
         )}
       >
         {children}
       </span>
+      {pinnable && (
+        <button
+          type="button"
+          data-slot="sidebar-pin"
+          onClick={togglePin}
+          aria-pressed={!collapsed}
+          aria-label={collapsed ? "Pin sidebar open" : "Unpin sidebar"}
+          className={cn(
+            "flex size-5 shrink-0 items-center justify-center rounded-full text-muted-foreground outline-none transition-opacity duration-200 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50",
+            "[&_svg]:size-[18px]",
+            collapsed && "pointer-events-none opacity-0",
+          )}
+        >
+          {collapsed ? <Circle /> : <CircleDot />}
+        </button>
+      )}
     </div>
   )
 }
@@ -129,6 +183,7 @@ function SidebarItem({
   ...props
 }: SidebarItemProps) {
   const { collapsed } = useSidebar()
+  const [tipOpen, setTipOpen] = React.useState(false)
   const button = (
     <button
       type="button"
@@ -139,18 +194,21 @@ function SidebarItem({
         "flex w-full shrink-0 items-center gap-2.5 overflow-hidden rounded-lg px-2.5 py-2 text-[13px] text-foreground/80 transition-all duration-300 hover:bg-muted",
         "data-[active=true]:bg-primary/10 data-[active=true]:font-semibold data-[active=true]:text-primary",
         "[&_svg]:size-4 [&_svg]:shrink-0",
-        // Collapsed → a centered icon square matching <SidebarRailItem>.
-        collapsed && "size-11 justify-center gap-0 rounded-[10px] p-0 [&_svg]:size-[18px]",
+        // Collapsed → an icon square matching <SidebarRailItem>. Padding stays
+        // put so the icon never moves — only the box around it shrinks.
+        collapsed && "size-11 rounded-[10px] [&_svg]:size-[18px]",
         className,
       )}
       {...props}
     >
       {icon}
-      {/* sr-only when collapsed keeps the label as the button's accessible name. */}
+      {/* Faded, not `sr-only` — staying in the flow keeps the label as the
+          button's accessible name and lets the rail clip it instead of the
+          text vanishing on the first frame of the width animation. */}
       <span
         className={cn(
           "flex-1 truncate text-left transition-opacity duration-200",
-          collapsed && "sr-only",
+          collapsed && "opacity-0",
         )}
       >
         {children}
@@ -159,7 +217,7 @@ function SidebarItem({
         <span
           className={cn(
             "ml-auto inline-flex shrink-0 items-center justify-center rounded-full bg-danger/10 px-1.5 text-[10.5px] font-semibold text-danger transition-opacity duration-200",
-            collapsed && "hidden",
+            collapsed && "opacity-0",
           )}
         >
           {badge}
@@ -168,25 +226,23 @@ function SidebarItem({
     </button>
   )
 
-  // Collapsed → the label is sr-only, so surface it (and any badge) as a
-  // tooltip on hover/focus. Expanded items show their label inline already.
-  if (collapsed) {
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent side="right" sideOffset={8} className="flex items-center gap-2">
-          {children}
-          {badge != null && (
-            <span className="inline-flex items-center justify-center rounded-full bg-background/20 px-1.5 text-[10.5px] font-semibold">
-              {badge}
-            </span>
-          )}
-        </TooltipContent>
-      </Tooltip>
-    )
-  }
-
-  return button
+  // Always wrapped, never conditionally: mounting the Tooltip only when
+  // collapsed replaces the button's DOM node the instant the state flips, which
+  // kills the in-flight width/opacity transitions. Kept controlled so it can
+  // only open once the label is actually hidden.
+  return (
+    <Tooltip open={collapsed && tipOpen} onOpenChange={setTipOpen}>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent side="right" sideOffset={8} className="flex items-center gap-2">
+        {children}
+        {badge != null && (
+          <span className="inline-flex items-center justify-center rounded-full bg-background/20 px-1.5 text-[10.5px] font-semibold">
+            {badge}
+          </span>
+        )}
+      </TooltipContent>
+    </Tooltip>
+  )
 }
 
 function SidebarSub({
@@ -228,6 +284,21 @@ function SidebarSubItem({
         "data-[active=true]:bg-primary/10 data-[active=true]:font-semibold data-[active=true]:text-primary",
         className,
       )}
+      {...props}
+    />
+  )
+}
+
+// Bottom-anchored group (Reports, Help, …). Needs the sidebar to fill its
+// container's height for `mt-auto` to push it down.
+function SidebarFooter({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      data-slot="sidebar-footer"
+      className={cn("mt-auto flex shrink-0 flex-col gap-0.5 pt-2", className)}
       {...props}
     />
   )
@@ -297,6 +368,7 @@ export {
   SidebarItem,
   SidebarSub,
   SidebarSubItem,
+  SidebarFooter,
   SidebarRail,
   SidebarRailItem,
   SidebarSeparator,

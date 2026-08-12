@@ -20,6 +20,7 @@ import {
   SidebarItem,
   SidebarSub,
   SidebarSubItem,
+  SidebarFooter,
   SidebarRail,
   SidebarRailItem,
   SidebarSeparator,
@@ -36,6 +37,7 @@ const toc = [
   { title: "Usage", href: "#usage" },
   { title: "Examples", href: "#examples" },
   { title: "Full sidebar", href: "#full-sidebar", depth: 1 },
+  { title: "Pinnable", href: "#pinnable", depth: 1 },
   { title: "Collapsible", href: "#collapsible", depth: 1 },
   { title: "Collapsed rail", href: "#collapsed-rail", depth: 1 },
   { title: "API Reference", href: "#api-reference" },
@@ -59,6 +61,25 @@ function CollapsibleSidebar() {
         {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
         {collapsed ? "Expand" : "Collapse"}
       </Button>
+    </div>
+  )
+}
+
+function PinnableSidebar() {
+  return (
+    // h-[460px] so the footer's mt-auto has room to push against.
+    <div className="flex h-[460px] items-stretch">
+      <Sidebar pinnable>
+        <SidebarBrand logo="E">empeo</SidebarBrand>
+        <SidebarItem icon={<LayoutDashboard />} active title="Dashboard">Dashboard</SidebarItem>
+        <SidebarItem icon={<FileText />} title="Records">Records</SidebarItem>
+        <SidebarItem icon={<Users />} badge={12} title="Employees">Employees</SidebarItem>
+        <SidebarItem icon={<CalendarDays />} title="Calendar">Calendar</SidebarItem>
+        <SidebarFooter>
+          <SidebarItem icon={<BarChart3 />} title="Reports">Reports</SidebarItem>
+          <SidebarItem icon={<HelpCircle />} title="Help">Help</SidebarItem>
+        </SidebarFooter>
+      </Sidebar>
     </div>
   )
 }
@@ -146,6 +167,23 @@ export default function SidebarDocPage() {
         <FullSidebar />
       </ComponentPreview>
 
+      <DocH3 id="pinnable">Pinnable</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">Set <code>pinnable</code> to put a pin toggle beside the brand — pinned keeps the panel expanded, unpinned collapses it to the rail. Collapsed, the logo mark becomes the way back. <code>SidebarFooter</code> anchors a group to the bottom.</p>
+      <CodeBlock
+        className="mt-4"
+        code={`<Sidebar pinnable defaultCollapsed={false}>
+  <SidebarBrand logo="E">empeo</SidebarBrand>
+  <SidebarItem icon={<LayoutDashboard />} active title="Dashboard">Dashboard</SidebarItem>
+  <SidebarItem icon={<Users />} badge={12} title="Employees">Employees</SidebarItem>
+  <SidebarFooter>
+    <SidebarItem icon={<HelpCircle />} title="Help">Help</SidebarItem>
+  </SidebarFooter>
+</Sidebar>`}
+      />
+      <ComponentPreview>
+        <PinnableSidebar />
+      </ComponentPreview>
+
       <DocH3 id="collapsible">Collapsible</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">Drive the <code>collapsed</code> prop from your own state — the panel animates down to an icon-only rail: items become centered icon buttons and section labels turn into dividers between groups. Add a <code>title</code> to each item for a tooltip when narrow.</p>
       <CodeBlock
@@ -171,8 +209,11 @@ export default function SidebarDocPage() {
       <DocH2 id="api-reference">API Reference</DocH2>
       <DocH3 id="api-sidebar">Sidebar</DocH3>
       <PropsTable rows={[
-        { prop: "collapsed", type: "boolean", default: "false", desc: "Collapse to an icon-only rail — width and labels animate" },
-        { prop: "children", type: "ReactNode", default: "—", desc: "Brand, labels, items, and sub-groups" },
+        { prop: "collapsed", type: "boolean", default: "—", desc: "Controlled collapse to an icon-only rail — width and labels animate" },
+        { prop: "defaultCollapsed", type: "boolean", default: "false", desc: "Initial state when collapsed is uncontrolled" },
+        { prop: "onCollapsedChange", type: "(collapsed: boolean) => void", default: "—", desc: "Called when the pin toggle flips the state" },
+        { prop: "pinnable", type: "boolean", default: "false", desc: "Show the pin toggle in SidebarBrand" },
+        { prop: "children", type: "ReactNode", default: "—", desc: "Brand, labels, items, sub-groups, and a footer" },
         { prop: "className", type: "string", default: "—", desc: "Additional classes" },
       ]} />
 
