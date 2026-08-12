@@ -257,6 +257,26 @@
       ]
     },
     {
+      "name": "responsive-popover",
+      "type": "registry:ui",
+      "title": "Responsive Popover",
+      "description": "A popover/bottom-sheet switch used by every selection component — renders a Radix Popover on desktop and a Vaul bottom sheet below 768px, with the same Root/Trigger/Content API.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/drawer.json"
+      ],
+      "dependencies": [
+        "radix-ui",
+        "vaul"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/responsive-popover.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/responsive-popover.tsx"
+        }
+      ]
+    },
+    {
       "name": "filter",
       "type": "registry:ui",
       "title": "Filter",
@@ -343,7 +363,8 @@
       "title": "DateTime Picker",
       "description": "Popover-based date, time, and combined date-time pickers built on the Gofive Calendar, with controlled state and no external date library.",
       "registryDependencies": [
-        "https://ui.go5.online/r/calendar.json"
+        "https://ui.go5.online/r/calendar.json",
+        "https://ui.go5.online/r/responsive-popover.json"
       ],
       "dependencies": [
         "radix-ui",
@@ -372,6 +393,9 @@
           "type": "registry:ui",
           "target": "@ui/gofive/picker.tsx"
         }
+      ],
+      "registryDependencies": [
+        "https://ui.go5.online/r/responsive-popover.json"
       ]
     },
     {
@@ -389,6 +413,9 @@
           "type": "registry:ui",
           "target": "@ui/gofive/media-picker.tsx"
         }
+      ],
+      "registryDependencies": [
+        "https://ui.go5.online/r/responsive-popover.json"
       ]
     },
     {
@@ -601,6 +628,9 @@
           "type": "registry:ui",
           "target": "@ui/gofive/select.tsx"
         }
+      ],
+      "registryDependencies": [
+        "https://ui.go5.online/r/responsive-popover.json"
       ]
     },
     {
@@ -634,6 +664,9 @@
           "type": "registry:ui",
           "target": "@ui/gofive/tree-select.tsx"
         }
+      ],
+      "registryDependencies": [
+        "https://ui.go5.online/r/responsive-popover.json"
       ]
     },
     {
@@ -651,6 +684,9 @@
           "type": "registry:ui",
           "target": "@ui/gofive/person-picker.tsx"
         }
+      ],
+      "registryDependencies": [
+        "https://ui.go5.online/r/responsive-popover.json"
       ]
     },
     {

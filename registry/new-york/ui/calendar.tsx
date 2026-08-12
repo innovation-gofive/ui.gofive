@@ -235,7 +235,7 @@ function Calendar({
       {WEEKDAYS.map((wd) => (
         <div
           key={wd}
-          className="flex h-8 w-9 items-center justify-center text-[11px] font-medium text-muted-foreground"
+          className="flex h-8 w-full min-w-9 items-center justify-center text-[11px] font-medium text-muted-foreground"
         >
           {wd}
         </div>
@@ -267,7 +267,7 @@ function Calendar({
           <div
             key={day.toISOString()}
             className={cn(
-              "flex h-9 w-9 items-center justify-center",
+              "flex h-9 w-full min-w-9 items-center justify-center",
               inRange && "bg-primary/10",
               isStart && "rounded-l-md bg-primary/10",
               isEnd && "rounded-r-md bg-primary/10",
@@ -283,7 +283,7 @@ function Calendar({
               data-selected={selected || undefined}
               data-outside={outside || undefined}
               className={cn(
-                "inline-flex size-9 items-center justify-center rounded-md text-[13px] font-normal transition-colors",
+                "inline-flex h-9 w-full min-w-9 items-center justify-center rounded-md text-[13px] font-normal transition-colors",
                 "hover:bg-accent hover:text-foreground",
                 outside && "text-muted-foreground/50",
                 isToday && !selected && "ring-1 ring-inset ring-primary text-primary font-medium",
@@ -302,7 +302,7 @@ function Calendar({
 
   // ── Month grid ───────────────────────────────────────────────────
   const monthGrid = (
-    <div className="grid w-[252px] grid-cols-3 gap-1.5 px-0.5">
+    <div className="grid w-full min-w-[252px] grid-cols-3 gap-1.5 px-0.5">
       {MONTHS_SHORT.map((m, i) => {
         const selected =
           mode === "single" &&
@@ -332,7 +332,7 @@ function Calendar({
   // ── Year grid ────────────────────────────────────────────────────
   const blockStart = yearBlockStart(year)
   const yearGrid = (
-    <div className="grid w-[252px] grid-cols-3 gap-1.5 px-0.5">
+    <div className="grid w-full min-w-[252px] grid-cols-3 gap-1.5 px-0.5">
       {Array.from({ length: 12 }, (_, i) => blockStart + i).map((y) => {
         const selected =
           mode === "single" && single != null && single.getFullYear() === y
@@ -358,7 +358,7 @@ function Calendar({
 
   // ── Quarter grid ─────────────────────────────────────────────────
   const quarterGrid = (
-    <div className="grid w-[252px] grid-cols-2 gap-2 px-0.5">
+    <div className="grid w-full min-w-[252px] grid-cols-2 gap-2 px-0.5">
       {QUARTERS.map((q) => {
         const selected =
           mode === "single" &&

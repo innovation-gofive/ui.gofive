@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "responsive-popover",
+  "title": "Responsive Popover",
+  "description": "A popover/bottom-sheet switch used by every selection component — renders a Radix Popover on desktop and a Vaul bottom sheet below 768px, with the same Root/Trigger/Content API.",
+  "dependencies": [
+    "radix-ui",
+    "vaul"
+  ],
+  "registryDependencies": [
+    "https://ui.go5.online/r/drawer.json"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/ui/responsive-popover.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Popover as PopoverPrimitive } from \"radix-ui\"\n\nimport { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from \"./drawer\"\n\nconst MOBILE_BREAKPOINT = 768\n\nfunction useIsMobile() {\n  const [isMobile, setIsMobile] = React.useState(false)\n\n  React.useEffect(() => {\n    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)\n    const onChange = () => setIsMobile(mql.matches)\n    onChange()\n    mql.addEventListener(\"change\", onChange)\n    return () => mql.removeEventListener(\"change\", onChange)\n  }, [])\n\n  return isMobile\n}\n\nconst SheetContext = React.createContext(false)\n\n/** True when the surrounding panel is rendered as a mobile bottom sheet. */\nfunction useIsBottomSheet() {\n  return React.useContext(SheetContext)\n}\n\nfunction Root({\n  open,\n  onOpenChange,\n  children,\n}: {\n  open?: boolean\n  onOpenChange?: (open: boolean) => void\n  children: React.ReactNode\n}) {\n  const isMobile = useIsMobile()\n\n  return (\n    <SheetContext.Provider value={isMobile}>\n      {isMobile ? (\n        <Drawer open={open} onOpenChange={onOpenChange}>\n          {children}\n        </Drawer>\n      ) : (\n        <PopoverPrimitive.Root open={open} onOpenChange={onOpenChange}>\n          {children}\n        </PopoverPrimitive.Root>\n      )}\n    </SheetContext.Provider>\n  )\n}\n\nfunction Trigger(props: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {\n  return useIsBottomSheet() ? (\n    <DrawerTrigger {...props} />\n  ) : (\n    <PopoverPrimitive.Trigger {...props} />\n  )\n}\n\n/** No-op on mobile — DrawerContent portals itself. */\nfunction Portal({ children }: { children: React.ReactNode }) {\n  return useIsBottomSheet() ? (\n    <>{children}</>\n  ) : (\n    <PopoverPrimitive.Portal>{children}</PopoverPrimitive.Portal>\n  )\n}\n\nfunction Content({\n  className,\n  align = \"start\",\n  sideOffset = 6,\n  title = \"Options\",\n  children,\n  ...props\n}: React.ComponentProps<typeof PopoverPrimitive.Content> & {\n  /** Screen-reader label for the bottom sheet. */\n  title?: string\n  \"data-slot\"?: string\n}) {\n  // Popover sizing/placement (trigger width, max-h-64, align) is meaningless in\n  // a sheet — drop className and the popover-only props instead of merging them.\n  if (useIsBottomSheet()) {\n    return (\n      <DrawerContent\n        data-slot={props[\"data-slot\"]}\n        aria-describedby={undefined}\n        className=\"bg-popover text-popover-foreground\"\n      >\n        <DrawerTitle className=\"sr-only\">{title}</DrawerTitle>\n        <div className=\"min-h-0 flex-1 overflow-auto p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]\">\n          {children}\n        </div>\n      </DrawerContent>\n    )\n  }\n\n  return (\n    <PopoverPrimitive.Content\n      align={align}\n      sideOffset={sideOffset}\n      className={className}\n      {...props}\n    >\n      {children}\n    </PopoverPrimitive.Content>\n  )\n}\n\n/** Drop-in for radix-ui's `Popover` namespace: popover on desktop, bottom sheet on mobile. */\nconst ResponsivePopover = { Root, Trigger, Portal, Content }\n\nexport { ResponsivePopover, useIsBottomSheet }\n",
+      "type": "registry:ui",
+      "target": "@ui/gofive/responsive-popover.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Popover as PopoverPrimitive } from "radix-ui"
+import { ResponsivePopover as PopoverPrimitive } from "./responsive-popover"
 import { Calendar as CalendarIcon, Clock } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -194,6 +194,10 @@ function presetMatches(preset: RangePreset, range: CalendarRange | null): boolea
   return isSameDay(v.from, range.from) && isSameDay(v.to, range.to)
 }
 
+// Sidebar row on desktop, pill chip in the mobile scroll strip.
+const PRESET_CLASS =
+  "shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-left text-[13px] transition-colors max-md:rounded-full max-md:border max-md:px-3.5 max-md:py-1.5 max-md:text-[12.5px]"
+
 function PresetSidebar({
   presets,
   value,
@@ -207,17 +211,18 @@ function PresetSidebar({
 }) {
   const activeIdx = presets.findIndex((p) => presetMatches(p, value))
   return (
-    <div className="mr-2.5 flex min-w-[140px] flex-col gap-0.5 border-r pr-2">
+    // Mobile: the sidebar becomes a single scrollable chip strip above the calendar.
+    <div className="mr-2.5 flex min-w-[140px] flex-col gap-0.5 border-r pr-2 max-md:mb-3 max-md:mr-0 max-md:min-w-0 max-md:flex-row max-md:gap-2 max-md:overflow-x-auto max-md:border-r-0 max-md:pb-1 max-md:pr-0 max-md:[scrollbar-width:none]">
       {presets.map((p, i) => (
         <button
           key={p.label}
           type="button"
           onClick={() => onSelect(p)}
           className={cn(
-            "rounded-md px-3 py-2 text-left text-[13px] transition-colors",
+            PRESET_CLASS,
             i === activeIdx
-              ? "bg-primary/10 font-medium text-primary"
-              : "text-foreground/80 hover:bg-accent hover:text-foreground",
+              ? "bg-primary/10 font-medium text-primary max-md:border-primary"
+              : "text-foreground/80 hover:bg-accent hover:text-foreground max-md:border-input",
           )}
         >
           {p.label}
@@ -227,10 +232,10 @@ function PresetSidebar({
         type="button"
         onClick={onCustom}
         className={cn(
-          "rounded-md px-3 py-2 text-left text-[13px] transition-colors",
+          PRESET_CLASS,
           activeIdx === -1 && value?.from
-            ? "bg-primary/10 font-medium text-primary"
-            : "text-foreground/80 hover:bg-accent hover:text-foreground",
+            ? "bg-primary/10 font-medium text-primary max-md:border-primary"
+            : "text-foreground/80 hover:bg-accent hover:text-foreground max-md:border-input",
         )}
       >
         Custom
@@ -352,17 +357,17 @@ function DatePicker({
                   icon={<CalendarIcon />}
                   value={draftRange?.from ? formatDate(draftRange.from) : undefined}
                   placeholder="Start"
-                  className="h-8 w-[150px] text-[13px]"
+                  className="h-8 w-[150px] text-[13px] max-md:w-auto max-md:flex-1"
                 />
                 <span className="text-muted-foreground">→</span>
                 <TriggerField
                   icon={<CalendarIcon />}
                   value={draftRange?.to ? formatDate(draftRange.to) : undefined}
                   placeholder="End"
-                  className="h-8 w-[150px] text-[13px]"
+                  className="h-8 w-[150px] text-[13px] max-md:w-auto max-md:flex-1"
                 />
               </div>
-              <div className="flex">
+              <div className="flex max-md:flex-col">
                 <PresetSidebar
                   presets={presetList}
                   value={draftRange}
@@ -374,6 +379,7 @@ function DatePicker({
                   value={draftRange}
                   onChange={handleCalendarChange}
                   disabled={disabledDate}
+                  className="max-md:w-full"
                 />
               </div>
             </>
@@ -384,6 +390,7 @@ function DatePicker({
               value={draft}
               onChange={handleCalendarChange}
               disabled={disabledDate}
+              className="max-md:w-full"
             />
           )}
 

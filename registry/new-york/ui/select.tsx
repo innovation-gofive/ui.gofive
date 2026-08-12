@@ -1,7 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { Popover as PopoverPrimitive } from "radix-ui"
+import {
+  ResponsivePopover as PopoverPrimitive,
+  useIsBottomSheet,
+} from "./responsive-popover"
 import { Check, ChevronDown, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -59,6 +62,9 @@ function MenuSearch({
   onValueChange: (v: string) => void
   placeholder?: string
 }) {
+  // Autofocus in a bottom sheet pops the keyboard over the options.
+  const autoFocus = !useIsBottomSheet()
+
   return (
     <div
       data-slot="select-search"
@@ -66,7 +72,7 @@ function MenuSearch({
     >
       <Search className="size-3.5 shrink-0 text-muted-foreground" />
       <input
-        autoFocus
+        autoFocus={autoFocus}
         value={value}
         onChange={(e) => onValueChange(e.target.value)}
         placeholder={placeholder}

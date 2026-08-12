@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Popover as PopoverPrimitive } from "radix-ui"
+import { Popover as RadixPopover } from "radix-ui"
+import { ResponsivePopover as PopoverPrimitive, useIsBottomSheet } from "./responsive-popover"
 import { Check, ChevronDown, Search, X, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -155,11 +156,14 @@ function PickerSearch({
   onChange: (v: string) => void
   placeholder: string
 }) {
+  // Autofocus in a bottom sheet pops the keyboard over the options.
+  const autoFocus = !useIsBottomSheet()
+
   return (
     <div className="flex items-center gap-2 border-b px-3 py-2.5">
       <Search className="size-4 shrink-0 text-muted-foreground" />
       <input
-        autoFocus
+        autoFocus={autoFocus}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -555,8 +559,8 @@ function ReviewerStack({ people, max = 3, className }: ReviewerStackProps) {
   const overflow = people.length - visible.length
 
   return (
-    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
-      <PopoverPrimitive.Trigger asChild>
+    <RadixPopover.Root open={open} onOpenChange={setOpen}>
+      <RadixPopover.Trigger asChild>
         <button
           type="button"
           data-slot="reviewer-stack-trigger"
@@ -582,9 +586,9 @@ function ReviewerStack({ people, max = 3, className }: ReviewerStackProps) {
           </span>
           <ChevronDown className="ml-auto size-4 shrink-0 text-muted-foreground" />
         </button>
-      </PopoverPrimitive.Trigger>
-      <PopoverPrimitive.Portal>
-        <PopoverPrimitive.Content
+      </RadixPopover.Trigger>
+      <RadixPopover.Portal>
+        <RadixPopover.Content
           data-slot="reviewer-stack-popover"
           align="start"
           sideOffset={6}
@@ -617,9 +621,9 @@ function ReviewerStack({ people, max = 3, className }: ReviewerStackProps) {
               </div>
             ))}
           </div>
-        </PopoverPrimitive.Content>
-      </PopoverPrimitive.Portal>
-    </PopoverPrimitive.Root>
+        </RadixPopover.Content>
+      </RadixPopover.Portal>
+    </RadixPopover.Root>
   )
 }
 

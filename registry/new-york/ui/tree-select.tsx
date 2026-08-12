@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Popover as PopoverPrimitive } from "radix-ui"
+import { ResponsivePopover as PopoverPrimitive } from "./responsive-popover"
 import { ChevronRight, ChevronDown, Check, Search, Folder, Minus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
