@@ -1,6 +1,9 @@
+"use client"
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -40,19 +43,43 @@ function Button({
   variant,
   size,
   asChild = false,
+  loading = false,
+  disabled,
+  children,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    /** Swap the leading content for a spinner and block interaction. */
+    loading?: boolean
   }) {
   const Comp = asChild ? Slot : "button"
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      data-loading={loading || undefined}
+      // `asChild` forwards to an arbitrary element, so aria-disabled carries
+      // the state where the native `disabled` attribute may not apply.
+      disabled={asChild ? undefined : disabled || loading}
+      aria-disabled={disabled || loading || undefined}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        loading && "pointer-events-none opacity-50",
+      )}
       {...props}
-    />
+    >
+      {/* Slot takes a single child, so the spinner is only injected when this
+          renders its own <button>. */}
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {loading && <Loader2 className="animate-spin" />}
+          {children}
+        </>
+      )}
+    </Comp>
   )
 }
 

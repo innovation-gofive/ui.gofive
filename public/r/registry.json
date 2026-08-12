@@ -797,9 +797,318 @@
         "https://ui.go5.online/r/tabs.json",
         "https://ui.go5.online/r/navbar.json",
         "https://ui.go5.online/r/bottom-nav.json",
-        "https://ui.go5.online/r/sidebar.json"
+        "https://ui.go5.online/r/sidebar.json",
+        "https://ui.go5.online/r/responsive-popover.json",
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/card.json",
+        "https://ui.go5.online/r/label.json",
+        "https://ui.go5.online/r/separator.json",
+        "https://ui.go5.online/r/popover.json",
+        "https://ui.go5.online/r/dropdown-menu.json",
+        "https://ui.go5.online/r/scroll-area.json",
+        "https://ui.go5.online/r/accordion.json",
+        "https://ui.go5.online/r/collapsible.json",
+        "https://ui.go5.online/r/toggle.json",
+        "https://ui.go5.online/r/alert-dialog.json",
+        "https://ui.go5.online/r/command.json",
+        "https://ui.go5.online/r/table.json",
+        "https://ui.go5.online/r/form.json",
+        "https://ui.go5.online/r/breadcrumb.json",
+        "https://ui.go5.online/r/pagination.json",
+        "https://ui.go5.online/r/resizable.json"
       ],
       "files": []
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "The base button every other Gofive component leans on — default/secondary/ghost/outline/destructive/link variants, sm/default/lg/icon sizes, asChild composition, and a loading state that swaps in a spinner and blocks interaction.",
+      "dependencies": [
+        "class-variance-authority",
+        "@radix-ui/react-slot",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Surface container with Header, Title, Description, Action, Content, and Footer slots, plus an interactive variant that lifts on hover.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/card.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "Accessible form label bound to a control, dimmed when the paired field is disabled.",
+      "dependencies": [
+        "@radix-ui/react-label"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/label.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "Horizontal or vertical hairline divider.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/separator.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/separator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "The raw popover primitive behind the Gofive pickers — Trigger, portalled Content with side/align animations, Anchor, and Close.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/popover.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/popover.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Button-triggered menu with Item, CheckboxItem, RadioItem/RadioGroup, Label, Separator, Shortcut, and nested Sub menus.",
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/dropdown-menu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/dropdown-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:ui",
+      "title": "Scroll Area",
+      "description": "Cross-browser styled scrollbars with a custom thumb, for vertical and horizontal overflow.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/scroll-area.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/scroll-area.tsx"
+        }
+      ]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "Vertically stacked, animated disclosure sections with a chevron that flips on open.",
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/accordion.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/accordion.tsx"
+        }
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "description": "A single animated open/close region — the unstyled building block for expandable panels.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/collapsible.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/collapsible.tsx"
+        }
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle & ToggleGroup",
+      "description": "Two-state toggle button and a ToggleGroup supporting single or multiple selection, in default and outline variants.",
+      "dependencies": [
+        "radix-ui",
+        "class-variance-authority"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/toggle.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/toggle.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "Alert Dialog",
+      "description": "Modal confirmation that forces a choice — Action and Cancel semantics, with a destructive action variant for delete prompts.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json"
+      ],
+      "dependencies": [
+        "radix-ui"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/alert-dialog.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/alert-dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "title": "Command",
+      "description": "Filterable command list built on cmdk — usable bare inside a Popover for comboboxes, or wrapped in CommandDialog for a ⌘K palette.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/dialog.json"
+      ],
+      "dependencies": [
+        "cmdk",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/command.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/command.tsx"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table & DataTable",
+      "description": "Table primitives plus a DataTable with client-side column sorting, a sticky header, row click, and an empty state — no data-grid dependency.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/table.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "form",
+      "type": "registry:ui",
+      "title": "Form",
+      "description": "react-hook-form wrapper — FormField/FormItem/FormLabel/FormControl/FormDescription, with FormMessage rendering errors through the Gofive ValidationMessage.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/label.json",
+        "https://ui.go5.online/r/validation.json"
+      ],
+      "dependencies": [
+        "react-hook-form",
+        "radix-ui"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/form.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "description": "Hierarchical trail with links, a current page, custom separators, and a collapsed ellipsis.",
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/breadcrumb.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/breadcrumb.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "description": "Page navigation with previous/next, numbered links, an active state, and an ellipsis gap.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/pagination.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/pagination.tsx"
+        }
+      ]
+    },
+    {
+      "name": "resizable",
+      "type": "registry:ui",
+      "title": "Resizable",
+      "description": "Draggable split panes for multi-pane layouts (e.g. a 3-pane mailbox), horizontal or vertical, with an optional grip handle.",
+      "dependencies": [
+        "react-resizable-panels",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/resizable.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/resizable.tsx"
+        }
+      ]
     }
   ]
 }
