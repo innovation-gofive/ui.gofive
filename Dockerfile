@@ -2,6 +2,8 @@ FROM node:22-alpine AS base
 WORKDIR /app
 
 FROM base AS deps
+# node:22-alpine ships npm 10, which rejects lockfiles written by npm 11
+RUN npm install -g npm@11
 COPY package.json package-lock.json ./
 RUN npm ci
 
