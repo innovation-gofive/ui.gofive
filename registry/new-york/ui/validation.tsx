@@ -56,7 +56,7 @@ function ValidationMessage({
 }
 
 // ── Rule checklist (e.g. password requirements) ────────────────────
-export interface RuleListProps extends React.HTMLAttributes<HTMLUListElement> {}
+export type RuleListProps = React.HTMLAttributes<HTMLUListElement>
 
 function RuleList({ className, ...props }: RuleListProps) {
   return (

@@ -238,11 +238,19 @@ interface ToastRecord extends ToastOptions {
   open: boolean
 }
 
-type Listener = (toasts: ToastRecord[]) => void
+type Listener = () => void
 
-let memoryState: ToastRecord[] = []
+const EMPTY: ToastRecord[] = []
+let memoryState: ToastRecord[] = EMPTY
 const listeners = new Set<Listener>()
 let count = 0
+
+function subscribe(listener: Listener) {
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
+}
 
 function genId() {
   count = (count + 1) % Number.MAX_SAFE_INTEGER
@@ -250,7 +258,7 @@ function genId() {
 }
 
 function emit() {
-  for (const listener of listeners) listener(memoryState)
+  for (const listener of listeners) listener()
 }
 
 /** Imperatively show a toast. Returns controls to update or dismiss it. */
@@ -284,15 +292,11 @@ function removeToast(id: string) {
 
 /** Subscribe to the toast store and access the imperative helpers. */
 export function useToast() {
-  const [toasts, setToasts] = React.useState<ToastRecord[]>(memoryState)
-
-  React.useEffect(() => {
-    listeners.add(setToasts)
-    setToasts(memoryState)
-    return () => {
-      listeners.delete(setToasts)
-    }
-  }, [])
+  const toasts = React.useSyncExternalStore(
+    subscribe,
+    () => memoryState,
+    () => EMPTY,
+  )
 
   return { toasts, toast, dismiss: removeToast }
 }

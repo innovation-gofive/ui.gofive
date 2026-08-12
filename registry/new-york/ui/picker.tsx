@@ -303,8 +303,14 @@ function ColorPanel({
   const { r, g, b } = hexToRgb(hex)
   const hsv = rgbToHsv(r, g, b)
 
+  // Editable buffer for the hex field; re-synced during render whenever the
+  // committed colour changes underneath it.
   const [hexText, setHexText] = React.useState(hex.replace("#", ""))
-  React.useEffect(() => setHexText(hex.replace("#", "")), [hex])
+  const [prevHex, setPrevHex] = React.useState(hex)
+  if (hex !== prevHex) {
+    setPrevHex(hex)
+    setHexText(hex.replace("#", ""))
+  }
 
   const emit = (nextHex: string, nextAlpha = alpha) =>
     onChange?.(withAlpha(nextHex, nextAlpha))

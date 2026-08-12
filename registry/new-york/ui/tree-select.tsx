@@ -310,10 +310,12 @@ function TreeMultiSelect({
     () => new Set(defaultExpanded ?? [])
   )
 
-  // sync draft with committed when (re)opening
-  React.useEffect(() => {
-    if (open) setDraft(committed)
-  }, [open, committed])
+  // sync draft with committed when (re)opening — opening only ever happens
+  // through the trigger, so the handler covers it
+  const changeOpen = (next: boolean) => {
+    setOpen(next)
+    if (next) setDraft(committed)
+  }
 
   const live = showFooter ? draft : committed
   const liveSet = React.useMemo(() => new Set(live), [live])
@@ -471,7 +473,7 @@ function TreeMultiSelect({
   }
 
   return (
-    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+    <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild disabled={disabled}>
         <button
           type="button"

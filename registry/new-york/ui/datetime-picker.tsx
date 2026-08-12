@@ -287,9 +287,11 @@ function DatePicker({
   }, [presets, mode])
 
   // Re-sync the draft from the committed value whenever the popover opens.
-  React.useEffect(() => {
-    if (open) setDraft(value ?? null)
-  }, [open, value])
+  // Opening only ever happens through the trigger, so the handler covers it.
+  const changeOpen = (next: boolean) => {
+    setOpen(next)
+    if (next) setDraft(value ?? null)
+  }
 
   // Trigger label is always derived from the committed value.
   let label = ""
@@ -338,7 +340,7 @@ function DatePicker({
 
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+      <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
         <PopoverPrimitive.Trigger asChild disabled={disabled}>
           <button type="button" data-slot="date-picker-trigger" className={triggerWidth}>
             <TriggerField
@@ -593,9 +595,11 @@ function DateTimePicker({
   const [open, setOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<Date | null>(value ?? null)
 
-  React.useEffect(() => {
-    if (open) setDraft(value ?? null)
-  }, [open, value])
+  // Opening only ever happens through the trigger, so the handler covers it.
+  const changeOpen = (next: boolean) => {
+    setOpen(next)
+    if (next) setDraft(value ?? null)
+  }
 
   const label = value ? `${formatDate(value)}, ${formatTime(value)}` : ""
 
@@ -622,7 +626,7 @@ function DateTimePicker({
 
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+      <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
         <PopoverPrimitive.Trigger asChild disabled={disabled}>
           <button type="button" data-slot="datetime-picker-trigger" className="w-[260px]">
             <TriggerField

@@ -139,9 +139,12 @@ function Select({
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState("")
 
-  React.useEffect(() => {
-    if (!open) setQuery("")
-  }, [open])
+  // Every open/close path routes through here so the search query never leaks
+  // into the next open.
+  const changeOpen = (next: boolean) => {
+    setOpen(next)
+    if (!next) setQuery("")
+  }
 
   const selected = React.useMemo(
     () => options.find((o) => o.value === current),
@@ -158,11 +161,11 @@ function Select({
     if (opt.disabled) return
     if (!isControlled) setInternal(opt.value)
     onValueChange?.(opt.value)
-    setOpen(false)
+    changeOpen(false)
   }
 
   return (
-    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+    <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild>
         <button
           type="button"
@@ -309,9 +312,12 @@ function MultiSelect({
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState("")
 
-  React.useEffect(() => {
-    if (!open) setQuery("")
-  }, [open])
+  // Every open/close path routes through here so the search query never leaks
+  // into the next open.
+  const changeOpen = (next: boolean) => {
+    setOpen(next)
+    if (!next) setQuery("")
+  }
 
   const commit = (next: string[]) => {
     if (!isControlled) setInternal(next)
@@ -357,7 +363,7 @@ function MultiSelect({
   const removeChip = (val: string) => commit(current.filter((v) => v !== val))
 
   return (
-    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+    <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild>
         <button
           type="button"
@@ -506,7 +512,7 @@ function MultiSelect({
               </button>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={() => changeOpen(false)}
                 className="inline-flex h-7 items-center rounded-md bg-primary px-3 text-[12px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
               >
                 Apply ({current.length})

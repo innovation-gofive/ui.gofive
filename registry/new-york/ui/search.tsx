@@ -491,26 +491,32 @@ function CommandPalette({
   emptyMessage,
 }: CommandPaletteProps) {
   const [query, setQuery] = React.useState("")
-  const [activeIndex, setActiveIndex] = React.useState(0)
+  const [storedIndex, setStoredIndex] = React.useState(0)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   const filtered = React.useMemo(() => filterItems(items, query), [items, query])
   const groups = React.useMemo(() => groupItems(filtered), [filtered])
 
-  // reset on open
-  React.useEffect(() => {
+  // `open` is a prop, so reset during render when it flips rather than in an
+  // effect — no wasted render pass and no stale frame.
+  const [prevOpen, setPrevOpen] = React.useState(open)
+  if (open !== prevOpen) {
+    setPrevOpen(open)
     if (open) {
       setQuery("")
-      setActiveIndex(0)
-      const id = requestAnimationFrame(() => inputRef.current?.focus())
-      return () => cancelAnimationFrame(id)
+      setStoredIndex(0)
     }
-  }, [open])
+  }
 
-  // keep active index in range when results change
+  // Derived, so shrinking results can never leave the index out of range.
+  const activeIndex =
+    filtered.length === 0 ? 0 : Math.min(storedIndex, filtered.length - 1)
+
   React.useEffect(() => {
-    setActiveIndex((i) => (filtered.length === 0 ? 0 : Math.min(i, filtered.length - 1)))
-  }, [filtered.length])
+    if (!open) return
+    const id = requestAnimationFrame(() => inputRef.current?.focus())
+    return () => cancelAnimationFrame(id)
+  }, [open])
 
   const choose = React.useCallback(
     (item: SearchItem) => {
@@ -523,10 +529,15 @@ function CommandPalette({
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault()
-      setActiveIndex((i) => (filtered.length === 0 ? 0 : (i + 1) % filtered.length))
+      // step from the clamped index, not the stored one
+      setStoredIndex(filtered.length === 0 ? 0 : (activeIndex + 1) % filtered.length)
     } else if (e.key === "ArrowUp") {
       e.preventDefault()
-      setActiveIndex((i) => (filtered.length === 0 ? 0 : (i - 1 + filtered.length) % filtered.length))
+      setStoredIndex(
+        filtered.length === 0
+          ? 0
+          : (activeIndex - 1 + filtered.length) % filtered.length,
+      )
     } else if (e.key === "Enter") {
       e.preventDefault()
       const item = filtered[activeIndex]

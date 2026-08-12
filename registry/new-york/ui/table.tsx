@@ -187,14 +187,24 @@ function DataTable<T>({
             {columns.map((col) => {
               const active = sort?.key === col.key
               return (
-                <TableHead key={col.key} className={col.headClassName}>
+                <TableHead
+                  key={col.key}
+                  className={col.headClassName}
+                  // aria-sort belongs on the header cell, not the button inside it
+                  aria-sort={
+                    col.sortable
+                      ? active
+                        ? sort.desc
+                          ? "descending"
+                          : "ascending"
+                        : "none"
+                      : undefined
+                  }
+                >
                   {col.sortable ? (
                     <button
                       type="button"
                       onClick={() => toggleSort(col.key)}
-                      aria-sort={
-                        active ? (sort.desc ? "descending" : "ascending") : "none"
-                      }
                       className={cn(
                         "-mx-1 inline-flex items-center gap-1 rounded px-1 py-0.5 outline-none transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50",
                         active && "text-foreground",
