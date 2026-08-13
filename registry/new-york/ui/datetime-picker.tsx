@@ -436,8 +436,17 @@ function ScrollColumn({
   const ref = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
-    const el = ref.current?.querySelector<HTMLButtonElement>('[data-active="true"]')
-    el?.scrollIntoView({ block: "center" })
+    const el = ref.current
+    const active = el?.querySelector<HTMLButtonElement>('[data-active="true"]')
+    if (!el || !active) return
+    // Scroll this column only, and instantly. scrollIntoView walks up and
+    // scrolls every ancestor, and the column's smooth scroll-behavior turned
+    // this into a ~360ms animation for far-down values (minute 55 travels
+    // ~400px) — long enough to be interrupted, leaving the column at the top.
+    el.scrollTo({
+      top: active.offsetTop - el.offsetTop - (el.clientHeight - active.offsetHeight) / 2,
+      behavior: "instant",
+    })
   }, [selected])
 
   return (
@@ -445,8 +454,11 @@ function ScrollColumn({
       ref={ref}
       role="listbox"
       aria-label={ariaLabel}
+      // Padding is derived from the height so the selected row stays centred:
+      // --time-col-h defaults to a standalone 5-row column, and DateTimePicker
+      // raises it to fill the calendar's height.
       className={cn(
-        "h-[180px] overflow-y-auto scroll-smooth py-[72px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        "h-[var(--time-col-h,180px)] overflow-y-auto py-[calc((var(--time-col-h,180px)-36px)/2)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         width,
       )}
     >
@@ -654,6 +666,8 @@ function DateTimePicker({
                 onChange={handleTime}
                 minuteStep={minuteStep}
                 hourCycle={hourCycle}
+                // Fill the panel: calendar (300px) minus this panel's header.
+                className="[--time-col-h:276px]"
               />
             </div>
           </div>
