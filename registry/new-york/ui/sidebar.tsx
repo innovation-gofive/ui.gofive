@@ -65,7 +65,9 @@ function Sidebar({
           // Labels stay in the flow and fade out; `overflow-x-hidden` clips
           // them as the rail narrows. Nothing switches to `display`/`sr-only`
           // mid-animation, so width is the only thing that moves.
-          "relative flex flex-col gap-0.5 overflow-x-hidden rounded-xl border border-border bg-background p-2.5",
+          // Same panel chrome as <Card> — see card.tsx.
+          "relative flex flex-col gap-0.5 overflow-x-hidden rounded-xl bg-background p-2.5",
+          "border border-[var(--panel-border,var(--border))] shadow-[var(--panel-shadow,none)]",
           "transition-[width] duration-300 ease-in-out",
           // Padding is constant across states: p-2.5 leaves exactly 44px of
           // content in the 64px rail, which is the collapsed item size.

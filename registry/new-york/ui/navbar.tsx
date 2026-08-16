@@ -21,7 +21,9 @@ function Navbar({
     <header
       data-slot="navbar"
       className={cn(
-        "flex h-[52px] items-center gap-4 rounded-xl border border-border bg-background px-4",
+        // Same panel chrome as <Card> / <Sidebar> — see card.tsx.
+        "flex h-[52px] items-center gap-4 rounded-xl bg-background px-4",
+        "border border-[var(--panel-border,var(--border))] shadow-[var(--panel-shadow,none)]",
         className,
       )}
       {...props}

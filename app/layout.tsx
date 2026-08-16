@@ -23,8 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={goFive.variable}>
-      <body className="antialiased">{children}</body>
+    <html lang="en" className={goFive.variable} suppressHydrationWarning>
+      <body className="antialiased">
+        {/* Set .dark before paint to avoid a light-mode flash. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.theme==="dark"||(!("theme"in localStorage)&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`,
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

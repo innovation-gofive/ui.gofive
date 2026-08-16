@@ -19,6 +19,7 @@
 
 @theme inline {
   /* Semantic colors (brand-tunable) */
+  --color-primary-soft: var(--primary-soft);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-success-soft: var(--success-soft);
@@ -55,9 +56,9 @@
 :root {
   --gf-fg-1: #1c1c22;
   --gf-fg-2: #383842;
-  --gf-fg-3: #52525f;
+  --gf-fg-3: #525260;
   --gf-fg-4: #6a6a7c;
-  --gf-fg-5: #83839a;
+  --gf-fg-5: #838395;
   --gf-fg-6: #a5a5b6;
   --gf-line-1: #d2d2da;
   --gf-line-2: #dfdfe8;
@@ -81,11 +82,20 @@
   --secondary: var(--gf-bg-2);
   --secondary-foreground: var(--gf-fg-2);
   --border: var(--gf-line-2);
-  --input: var(--gf-line-2);
+  --input: var(--gf-line-1);
 
-  --primary: #f88411;
+  /* Panel chrome — cards/sidebars read as unframed: the faintest line token
+     plus a soft ambient shadow. Not transparent, since --card and --background
+     are both white. Dark swaps to a real hairline (see .dark). */
+  --panel-border: var(--gf-line-4);
+  --panel-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+
+  --primary: #f05b2f;
   --primary-foreground: #ffffff;
-  --ring: #f88411;
+  --ring: #f05b2f;
+  /* Raised/selected surface tint (empeo #fff3ec) — mixed from --primary
+     so every data-brand gets a matching tint for free */
+  --primary-soft: color-mix(in oklab, var(--primary) 8%, white);
 
   --success: #1da577;
   --success-foreground: #ffffff;
@@ -110,9 +120,9 @@
 
 [data-brand="empeo"],
 [data-brand="calendio"] {
-  --primary: #f88411;
+  --primary: #f05b2f;
   --primary-foreground: #ffffff;
-  --ring: #f88411;
+  --ring: #f05b2f;
 }
 
 [data-brand="venio"] {
@@ -271,10 +281,14 @@
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
 
+  --panel-border: var(--border);
+  --panel-shadow: none;
+
   --gf-bg-2: #1c1c22;
   --gf-bg-3: #15151a;
   --gf-bg-4: #26262e;
 
+  --primary-soft: color-mix(in oklab, var(--primary) 22%, var(--card));
   --success-soft: color-mix(in oklab, var(--success) 22%, var(--card));
   --success-soft-foreground: color-mix(in oklab, var(--success) 70%, white);
   --warning-soft: color-mix(in oklab, var(--warning) 22%, var(--card));

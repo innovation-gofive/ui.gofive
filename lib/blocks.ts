@@ -1,5 +1,6 @@
 import type { ComponentType } from "react"
 
+import { EmployeeHome } from "@/components/blocks/employee-home"
 import { HrDashboard } from "@/components/blocks/hr-dashboard"
 import { RecordsTable } from "@/components/blocks/records-table"
 import { CollapsedRail } from "@/components/blocks/collapsed-rail"
@@ -27,6 +28,37 @@ export interface BlockMeta {
 }
 
 export const blocks: BlockMeta[] = [
+  {
+    slug: "employee-home",
+    name: "Employee Home",
+    description:
+      "The empeo self-service home: an icon-led sidebar over a three-column feed — profile and leave balances, a newsfeed with stories and reactions, and an announcements rail. Built on the 12px dense type scale.",
+    tagline: "Sidebar · three-column feed · dense scale",
+    brand: "empeo",
+    component: EmployeeHome,
+    componentsUsed: [
+      { label: "Sidebar", href: "/docs/sidebar" },
+      { label: "Avatar", href: "/docs/avatar" },
+      { label: "Tag & Badge", href: "/docs/badge" },
+      { label: "Progress", href: "/docs/progress" },
+    ],
+    code: `// 12px base is set once on the shell — every step below is a
+// standard Tailwind size, so the block adds no private type scale.
+<AppShell brand="empeo" className="text-xs leading-[1.5]">
+  <Sidebar className="m-2.5 w-[188px] p-2">
+    <SidebarItem icon={<Home />} active>หน้าหลัก</SidebarItem>
+    <SidebarItem icon={<FileText />}>เอกสาร</SidebarItem>
+    <SidebarFooter>
+      <SidebarItem icon={<PieChart />}>รายงาน</SidebarItem>
+    </SidebarFooter>
+  </Sidebar>
+
+  {/* profile · newsfeed · announcements */}
+  <div className="grid gap-3 xl:grid-cols-[280px_minmax(0,1fr)_300px]">
+    …
+  </div>
+</AppShell>`,
+  },
   {
     slug: "hr-dashboard",
     name: "HR Dashboard",

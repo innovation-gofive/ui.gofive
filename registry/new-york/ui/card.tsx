@@ -14,7 +14,12 @@ function Card({
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
+        // Panel chrome comes from the theme (--panel-border / --panel-shadow):
+        // frameless + ambient shadow in light, hairline + no shadow in dark.
+        // The fallbacks reproduce the plain shadcn card, so installing this
+        // component without the Gofive theme still looks right.
+        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6",
+        "border border-[var(--panel-border,var(--border))] shadow-[var(--panel-shadow,0_1px_2px_rgb(0_0_0_/_0.05))]",
         interactive &&
           "cursor-pointer transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0",
         className

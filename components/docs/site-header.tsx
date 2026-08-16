@@ -4,6 +4,7 @@ import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 
 import { mainNav, isMainNavActive } from "@/lib/docs-config"
+import { ThemeToggle } from "@/components/theme-toggle"
 import {
   Navbar,
   NavbarNav,
@@ -55,6 +56,7 @@ export function SiteHeader({
           ))}
         </NavbarNav>
         <NavbarSpacer />
+        <ThemeToggle />
       </Navbar>
     </div>
   )

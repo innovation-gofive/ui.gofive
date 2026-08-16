@@ -9,12 +9,15 @@ import { cn } from "@/lib/utils"
 export type ProgressColor = "primary" | "success" | "warn" | "danger" | "info"
 export type ProgressSize = "sm" | "md" | "lg"
 
+// Theme tokens with literal fallbacks — see the same pattern in tag-badge.tsx.
+// NOTE: `primary` still resolves to the info blue, not --primary. Changing it
+// would recolor every existing <Progress color="primary"> at once.
 const FILL_COLOR: Record<ProgressColor, string> = {
-  primary: "#0A66E0",
-  success: "#1DA577",
-  warn: "#F9D423",
-  danger: "#D93A1A",
-  info: "#0A66E0",
+  primary: "var(--info, #0A66E0)",
+  success: "var(--success, #1DA577)",
+  warn: "var(--warning, #F9D423)",
+  danger: "var(--danger, #D93A1A)",
+  info: "var(--info, #0A66E0)",
 }
 
 const TRACK_SIZE: Record<ProgressSize, string> = {
@@ -43,7 +46,7 @@ function Progress({
       data-slot="progress"
       value={value}
       className={cn(
-        "relative w-full overflow-hidden rounded-full bg-[#ECECF0]",
+        "relative w-full overflow-hidden rounded-full bg-[var(--muted,#ECECF0)]",
         TRACK_SIZE[size],
         className,
       )}

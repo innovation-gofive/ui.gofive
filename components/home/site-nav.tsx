@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation"
 
 import { mainNav, isMainNavActive } from "@/lib/docs-config"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
 import {
   Navbar,
   NavbarNav,
@@ -39,6 +40,7 @@ export function SiteNav() {
           </NavbarNav>
           <NavbarSpacer />
           <NavbarActions>
+            <ThemeToggle />
             {/* Button has no Gofive equivalent — kept as-is (shadcn). */}
             <Button asChild size="sm">
               <Link href="/docs/introduction">Get Started</Link>

@@ -9,12 +9,17 @@ export type TagVariant = "soft" | "solid" | "outline"
 export type TagSize = "sm" | "md" | "lg"
 export type TagAnimation = "spin" | "shimmer" | "pop"
 
+// Theme tokens with the literal palette as fallback, so a standalone
+// `shadcn add badge` (no theme.json) still renders, while an app that has the
+// Gofive theme gets brand-aware + dark-mode-correct chips for free.
 const PALETTE: Record<TagColor, { text: string; softBg: string; solidBg: string; solidText: string }> = {
-  success: { text: "#0D6A4B", softBg: "#DBF3E8", solidBg: "#1DA577", solidText: "#ffffff" },
-  warn:    { text: "#7A5800", softBg: "#FFF4BF", solidBg: "#F9D423", solidText: "#212121" },
-  danger:  { text: "#8A1F0A", softBg: "#FDE0D6", solidBg: "#D93A1A", solidText: "#ffffff" },
-  info:    { text: "#063F89", softBg: "#DDEAFC", solidBg: "#0A66E0", solidText: "#ffffff" },
-  neutral: { text: "#52525F", softBg: "#ECECF0", solidBg: "#3B3B44", solidText: "#ffffff" },
+  success: { text: "var(--success-soft-foreground, #0D6A4B)", softBg: "var(--success-soft, #DBF3E8)", solidBg: "var(--success, #1DA577)", solidText: "var(--success-foreground, #ffffff)" },
+  warn:    { text: "var(--warning-soft-foreground, #7A5800)", softBg: "var(--warning-soft, #FFF4BF)", solidBg: "var(--warning, #F9D423)", solidText: "var(--warning-foreground, #212121)" },
+  danger:  { text: "var(--danger-soft-foreground, #8A1F0A)",  softBg: "var(--danger-soft, #FDE0D6)",  solidBg: "var(--danger, #D93A1A)",  solidText: "var(--danger-foreground, #ffffff)" },
+  info:    { text: "var(--info-soft-foreground, #063F89)",    softBg: "var(--info-soft, #DDEAFC)",    solidBg: "var(--info, #0A66E0)",    solidText: "var(--info-foreground, #ffffff)" },
+  // solidText stays literal white: the neutral chip keeps its dark ink fill in
+  // both themes, so --background would put near-black text on it in dark.
+  neutral: { text: "var(--muted-foreground, #52525F)",        softBg: "var(--muted, #ECECF0)",        solidBg: "var(--gf-fg-2, #3B3B44)", solidText: "#ffffff" },
 }
 
 function resolveColorStyle(color: TagColor, variant: TagVariant): React.CSSProperties {
