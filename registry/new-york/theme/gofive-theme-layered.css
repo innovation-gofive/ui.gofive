@@ -1,0 +1,29 @@
+/* ============================================================
+   Gofive theme — layered variant.
+
+   Same tokens as gofive-theme.css, only imported into @layer base
+   so your own base-layer tokens can override them.
+
+   Use this file when you declare your own tokens inside
+   @layer base. Unlayered CSS always outranks any @layer, so the
+   plain gofive-theme.css would hijack your whole color system
+   regardless of import order.
+
+   Use the plain gofive-theme.css when you have no tokens of your
+   own — that is the standard shadcn/Tailwind-v4 setup and this
+   file buys you nothing.
+
+   Import it BEFORE your own @layer base tokens. Both end up in
+   the same layer at the same specificity, so source order decides
+   the winner — after yours, Gofive wins and this file does nothing:
+
+     @import "tailwindcss";
+     @import "./gofive-theme-layered.css";
+     @layer base { :root { --primary: #your-brand; } }
+
+   Note: overriding a token at :root outranks Gofive's .dark and
+   [data-brand] blocks for that token, so it opts that one token
+   out of dark mode and runtime brand switching.
+   ============================================================ */
+
+@import "./gofive-theme.css" layer(base);

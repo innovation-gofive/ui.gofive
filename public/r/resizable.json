@@ -4,7 +4,7 @@
   "title": "Resizable",
   "description": "Draggable split panes for multi-pane layouts (e.g. a 3-pane mailbox), horizontal or vertical, with an optional grip handle.",
   "dependencies": [
-    "react-resizable-panels",
+    "react-resizable-panels@^4.12.2",
     "lucide-react"
   ],
   "files": [

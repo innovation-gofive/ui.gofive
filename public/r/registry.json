@@ -17,6 +17,24 @@
       ]
     },
     {
+      "name": "theme-layered",
+      "type": "registry:theme",
+      "title": "Gofive Theme (layered)",
+      "description": "Same tokens as the theme item, imported into @layer base so your own @layer base tokens can override them. Use this only if you declare tokens of your own — otherwise install theme. Import it before your own base-layer tokens; same layer, so source order wins.",
+      "files": [
+        {
+          "path": "registry/new-york/theme/gofive-theme-layered.css",
+          "type": "registry:file",
+          "target": "app/gofive-theme-layered.css"
+        },
+        {
+          "path": "registry/new-york/theme/gofive-theme.css",
+          "type": "registry:file",
+          "target": "app/gofive-theme.css"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "title": "Tag & Badge",
@@ -982,6 +1000,23 @@
       ]
     },
     {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "Toggle & ToggleGroup (alias of toggle)",
+      "description": "Alias for the toggle item — the exact same toggle.tsx file. Installing either name gives you both Toggle and ToggleGroup; you never need both items.",
+      "dependencies": [
+        "radix-ui",
+        "class-variance-authority"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/toggle.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/toggle.tsx"
+        }
+      ]
+    },
+    {
       "name": "alert-dialog",
       "type": "registry:ui",
       "title": "Alert Dialog",
@@ -1099,7 +1134,7 @@
       "title": "Resizable",
       "description": "Draggable split panes for multi-pane layouts (e.g. a 3-pane mailbox), horizontal or vertical, with an optional grip handle.",
       "dependencies": [
-        "react-resizable-panels",
+        "react-resizable-panels@^4.12.2",
         "lucide-react"
       ],
       "files": [

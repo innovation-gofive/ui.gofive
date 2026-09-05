@@ -36,6 +36,7 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -137,6 +138,7 @@
   /* Raised/selected surface tint (empeo #fff3ec) — mixed from --primary
      so every data-brand gets a matching tint for free */
   --primary-soft: color-mix(in oklab, var(--primary) 8%, white);
+  --primary-soft-foreground: color-mix(in oklab, black 75%, var(--primary));
 
   /* Semantic — Gofive · empeo · Calendio */
   --success: #1da577;
@@ -375,6 +377,7 @@
 
   /* Soft tints recomputed from the active semantic hue */
   --primary-soft: color-mix(in oklab, var(--primary) 22%, var(--card));
+  --primary-soft-foreground: color-mix(in oklab, white 60%, var(--primary));
   --success-soft: color-mix(in oklab, var(--success) 22%, var(--card));
   --success-soft-foreground: color-mix(in oklab, var(--success) 70%, white);
   --warning-soft: color-mix(in oklab, var(--warning) 22%, var(--card));

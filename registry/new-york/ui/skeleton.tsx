@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils"
 
 // ── Animation CSS (React 19 style hoisting deduplicates via href) ──
 const SKELETON_CSS = `
-  .gf-skeleton{background:linear-gradient(90deg,#ECECF0 25%,#F4F4F6 50%,#ECECF0 75%);background-size:200% 100%;animation:gf-skeleton-shim 1.5s linear infinite;}
+  .gf-skeleton{background:var(--gf-bg-4, var(--muted));background:linear-gradient(90deg,var(--gf-bg-4, var(--muted)) 25%,color-mix(in oklab, var(--gf-bg-4, var(--muted)) 96.5%, var(--foreground)) 50%,var(--gf-bg-4, var(--muted)) 75%);background-size:200% 100%;animation:gf-skeleton-shim 1.5s linear infinite;}
   @keyframes gf-skeleton-shim{to{background-position:-200% 0;}}
-  .gf-skeleton-pulse{background:#ECECF0;animation:gf-skeleton-pulse 1.5s ease-in-out infinite;}
+  .gf-skeleton-pulse{background:var(--gf-bg-4, var(--muted));animation:gf-skeleton-pulse 1.5s ease-in-out infinite;}
   @keyframes gf-skeleton-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 `
 

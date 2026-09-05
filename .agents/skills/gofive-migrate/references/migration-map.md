@@ -44,12 +44,12 @@ For exact target props always cross-check the `gofive-ui` skill's `references/co
 | `alert` | `@gofive/alert` | `…/gofive/alert` (`Alert`) | Structural | See §3. `variant`+`AlertTitle`/`AlertDescription` → `status` + children. |
 | `sonner` / `toast` | `@gofive/toast` | `…/gofive/toast` (`Toaster`,`toast`,`useToast`) | Structural | `toast(msg)` → `toast({ status, title, description })`; render `<Toaster/>` once. |
 | `sidebar` | `@gofive/sidebar` | `…/gofive/sidebar` | Structural | shadcn's large provider system → Gofive's simpler `Sidebar`/`SidebarBrand`/`SidebarLabel`/`SidebarItem`/`SidebarRail`. |
-| `toggle-group` | `@gofive/segmented` | `…/gofive/segmented` (`Segmented`,`SegmentedItem`) | Structural | See §3. **Single-select only** (no `type="multiple"`). Not `SegmentedControl` (that's `@gofive/filter`). |
+| `toggle-group` | `@gofive/toggle-group` | `…/gofive/toggle` (`ToggleGroup`,`ToggleGroupItem`) | Drop-in | Same `ToggleGroupPrimitive.Root` props as shadcn — both `type="single"` and `type="multiple"` work. Ships in the same file as `toggle`; either name installs both. See §3 before reaching for `@gofive/segmented` instead. |
 | `command` | `@gofive/search` | `…/gofive/search` (`CommandPalette`,`SearchInput`) | Structural | See §3. Flatten items → `items={SearchItem[]}`; controlled `open`/`onOpenChange`. |
 | `navigation-menu` | `@gofive/navbar` | `…/gofive/navbar` (`Navbar`,`NavbarBrand`,`NavbarNav`,`NavbarItem`,`NavbarSpacer`,`NavbarActions`,`NavbarIconButton`) | Structural | See §3. Floating bar — needs an app-shell; `NavbarItem` is a `<button>`, no dropdown equiv. |
 
 ### shadcn components with NO Gofive equivalent → **SKIP** (leave untouched, report)
-`button`, `card`, `accordion`, `alert-dialog`, `aspect-ratio`, `breadcrumb`, `carousel`, `chart`, `collapsible`, `dropdown-menu`, `form`, `hover-card`, `label`, `pagination`, `popover`, `resizable`, `scroll-area`, `separator`, `table`, `toggle`.
+`button`, `card`, `accordion`, `alert-dialog`, `aspect-ratio`, `breadcrumb`, `carousel`, `chart`, `collapsible`, `dropdown-menu`, `form`, `hover-card`, `label`, `pagination`, `popover`, `resizable`, `scroll-area`, `separator`, `table`.
 
 > `dropdown-menu`/`popover`: Gofive exposes no standalone version (it uses popovers internally). Only convert by hand if `menubar`/`context-menu` truly fits — otherwise skip.
 
@@ -247,7 +247,22 @@ Prop deltas (real props — `CalendarProps`, calendar.tsx):
 
 Mirror the controlled wiring in `app/docs/calendar/page.tsx` (single + range). For an input/popover trigger, the granularity flow is shown via `DatePicker`'s `calendar` prop in `app/docs/datetime-picker/page.tsx`. Bucket: **Structural** — flag for review.
 
-### `toggle-group` → `@gofive/segmented`
+### `toggle-group` → `@gofive/toggle-group`
+**Drop-in — import swap only.** Gofive's `ToggleGroup`/`ToggleGroupItem` are built on the same
+`ToggleGroupPrimitive.Root` as shadcn's and take the same props, so `type="single"`,
+`type="multiple"`, `value`/`onValueChange` and per-item `variant`/`size` all carry over unchanged:
+```diff
+-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
++import { ToggleGroup, ToggleGroupItem } from "@/components/ui/gofive/toggle"
+```
+Both live in the `toggle` item, so `shadcn add @gofive/toggle-group` and `shadcn add @gofive/toggle`
+install the same file and give you `Toggle`, `toggleVariants`, `ToggleGroup` and `ToggleGroupItem`.
+
+#### Alternative: `@gofive/segmented` (a design choice, not a migration target)
+Reach for this only when you actually want Gofive's segmented-control look. It is a **different
+component** — not Radix-based, single-select only — so converting to it is a structural rewrite that
+costs you `type="multiple"`. Prefer the drop-in above unless the segmented styling is the point.
+
 shadcn's composable toggle-group → Gofive's `Segmented`/`SegmentedItem` (same children-based shape, just renamed parts):
 ```tsx
 // before (shadcn)

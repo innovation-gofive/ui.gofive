@@ -7,12 +7,12 @@ import { cn } from "@/lib/utils"
 // ── Gofive semantic tones for the illustration tile ────────────────
 export type EmptyStateTone = "neutral" | "success" | "warn" | "danger" | "info"
 
-const TONE: Record<EmptyStateTone, { bg: string; fg: string }> = {
-  neutral: { bg: "#F4F4F5", fg: "#71717A" },
-  success: { bg: "#DBF3E8", fg: "#0D6A4B" },
-  warn:    { bg: "#FFF4BF", fg: "#7A5800" },
-  danger:  { bg: "#FDE0D6", fg: "#8A1F0A" },
-  info:    { bg: "#DDEAFC", fg: "#063F89" },
+const TONE: Record<EmptyStateTone, string> = {
+  neutral: "bg-muted text-muted-foreground",
+  success: "bg-success-soft text-success-soft-foreground",
+  warn:    "bg-warning-soft text-warning-soft-foreground",
+  danger:  "bg-danger-soft text-danger-soft-foreground",
+  info:    "bg-info-soft text-info-soft-foreground",
 }
 
 export interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,7 +34,6 @@ function EmptyState({
   className,
   ...props
 }: EmptyStateProps) {
-  const t = TONE[tone]
   return (
     <div
       data-slot="empty-state"
@@ -47,8 +46,10 @@ function EmptyState({
     >
       {icon && (
         <div
-          className="mb-1 flex size-24 items-center justify-center rounded-3xl [&_svg]:size-10"
-          style={{ backgroundColor: t.bg, color: t.fg }}
+          className={cn(
+            "mb-1 flex size-24 items-center justify-center rounded-3xl [&_svg]:size-10",
+            TONE[tone],
+          )}
         >
           {icon}
         </div>

@@ -164,7 +164,7 @@ const COUNT_SIZE: Record<BadgeCountSize, string> = {
 
 function BadgeCount({
   size = "md",
-  bgColor = "#D93A1A",
+  bgColor = "var(--danger)",
   children,
   className,
   style,
@@ -177,7 +177,7 @@ function BadgeCount({
         COUNT_SIZE[size],
         className,
       )}
-      style={{ color: "#ffffff", backgroundColor: bgColor, ...style }}
+      style={{ color: "var(--danger-foreground)", backgroundColor: bgColor, ...style }}
       {...props}
     >
       {size !== "dot" && children}
@@ -196,8 +196,8 @@ export interface AvatarChipProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 function AvatarChip({
   initials,
-  avatarBg = "#F88411",
-  avatarColor = "#ffffff",
+  avatarBg = "var(--primary)",
+  avatarColor = "var(--primary-foreground)",
   onDismiss,
   children,
   className,
@@ -208,9 +208,10 @@ function AvatarChip({
     <span
       className={cn(
         "inline-flex items-center gap-1.5 h-[26px] pl-0.5 pr-2.5 rounded-full text-[11.5px] font-bold",
+        "bg-primary-soft text-primary-soft-foreground",
         className,
       )}
-      style={{ backgroundColor: "#FFE9CC", color: "#7A3A00", ...style }}
+      style={style}
       {...props}
     >
       <span

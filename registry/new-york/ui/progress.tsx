@@ -111,7 +111,7 @@ function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#ECECF0"
+          stroke="var(--muted, #ECECF0)"
           strokeWidth={strokeWidth}
         />
         <circle
