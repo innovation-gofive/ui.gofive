@@ -1,8 +1,10 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
-  "name": "tabs",
-  "title": "Tabs",
-  "description": "Navigation tabs in four looks — underline, soft pill, segmented, and vertical — with optional count badges, driven by controlled or uncontrolled state.",
+  "name": "scrollable-tabs",
+  "title": "Scrollable Tabs",
+  "description": "A tab bar too wide to fit: horizontal scrolling with arrow buttons that appear only on the side that still has content. Ships in tabs.tsx as <ScrollableTabsList>, so adding either item installs the same file.",
+  "dependencies": [],
+  "registryDependencies": [],
   "files": [
     {
       "path": "registry/new-york/ui/tabs.tsx",

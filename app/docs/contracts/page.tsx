@@ -13,6 +13,7 @@ const toc = [
   { title: "Overlays & portals", href: "#overlays" },
   { title: "Form controls", href: "#form-controls" },
   { title: "Async options", href: "#async" },
+  { title: "What is not Radix", href: "#not-radix" },
   { title: "Color", href: "#color" },
 ]
 
@@ -140,6 +141,13 @@ export default function ContractsPage() {
 />`}
       />
 
+      <DocH2 id="not-radix">What is not Radix</DocH2>
+      <DocLead>
+        Most of this registry wraps Radix. Two components deliberately do not,
+        and both keep the ARIA shape Radix would have produced — so the
+        difference is in the implementation, not in what a screen reader hears.
+      </DocLead>
+
       <DocH3 id="select-not-radix">Select is not built on Radix Select</DocH3>
       <p className="mt-4 leading-7 text-muted-foreground">
         <code>Select</code> is a popover over a listbox rather than a wrapper
@@ -152,6 +160,48 @@ export default function ContractsPage() {
         as <code>role=&quot;listbox&quot;</code>, so assistive tech sees the
         expected shape.
       </p>
+
+      <DocH3 id="tabs-not-radix">Tabs is not built on Radix Tabs</DocH3>
+      <p className="mt-4 leading-7 text-muted-foreground">
+        <code>Tabs</code> is a React context over plain buttons. Radix Tabs
+        supplies state and keyboard behaviour, which this component already
+        implements: <code>role=&quot;tablist&quot;</code> /{" "}
+        <code>&quot;tab&quot;</code> / <code>&quot;tabpanel&quot;</code> with{" "}
+        <code>aria-controls</code>, <code>aria-selected</code> and{" "}
+        <code>aria-labelledby</code> linking each pair; roving{" "}
+        <code>tabindex</code> so the list is one tab stop; arrow keys, Home and
+        End, skipping disabled triggers; and{" "}
+        <code>activationMode=&quot;manual&quot;</code> for the case where
+        selecting a tab is expensive. What Radix would have added on top of
+        that is the sliding indicator, the four variants, the badge and{" "}
+        <code>ScrollableTabsList</code> — none of which it has.
+      </p>
+      <p className="mt-4 leading-7 text-muted-foreground">
+        Three Radix features are genuinely absent, so reach for them
+        knowingly. There is no <code>dir=&quot;rtl&quot;</code> handling: arrow
+        keys always move left-to-right. There is no <code>loop</code> escape
+        hatch; arrow navigation always wraps at the ends. And a trigger is
+        always a <code>&lt;button&gt;</code> — there is no{" "}
+        <code>asChild</code>, so tabs cannot be rendered as links. If you need
+        URL-addressable tabs, drive <code>value</code> from the route and
+        navigate in <code>onValueChange</code>.
+      </p>
+      <p className="mt-4 leading-7 text-muted-foreground">
+        The fourth — Radix&rsquo;s <code>forceMount</code> — has an equivalent.
+        An inactive panel unmounts by default, which discards anything it was
+        holding: a half-filled form, a scroll position, a playing video. Pass{" "}
+        <code>keepMounted</code> to keep it in the DOM behind the{" "}
+        <code>hidden</code> attribute instead, which leaves it out of both the
+        accessibility tree and the tab order.
+      </p>
+      <CodeBlock
+        className="mt-4"
+        language="tsx"
+        code={`{/* Switching away and back keeps what the user typed. */}
+<TabsContent value="details" keepMounted>
+  <AddressForm />
+</TabsContent>`}
+      />
 
       <DocH2 id="async">Async options</DocH2>
       <DocLead>

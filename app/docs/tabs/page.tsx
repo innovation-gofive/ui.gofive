@@ -136,6 +136,7 @@ export default function TabsPage() {
       <DocH3 id="api-tabscontent">TabsContent</DocH3>
       <PropsTable rows={[
         { prop: "value", type: "string", default: "—", desc: "Renders its children only when this value is active" },
+        { prop: "keepMounted", type: "boolean", default: "false", desc: "Keep the panel mounted while another tab is active, hidden rather than removed — so a half-filled form, a scroll position or a playing video survives the switch" },
         { prop: "children", type: "ReactNode", default: "—", desc: "Panel content" },
       ]} />
     </DocPage>

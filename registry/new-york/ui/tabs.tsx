@@ -404,22 +404,38 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
 export interface TabsContentProps
   extends React.HTMLAttributes<HTMLDivElement> {
   value: string
+  /**
+   * Keep the panel mounted while another tab is active, hidden with the
+   * `hidden` attribute instead of being removed.
+   *
+   * An unmounted panel loses everything it was holding: half-filled inputs,
+   * scroll position, a playing video, a chart's animation state. Set this on
+   * any panel whose contents the user would be annoyed to lose — the cost is
+   * that every panel renders on mount, so a heavy one stays cheap by leaving
+   * this off.
+   */
+  keepMounted?: boolean
 }
 
 const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
-  function TabsContent({ value, className, ...props }, ref) {
+  function TabsContent({ value, keepMounted = false, className, ...props }, ref) {
     const { value: current, baseId } = useTabsContext("TabsContent")
-    if (current !== value) return null
+    const active = current === value
+    if (!active && !keepMounted) return null
     return (
       <div
         ref={ref}
         role="tabpanel"
         id={`${baseId}-panel-${value}`}
         aria-labelledby={`${baseId}-tab-${value}`}
+        // `hidden` keeps the subtree in the DOM but out of the accessibility
+        // tree and the tab order, which is exactly what an inactive panel wants.
+        hidden={!active}
         // Panels are focusable so keyboard users can reach content that has no
         // focusable child of its own.
         tabIndex={0}
         data-slot="tabs-content"
+        data-state={active ? "active" : "inactive"}
         className={cn(
           // mt-2 matches shadcn's spacing, which callers already expect.
           "mt-2 outline-none animate-in fade-in-0 slide-in-from-bottom-1 duration-200 motion-reduce:animate-none",
