@@ -9,24 +9,40 @@ export type TagVariant = "soft" | "solid" | "outline"
 export type TagSize = "sm" | "md" | "lg"
 export type TagAnimation = "spin" | "shimmer" | "pop"
 
-// Theme tokens with the literal palette as fallback, so a standalone
-// `shadcn add badge` (no theme.json) still renders, while an app that has the
-// Gofive theme gets brand-aware + dark-mode-correct chips for free.
-const PALETTE: Record<TagColor, { text: string; softBg: string; solidBg: string; solidText: string }> = {
-  success: { text: "var(--success-soft-foreground, #0D6A4B)", softBg: "var(--success-soft, #DBF3E8)", solidBg: "var(--success, #1DA577)", solidText: "var(--success-foreground, #ffffff)" },
-  warn:    { text: "var(--warning-soft-foreground, #7A5800)", softBg: "var(--warning-soft, #FFF4BF)", solidBg: "var(--warning, #F9D423)", solidText: "var(--warning-foreground, #212121)" },
-  danger:  { text: "var(--danger-soft-foreground, #8A1F0A)",  softBg: "var(--danger-soft, #FDE0D6)",  solidBg: "var(--danger, #D93A1A)",  solidText: "var(--danger-foreground, #ffffff)" },
-  info:    { text: "var(--info-soft-foreground, #063F89)",    softBg: "var(--info-soft, #DDEAFC)",    solidBg: "var(--info, #0A66E0)",    solidText: "var(--info-foreground, #ffffff)" },
-  // solidText stays literal white: the neutral chip keeps its dark ink fill in
-  // both themes, so --background would put near-black text on it in dark.
-  neutral: { text: "var(--muted-foreground, #52525F)",        softBg: "var(--muted, #ECECF0)",        solidBg: "var(--gf-fg-2, #3B3B44)", solidText: "#ffffff" },
-}
-
-function resolveColorStyle(color: TagColor, variant: TagVariant): React.CSSProperties {
-  const c = PALETTE[color]
-  if (variant === "solid") return { color: c.solidText, backgroundColor: c.solidBg }
-  if (variant === "outline") return { color: c.text, backgroundColor: "transparent", border: "1px solid currentColor" }
-  return { color: c.text, backgroundColor: c.softBg }
+// Semantic colors as Tailwind classes, not inline style. Utilities are compiled
+// by the *consuming* app, so they resolve against whatever token format that app
+// keeps (real colors here, HSL triplets in a shadcn-v3-style app) — a raw
+// `var(--success-soft)` in an inline style cannot do that, and inline style also
+// blocks callers from overriding the color via className.
+// Class strings must stay complete literals: Tailwind scans source text, so
+// `bg-${color}-soft` would generate nothing.
+const TONE: Record<TagColor, Record<TagVariant, string>> = {
+  success: {
+    soft: "bg-success-soft text-success-soft-foreground",
+    solid: "bg-success text-success-foreground",
+    outline: "border border-current bg-transparent text-success-soft-foreground",
+  },
+  warn: {
+    soft: "bg-warning-soft text-warning-soft-foreground",
+    solid: "bg-warning text-warning-foreground",
+    outline: "border border-current bg-transparent text-warning-soft-foreground",
+  },
+  danger: {
+    soft: "bg-danger-soft text-danger-soft-foreground",
+    solid: "bg-danger text-danger-foreground",
+    outline: "border border-current bg-transparent text-danger-soft-foreground",
+  },
+  info: {
+    soft: "bg-info-soft text-info-soft-foreground",
+    solid: "bg-info text-info-foreground",
+    outline: "border border-current bg-transparent text-info-soft-foreground",
+  },
+  neutral: {
+    soft: "bg-muted text-muted-foreground",
+    // Keeps its dark ink fill in both themes, so the label stays literal white.
+    solid: "bg-gf-fg-2 text-white",
+    outline: "border border-current bg-transparent text-muted-foreground",
+  },
 }
 
 const SIZE: Record<TagSize, string> = {
@@ -80,13 +96,14 @@ function Tag({
         className={cn(
           "inline-flex items-center font-bold leading-none tracking-[-0.003em]",
           SIZE[size],
+          TONE[color][variant],
           square ? "rounded-[5px]" : "rounded-full",
           animation === "spin" && "gf-tag-spin",
           animation === "shimmer" && "gf-tag-shimmer",
           animation === "pop" && "gf-tag-pop",
           className,
         )}
-        style={{ ...resolveColorStyle(color, variant), ...style }}
+        style={style}
         {...props}
       >
         {children}
@@ -153,6 +170,7 @@ export type BadgeCountSize = "dot" | "sm" | "md"
 
 export interface BadgeCountProps extends React.HTMLAttributes<HTMLSpanElement> {
   size?: BadgeCountSize
+  /** Override the danger fill with any CSS color. */
   bgColor?: string
 }
 
@@ -164,7 +182,7 @@ const COUNT_SIZE: Record<BadgeCountSize, string> = {
 
 function BadgeCount({
   size = "md",
-  bgColor = "var(--danger)",
+  bgColor,
   children,
   className,
   style,
@@ -174,10 +192,13 @@ function BadgeCount({
     <span
       className={cn(
         "inline-flex items-center justify-center rounded-full font-bold tabular-nums",
+        // Default tone as classes so it follows the app's theme; the inline
+        // style below only appears when a caller passes an explicit color.
+        "bg-danger text-danger-foreground",
         COUNT_SIZE[size],
         className,
       )}
-      style={{ color: "var(--danger-foreground)", backgroundColor: bgColor, ...style }}
+      style={bgColor ? { backgroundColor: bgColor, ...style } : style}
       {...props}
     >
       {size !== "dot" && children}
@@ -196,8 +217,8 @@ export interface AvatarChipProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 function AvatarChip({
   initials,
-  avatarBg = "var(--primary)",
-  avatarColor = "var(--primary-foreground)",
+  avatarBg,
+  avatarColor,
   onDismiss,
   children,
   className,
@@ -215,7 +236,10 @@ function AvatarChip({
       {...props}
     >
       <span
-        className="w-[22px] h-[22px] rounded-full inline-flex items-center justify-center text-[9.5px] font-extrabold shrink-0"
+        className={cn(
+          "w-[22px] h-[22px] rounded-full inline-flex items-center justify-center text-[9.5px] font-extrabold shrink-0",
+          "bg-primary text-primary-foreground",
+        )}
         style={{ backgroundColor: avatarBg, color: avatarColor }}
       >
         {initials}

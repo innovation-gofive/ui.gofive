@@ -3,8 +3,11 @@
 import * as React from "react"
 import { Circle, CircleDot } from "lucide-react"
 
+import { Slot } from "@radix-ui/react-slot"
+
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
+import { Sheet, SheetContent, SheetTitle } from "./sheet"
 
 // ── Sidebar context ────────────────────────────────────────────────
 // Shares the collapsed state down to brand, labels, and items so the whole
@@ -14,16 +17,181 @@ type SidebarContextValue = {
   collapsed: boolean
   pinnable: boolean
   togglePin: () => void
+  /** True inside <SidebarProvider>, which then owns the state. */
+  managed: boolean
+  /** Mobile drawer state, owned by the provider. */
+  mobileOpen: boolean
+  setMobileOpen: (open: boolean) => void
 }
 
 const SidebarContext = React.createContext<SidebarContextValue>({
   collapsed: false,
   pinnable: false,
   togglePin: () => {},
+  managed: false,
+  mobileOpen: false,
+  setMobileOpen: () => {},
 })
 
 function useSidebar() {
   return React.useContext(SidebarContext)
+}
+
+// ── SidebarProvider ────────────────────────────────────────────────
+// Optional. Without it <Sidebar> keeps its own collapse state, exactly as
+// before. With it the app shell owns collapse and the mobile drawer, so a
+// topbar button and a keyboard shortcut can drive the same sidebar.
+export interface SidebarProviderProps {
+  collapsed?: boolean
+  defaultCollapsed?: boolean
+  onCollapsedChange?: (collapsed: boolean) => void
+  mobileOpen?: boolean
+  defaultMobileOpen?: boolean
+  onMobileOpenChange?: (open: boolean) => void
+  /** Toggle collapse with Cmd/Ctrl+B. */
+  shortcut?: boolean
+  children: React.ReactNode
+}
+
+function SidebarProvider({
+  collapsed: collapsedProp,
+  defaultCollapsed = false,
+  onCollapsedChange,
+  mobileOpen: mobileOpenProp,
+  defaultMobileOpen = false,
+  onMobileOpenChange,
+  shortcut = true,
+  children,
+}: SidebarProviderProps) {
+  const [collapsedInternal, setCollapsedInternal] = React.useState(defaultCollapsed)
+  const collapsed = collapsedProp ?? collapsedInternal
+
+  const [mobileInternal, setMobileInternal] = React.useState(defaultMobileOpen)
+  const mobileOpen = mobileOpenProp ?? mobileInternal
+
+  const togglePin = React.useCallback(() => {
+    const next = !collapsed
+    if (collapsedProp === undefined) setCollapsedInternal(next)
+    onCollapsedChange?.(next)
+  }, [collapsed, collapsedProp, onCollapsedChange])
+
+  const setMobileOpen = React.useCallback(
+    (open: boolean) => {
+      if (mobileOpenProp === undefined) setMobileInternal(open)
+      onMobileOpenChange?.(open)
+    },
+    [mobileOpenProp, onMobileOpenChange],
+  )
+
+  React.useEffect(() => {
+    if (!shortcut) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== "b" || !(e.metaKey || e.ctrlKey)) return
+      e.preventDefault()
+      togglePin()
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [shortcut, togglePin])
+
+  const value = React.useMemo<SidebarContextValue>(
+    () => ({
+      collapsed,
+      pinnable: true,
+      togglePin,
+      managed: true,
+      mobileOpen,
+      setMobileOpen,
+    }),
+    [collapsed, togglePin, mobileOpen, setMobileOpen],
+  )
+
+  return (
+    <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>
+  )
+}
+
+// ── SidebarTrigger ─────────────────────────────────────────────────
+// Opens the mobile drawer below `md`, toggles collapse above it. Needs a
+// surrounding <SidebarProvider>.
+function SidebarTrigger({
+  className,
+  onClick,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { togglePin, setMobileOpen, mobileOpen, collapsed } = useSidebar()
+
+  return (
+    <button
+      type="button"
+      data-slot="sidebar-trigger"
+      aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+      aria-expanded={mobileOpen || !collapsed}
+      onClick={(e) => {
+        onClick?.(e)
+        if (e.defaultPrevented) return
+        // One control for both layouts: the drawer on small screens, the
+        // collapse toggle once the rail is actually on screen.
+        if (window.matchMedia("(min-width: 768px)").matches) togglePin()
+        else setMobileOpen(!mobileOpen)
+      }}
+      className={cn(
+        "inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:size-[18px]",
+        className,
+      )}
+      {...props}
+    />
+  )
+}
+
+// ── SidebarMobile ──────────────────────────────────────────────────
+// Renders its children in a left drawer, driven by the provider. Pair it with
+// a <Sidebar className="max-md:hidden"> for the desktop rail.
+function SidebarMobile({
+  title = "Navigation",
+  className,
+  children,
+}: {
+  /** Accessible name for the drawer; visually hidden by default. */
+  title?: string
+  className?: string
+  children: React.ReactNode
+}) {
+  const { mobileOpen, setMobileOpen } = useSidebar()
+
+  return (
+    <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+      <SheetContent
+        side="left"
+        aria-describedby={undefined}
+        data-slot="sidebar-mobile"
+        className={cn(
+          // Floats on the same gutter as the desktop rail, so the panel that
+          // slides in is the same rounded shape as the one it replaces.
+          "inset-y-2.5 left-2.5 h-auto w-[280px] gap-0 overflow-hidden rounded-xl border p-2.5 sm:max-w-[280px]",
+          className,
+        )}
+      >
+        <SheetTitle className="sr-only">{title}</SheetTitle>
+        {/* The drawer is already the panel: children render without a second
+            border or their own width. */}
+        <SidebarContext.Provider
+          value={{
+            collapsed: false,
+            pinnable: false,
+            togglePin: () => {},
+            managed: true,
+            mobileOpen,
+            setMobileOpen,
+          }}
+        >
+          <div className="flex h-full flex-col gap-0.5 overflow-y-auto">
+            {children}
+          </div>
+        </SidebarContext.Provider>
+      </SheetContent>
+    </Sheet>
+  )
 }
 
 // ── Sidebar (full navigation rail) ─────────────────────────────────
@@ -48,16 +216,35 @@ function Sidebar({
   className,
   ...props
 }: SidebarProps) {
+  const outer = useSidebar()
   const [internal, setInternal] = React.useState(defaultCollapsed)
-  const collapsed = collapsedProp ?? internal
+
+  // A <SidebarProvider> above wins, so an app shell can drive collapse from a
+  // topbar button; without one this keeps its own state, as it always did.
+  const collapsed = outer.managed
+    ? outer.collapsed
+    : (collapsedProp ?? internal)
 
   const togglePin = () => {
+    if (outer.managed) {
+      outer.togglePin()
+      return
+    }
     if (collapsedProp === undefined) setInternal(!collapsed)
     onCollapsedChange?.(!collapsed)
   }
 
   return (
-    <SidebarContext.Provider value={{ collapsed, pinnable, togglePin }}>
+    <SidebarContext.Provider
+      value={{
+        collapsed,
+        pinnable,
+        togglePin,
+        managed: outer.managed,
+        mobileOpen: outer.mobileOpen,
+        setMobileOpen: outer.setMobileOpen,
+      }}
+    >
       <aside
         data-slot="sidebar"
         data-collapsed={collapsed}
@@ -170,6 +357,15 @@ function SidebarLabel({
 
 export interface SidebarItemProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * Render as a link instead of a button, so middle-click, ⌘-click and
+   * open-in-new-tab work. Use `asChild` to hand off to a framework link
+   * (Next's <Link>) and keep prefetching.
+   */
+  href?: string
+  target?: string
+  rel?: string
+  asChild?: boolean
   icon?: React.ReactNode
   /** Trailing count badge, e.g. unread or pending items. */
   badge?: React.ReactNode
@@ -177,6 +373,10 @@ export interface SidebarItemProps
 }
 
 function SidebarItem({
+  href,
+  target,
+  rel,
+  asChild,
   icon,
   badge,
   active,
@@ -186,9 +386,17 @@ function SidebarItem({
 }: SidebarItemProps) {
   const { collapsed } = useSidebar()
   const [tipOpen, setTipOpen] = React.useState(false)
+
+  // Same box in all three shapes; only the element changes.
+  const Comp = (asChild ? Slot : href ? "a" : "button") as React.ElementType
+  const elementProps =
+    asChild || href
+      ? { href, target, rel }
+      : { type: "button" as const }
+
   const button = (
-    <button
-      type="button"
+    <Comp
+      {...elementProps}
       data-slot="sidebar-item"
       data-active={active}
       aria-current={active ? "page" : undefined}
@@ -225,7 +433,7 @@ function SidebarItem({
           {badge}
         </span>
       )}
-    </button>
+    </Comp>
   )
 
   // Always wrapped, never conditionally: mounting the Tooltip only when
@@ -365,6 +573,9 @@ function SidebarSeparator({
 
 export {
   Sidebar,
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarMobile,
   SidebarBrand,
   SidebarLabel,
   SidebarItem,

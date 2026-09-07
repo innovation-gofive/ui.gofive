@@ -5,7 +5,7 @@ import {
   ResponsivePopover as PopoverPrimitive,
   useIsBottomSheet,
 } from "./responsive-popover"
-import { Check, ChevronDown, Search, X } from "lucide-react"
+import { Check, ChevronDown, Loader2, Plus, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // ── Shared option model ─────────────────────────────────────────────
@@ -21,6 +21,85 @@ export interface SelectOption {
   group?: string
   /** Trailing content (e.g. a count) shown on the right of the row. */
   trailing?: React.ReactNode
+}
+
+// ── Shared form-control contract ────────────────────────────────────
+// What <Controller> (react-hook-form) and <FormControl> (a Radix Slot, so it
+// needs a real ref) expect from a field. Every picker in the registry should
+// accept this same set so callers never have to hand-wire validation state.
+export interface PickerFieldProps {
+  /** Emitted in a hidden input so the value reaches a native form submit. */
+  name?: string
+  /** Fires when the panel closes — the moment the field is actually left. */
+  onBlur?: () => void
+  /** Paints the invalid state and sets aria-invalid on the trigger. */
+  error?: boolean
+  required?: boolean
+  "aria-invalid"?: boolean | "true" | "false"
+  "aria-describedby"?: string
+  "aria-labelledby"?: string
+}
+
+// ── Shared async-options contract ───────────────────────────────────
+export interface PickerAsyncProps {
+  /**
+   * Receives the query as the user types. Providing it hands option filtering
+   * to the caller (server-side search) — the built-in client filter steps aside.
+   */
+  onSearchChange?: (query: string) => void
+  /** Show a loading row instead of the empty state while options are in flight. */
+  loading?: boolean
+  /** Replaces the built-in "No matches" panel. */
+  emptyState?: React.ReactNode
+  /**
+   * Ceiling on rows rendered at once; the rest are reachable by searching.
+   * Long option lists (thousands of rows from an API) otherwise block the main
+   * thread on every open.
+   */
+  maxRenderedOptions?: number
+}
+
+const DEFAULT_MAX_RENDERED = 200
+
+const TRIGGER_INVALID_CLASS =
+  "border-danger data-[state=open]:border-danger data-[state=open]:ring-danger/30"
+
+function LoadingRow() {
+  return (
+    <div
+      data-slot="select-loading"
+      className="flex items-center justify-center gap-2 px-3 py-6 text-sm text-muted-foreground"
+    >
+      <Loader2 className="size-4 animate-spin" />
+      Searching…
+    </div>
+  )
+}
+
+function TruncatedRow({ shown, total }: { shown: number; total: number }) {
+  return (
+    <div
+      data-slot="select-truncated"
+      className="border-t px-2.5 py-2 text-center text-[11.5px] text-muted-foreground"
+    >
+      Showing {shown} of {total} — refine your search to narrow it down.
+    </div>
+  )
+}
+
+/** Hidden mirror of the value so a native <form> submit still carries it. */
+function HiddenField({ name, value }: { name?: string; value: string | string[] }) {
+  if (!name) return null
+  const values = Array.isArray(value) ? value : [value]
+  return (
+    <>
+      {values
+        .filter((v) => v !== "" && v != null)
+        .map((v) => (
+          <input key={v} type="hidden" name={name} value={v} />
+        ))}
+    </>
+  )
 }
 
 // ── Shared popover panel ────────────────────────────────────────────
@@ -105,7 +184,7 @@ function GroupHeading({ children }: { children: React.ReactNode }) {
 }
 
 // ── Select (single) ─────────────────────────────────────────────────
-export interface SelectProps {
+export interface SelectProps extends PickerFieldProps, PickerAsyncProps {
   value?: string
   defaultValue?: string
   onValueChange?: (value: string) => void
@@ -119,19 +198,33 @@ export interface SelectProps {
   align?: "start" | "center" | "end"
 }
 
-function Select({
-  value,
-  defaultValue,
-  onValueChange,
-  options,
-  placeholder = "Select…",
-  searchable = false,
-  searchPlaceholder = "Search…",
-  disabled,
-  className,
-  triggerClassName,
-  align = "start",
-}: SelectProps) {
+const Select = React.forwardRef<HTMLButtonElement, SelectProps>(function Select(
+  {
+    value,
+    defaultValue,
+    onValueChange,
+    options,
+    placeholder = "Select…",
+    searchable = false,
+    searchPlaceholder = "Search…",
+    disabled,
+    className,
+    triggerClassName,
+    align = "start",
+    name,
+    onBlur,
+    error,
+    required,
+    "aria-invalid": ariaInvalid,
+    "aria-describedby": ariaDescribedBy,
+    "aria-labelledby": ariaLabelledBy,
+    onSearchChange,
+    loading,
+    emptyState,
+    maxRenderedOptions = DEFAULT_MAX_RENDERED,
+  },
+  ref,
+) {
   const isControlled = value !== undefined
   const [internal, setInternal] = React.useState(defaultValue)
   const current = isControlled ? value : internal
@@ -139,11 +232,28 @@ function Select({
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState("")
 
+  const invalid = error || (ariaInvalid != null && ariaInvalid !== "false")
+  const panelId = React.useId()
+
+  const runSearch = (q: string) => {
+    setQuery(q)
+    onSearchChange?.(q)
+  }
+
   // Every open/close path routes through here so the search query never leaks
-  // into the next open.
+  // into the next open — including the caller's copy of it when the options are
+  // fetched remotely. Closing is also the moment the field is left, which is
+  // what react-hook-form counts as a blur; the guard keeps that from firing on
+  // the initial render.
+  const opened = React.useRef(false)
   const changeOpen = (next: boolean) => {
     setOpen(next)
-    if (!next) setQuery("")
+    if (next) {
+      opened.current = true
+      return
+    }
+    if (query) runSearch("")
+    if (opened.current) onBlur?.()
   }
 
   const selected = React.useMemo(
@@ -151,11 +261,17 @@ function Select({
     [options, current],
   )
 
+  // With onSearchChange the caller owns the list, so filtering here would apply
+  // the query a second time to results that already match it.
   const filtered = React.useMemo(
-    () => (searchable ? filterOptions(options, query) : options),
-    [options, query, searchable],
+    () => (searchable && !onSearchChange ? filterOptions(options, query) : options),
+    [options, query, searchable, onSearchChange],
   )
-  const groups = React.useMemo(() => groupOptions(filtered), [filtered])
+  const capped = React.useMemo(
+    () => filtered.slice(0, maxRenderedOptions),
+    [filtered, maxRenderedOptions],
+  )
+  const groups = React.useMemo(() => groupOptions(capped), [capped])
 
   const choose = (opt: SelectOption) => {
     if (opt.disabled) return
@@ -168,10 +284,24 @@ function Select({
     <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild>
         <button
+          ref={ref}
           type="button"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-controls={panelId}
           data-slot="select-trigger"
           disabled={disabled}
-          className={cn(TRIGGER_CLASS, className, triggerClassName)}
+          aria-invalid={invalid || undefined}
+          aria-required={required || undefined}
+          aria-describedby={ariaDescribedBy}
+          aria-labelledby={ariaLabelledBy}
+          className={cn(
+            TRIGGER_CLASS,
+            invalid && TRIGGER_INVALID_CLASS,
+            className,
+            triggerClassName,
+          )}
         >
           {selected?.dot && (
             <span
@@ -196,7 +326,9 @@ function Select({
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
+          id={panelId}
           data-slot="select-content"
+          role="listbox"
           align={align}
           sideOffset={6}
           className={PANEL_CLASS}
@@ -204,12 +336,14 @@ function Select({
           {searchable && (
             <MenuSearch
               value={query}
-              onValueChange={setQuery}
+              onValueChange={runSearch}
               placeholder={searchPlaceholder}
             />
           )}
-          {filtered.length === 0 ? (
-            <EmptyState />
+          {loading ? (
+            <LoadingRow />
+          ) : filtered.length === 0 ? (
+            (emptyState ?? <EmptyState />)
           ) : (
             groups.map((g, gi) => (
               <div key={g.group ?? `__nogroup-${gi}`} data-slot="select-group">
@@ -220,6 +354,8 @@ function Select({
                     <button
                       key={opt.value}
                       type="button"
+                      role="option"
+                      aria-selected={isSelected}
                       data-slot="select-option"
                       data-selected={isSelected || undefined}
                       data-disabled={opt.disabled || undefined}
@@ -267,14 +403,28 @@ function Select({
               </div>
             ))
           )}
+          {filtered.length > capped.length && (
+            <TruncatedRow shown={capped.length} total={filtered.length} />
+          )}
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
+      <HiddenField name={name} value={current ?? ""} />
     </PopoverPrimitive.Root>
   )
-}
+})
 
 // ── MultiSelect ─────────────────────────────────────────────────────
-export interface MultiSelectProps {
+export interface MultiSelectProps extends PickerFieldProps, PickerAsyncProps {
+  /**
+   * Let the user commit what they typed as a new value — an email that is not
+   * in the directory yet, say. The created value is added to the selection and
+   * reported through `onCreate` so the caller can persist it.
+   */
+  creatable?: boolean
+  /** Reject a typed value; return `false` or a message. */
+  validate?: (value: string) => boolean | string
+  /** Fires with each accepted new value. */
+  onCreate?: (value: string) => void
   value?: string[]
   defaultValue?: string[]
   onValueChange?: (value: string[]) => void
@@ -290,21 +440,39 @@ export interface MultiSelectProps {
   align?: "start" | "center" | "end"
 }
 
-function MultiSelect({
-  value,
-  defaultValue,
-  onValueChange,
-  options,
-  placeholder = "Select…",
-  searchable = true,
-  searchPlaceholder = "Search…",
-  showFooter = true,
-  selectAll = true,
-  disabled,
-  className,
-  triggerClassName,
-  align = "start",
-}: MultiSelectProps) {
+const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
+  function MultiSelect(
+    {
+      value,
+      defaultValue,
+      onValueChange,
+      options,
+      placeholder = "Select…",
+      searchable = true,
+      searchPlaceholder = "Search…",
+      showFooter = true,
+      selectAll = true,
+      disabled,
+      className,
+      triggerClassName,
+      align = "start",
+      name,
+      onBlur,
+      error,
+      required,
+      "aria-invalid": ariaInvalid,
+      "aria-describedby": ariaDescribedBy,
+      "aria-labelledby": ariaLabelledBy,
+      onSearchChange,
+      loading,
+      emptyState,
+      maxRenderedOptions = DEFAULT_MAX_RENDERED,
+      creatable,
+      validate,
+      onCreate,
+    },
+    ref,
+  ) {
   const isControlled = value !== undefined
   const [internal, setInternal] = React.useState<string[]>(defaultValue ?? [])
   const current = isControlled ? value : internal
@@ -312,11 +480,25 @@ function MultiSelect({
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState("")
 
-  // Every open/close path routes through here so the search query never leaks
-  // into the next open.
+  const invalid = error || (ariaInvalid != null && ariaInvalid !== "false")
+  const panelId = React.useId()
+
+  const runSearch = (q: string) => {
+    setQuery(q)
+    onSearchChange?.(q)
+  }
+
+  // See <Select> for why close resets the query, notifies the caller, and is
+  // what counts as the blur.
+  const opened = React.useRef(false)
   const changeOpen = (next: boolean) => {
     setOpen(next)
-    if (!next) setQuery("")
+    if (next) {
+      opened.current = true
+      return
+    }
+    if (query) runSearch("")
+    if (opened.current) onBlur?.()
   }
 
   const commit = (next: string[]) => {
@@ -330,8 +512,12 @@ function MultiSelect({
   )
 
   const filtered = React.useMemo(
-    () => (searchable ? filterOptions(options, query) : options),
-    [options, query, searchable],
+    () => (searchable && !onSearchChange ? filterOptions(options, query) : options),
+    [options, query, searchable, onSearchChange],
+  )
+  const capped = React.useMemo(
+    () => filtered.slice(0, maxRenderedOptions),
+    [filtered, maxRenderedOptions],
   )
 
   const selectableValues = React.useMemo(
@@ -362,16 +548,50 @@ function MultiSelect({
   const clearAll = () => commit([])
   const removeChip = (val: string) => commit(current.filter((v) => v !== val))
 
+  // ── creatable ──────────────────────────────────────────────────
+  const typed = query.trim()
+  const [rejected, setRejected] = React.useState<string | null>(null)
+  const exactMatch = React.useMemo(
+    () =>
+      options.some(
+        (o) => o.label.toLowerCase() === typed.toLowerCase() || o.value === typed,
+      ),
+    [options, typed],
+  )
+  const canCreate = Boolean(creatable) && typed.length > 0 && !exactMatch
+
+  const create = () => {
+    const verdict = validate ? validate(typed) : true
+    if (verdict !== true) {
+      setRejected(typeof verdict === "string" ? verdict : "Invalid entry")
+      return
+    }
+    setRejected(null)
+    if (!current.includes(typed)) commit([...current, typed])
+    onCreate?.(typed)
+    runSearch("")
+  }
+
   return (
     <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild>
         <button
+          ref={ref}
           type="button"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-controls={panelId}
           data-slot="multi-select-trigger"
           disabled={disabled}
+          aria-invalid={invalid || undefined}
+          aria-required={required || undefined}
+          aria-describedby={ariaDescribedBy}
+          aria-labelledby={ariaLabelledBy}
           className={cn(
             TRIGGER_CLASS,
             "h-auto min-h-[38px] flex-wrap py-1.5",
+            invalid && TRIGGER_INVALID_CLASS,
             className,
             triggerClassName,
           )}
@@ -386,7 +606,7 @@ function MultiSelect({
                 <span
                   key={opt.value}
                   data-slot="multi-select-chip"
-                  className="inline-flex items-center gap-1 rounded-full bg-primary/15 py-0.5 pl-2 pr-1 text-[11.5px] font-medium text-[#7A3A00] dark:text-primary"
+                  className="inline-flex items-center gap-1 rounded-full bg-primary-soft py-0.5 pl-2 pr-1 text-[11.5px] font-medium text-primary-soft-foreground"
                 >
                   {opt.label}
                   <span
@@ -413,7 +633,10 @@ function MultiSelect({
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
+          id={panelId}
           data-slot="multi-select-content"
+          role="listbox"
+          aria-multiselectable
           align={align}
           sideOffset={6}
           className={PANEL_CLASS}
@@ -421,7 +644,7 @@ function MultiSelect({
           {searchable && (
             <MenuSearch
               value={query}
-              onValueChange={setQuery}
+              onValueChange={runSearch}
               placeholder={searchPlaceholder}
             />
           )}
@@ -439,15 +662,19 @@ function MultiSelect({
             )}
           </div>
 
-          {filtered.length === 0 ? (
-            <EmptyState />
+          {loading ? (
+            <LoadingRow />
+          ) : filtered.length === 0 ? (
+            (emptyState ?? <EmptyState />)
           ) : (
-            filtered.map((opt) => {
+            capped.map((opt) => {
               const isSelected = current.includes(opt.value)
               return (
                 <button
                   key={opt.value}
                   type="button"
+                  role="option"
+                  aria-selected={isSelected}
                   data-slot="multi-select-option"
                   data-selected={isSelected || undefined}
                   data-disabled={opt.disabled || undefined}
@@ -501,6 +728,32 @@ function MultiSelect({
             })
           )}
 
+          {canCreate && (
+            <>
+              <button
+                type="button"
+                data-slot="multi-select-create"
+                onClick={create}
+                className="flex w-full items-center gap-2 rounded-lg border-t px-2.5 py-2 text-left text-sm font-medium text-primary transition-colors hover:bg-primary-soft"
+              >
+                <Plus className="size-4 shrink-0" />
+                Add &ldquo;{typed}&rdquo;
+              </button>
+              {rejected && (
+                <p
+                  data-slot="multi-select-create-error"
+                  className="px-2.5 pb-1 text-[11.5px] text-danger"
+                >
+                  {rejected}
+                </p>
+              )}
+            </>
+          )}
+
+          {filtered.length > capped.length && (
+            <TruncatedRow shown={capped.length} total={filtered.length} />
+          )}
+
           {showFooter && (
             <div className="mt-1 flex items-center justify-between border-t px-2 py-2 text-[12px]">
               <button
@@ -521,8 +774,10 @@ function MultiSelect({
           )}
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
+      <HiddenField name={name} value={current} />
     </PopoverPrimitive.Root>
   )
-}
+  },
+)
 
 export { Select, MultiSelect }

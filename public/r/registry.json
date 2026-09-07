@@ -752,7 +752,8 @@
       "title": "Sidebar",
       "description": "A vertical navigation panel with brand, section labels, items with icons and count badges, nested sub-items, a pin toggle that keeps it expanded, a bottom-anchored footer, and a collapsed icon-only rail variant.",
       "registryDependencies": [
-        "https://ui.go5.online/r/tooltip.json"
+        "https://ui.go5.online/r/tooltip.json",
+        "https://ui.go5.online/r/sheet.json"
       ],
       "files": [
         {
@@ -762,7 +763,8 @@
         }
       ],
       "dependencies": [
-        "lucide-react"
+        "lucide-react",
+        "@radix-ui/react-slot"
       ]
     },
     {
@@ -1142,6 +1144,62 @@
           "path": "registry/new-york/ui/resizable.tsx",
           "type": "registry:ui",
           "target": "@ui/gofive/resizable.tsx"
+        }
+      ]
+    },
+    {
+      "name": "responsive-dialog",
+      "type": "registry:ui",
+      "title": "Responsive Dialog",
+      "description": "A centred dialog on desktop and a bottom drawer on touch-sized screens, from one composition.",
+      "dependencies": [],
+      "registryDependencies": [
+        "https://ui.go5.online/r/dialog.json",
+        "https://ui.go5.online/r/drawer.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/responsive-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chart",
+      "type": "registry:ui",
+      "title": "Chart",
+      "description": "Themed Recharts container with a tooltip, a legend, and a validated colour-blind-safe series ramp.",
+      "dependencies": [
+        "recharts@^3.10.1"
+      ],
+      "registryDependencies": [
+        "https://ui.go5.online/r/theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "Data Table",
+      "description": "Sorting, pagination, row selection and column visibility on TanStack Table v9.",
+      "dependencies": [
+        "@tanstack/react-table@^9.2.4",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://ui.go5.online/r/table.json",
+        "https://ui.go5.online/r/checkbox.json",
+        "https://ui.go5.online/r/popover.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/data-table.tsx",
+          "type": "registry:ui"
         }
       ]
     }

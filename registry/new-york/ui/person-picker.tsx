@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Popover as RadixPopover } from "radix-ui"
 import { ResponsivePopover as PopoverPrimitive, useIsBottomSheet } from "./responsive-popover"
-import { Check, ChevronDown, Search, X, Plus } from "lucide-react"
+import { Check, ChevronDown, Loader2, Search, X, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // ── Shared popover panel (matches picker.tsx PANEL_CLASS) ───────────
@@ -30,7 +30,7 @@ export interface Person {
 
 // ── Helpers ─────────────────────────────────────────────────────────
 const HASH_COLORS = [
-  "#F88411", "#0A66E0", "#1DA577", "#5E5EED",
+  "#F05B2F", "#0A66E0", "#1DA577", "#5E5EED",
   "#D93A1A", "#7A5800", "#116DFC", "#E677B7",
   "#0891B2", "#52525F",
 ]
@@ -209,7 +209,77 @@ function useControllable<T>(
 }
 
 // ── PersonPicker (single) ───────────────────────────────────────────
-export interface PersonPickerProps {
+// ── Shared picker contracts ─────────────────────────────────────────
+// Canonical definition lives in select.tsx; repeated here so this file stays
+// installable on its own. Keep the three pickers in sync.
+export interface PickerFieldProps {
+  /** Emitted in a hidden input so the value reaches a native form submit. */
+  name?: string
+  /** Fires when the panel closes — the moment the field is actually left. */
+  onBlur?: () => void
+  /** Paints the invalid state and sets aria-invalid on the trigger. */
+  error?: boolean
+  required?: boolean
+  "aria-invalid"?: boolean | "true" | "false"
+  "aria-describedby"?: string
+  "aria-labelledby"?: string
+}
+
+export interface PickerAsyncProps {
+  /** Receives the query as the user types; providing it hands filtering to the caller. */
+  onSearchChange?: (query: string) => void
+  /** Show a loading row while people are in flight. */
+  loading?: boolean
+  /** Replaces the built-in empty panel. */
+  emptyState?: React.ReactNode
+  /** Ceiling on rows rendered at once — long lists otherwise block the main thread. */
+  maxRenderedOptions?: number
+}
+
+const DEFAULT_MAX_RENDERED = 200
+
+const TRIGGER_INVALID_CLASS =
+  "border-danger data-[state=open]:border-danger data-[state=open]:ring-danger/30"
+
+function LoadingRow() {
+  return (
+    <div
+      data-slot="person-picker-loading"
+      className="flex items-center justify-center gap-2 px-3 py-6 text-sm text-muted-foreground"
+    >
+      <Loader2 className="size-4 animate-spin" />
+      Searching…
+    </div>
+  )
+}
+
+function TruncatedRow({ shown, total }: { shown: number; total: number }) {
+  return (
+    <div
+      data-slot="person-picker-truncated"
+      className="border-t px-2.5 py-2 text-center text-[11.5px] text-muted-foreground"
+    >
+      Showing {shown} of {total} — refine your search to narrow it down.
+    </div>
+  )
+}
+
+/** Hidden mirror of the value so a native <form> submit still carries it. */
+function HiddenField({ name, value }: { name?: string; value: string | string[] }) {
+  if (!name) return null
+  const values = Array.isArray(value) ? value : [value]
+  return (
+    <>
+      {values
+        .filter((v) => v !== "" && v != null)
+        .map((v) => (
+          <input key={v} type="hidden" name={name} value={v} />
+        ))}
+    </>
+  )
+}
+
+export interface PersonPickerProps extends PickerFieldProps, PickerAsyncProps {
   value?: string
   defaultValue?: string
   onValueChange?: (id: string) => void
@@ -220,46 +290,95 @@ export interface PersonPickerProps {
   className?: string
 }
 
-function PersonPicker({
-  value,
-  defaultValue,
-  onValueChange,
-  people,
-  placeholder = "Select a person…",
-  searchable = true,
-  onInvite,
-  className,
-}: PersonPickerProps) {
+const PersonPicker = React.forwardRef<HTMLButtonElement, PersonPickerProps>(
+  function PersonPicker(
+    {
+      value,
+      defaultValue,
+      onValueChange,
+      people,
+      placeholder = "Select a person…",
+      searchable = true,
+      onInvite,
+      className,
+      name,
+      onBlur,
+      error,
+      required,
+      "aria-invalid": ariaInvalid,
+      "aria-describedby": ariaDescribedBy,
+      "aria-labelledby": ariaLabelledBy,
+      onSearchChange,
+      loading,
+      emptyState,
+      maxRenderedOptions = DEFAULT_MAX_RENDERED,
+    },
+    ref,
+  ) {
   const [selectedId, setSelectedId] = useControllable(value, defaultValue ?? "", onValueChange)
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState("")
 
+  const invalid = error || (ariaInvalid != null && ariaInvalid !== "false")
+  const panelId = React.useId()
+
+  const runSearch = (q: string) => {
+    setQuery(q)
+    onSearchChange?.(q)
+  }
+
   const selected = people.find((p) => p.id === selectedId)
+  // With onSearchChange the caller owns the list, so filtering here would apply
+  // the query a second time to results that already match it.
   const filtered = React.useMemo(
-    () => (query ? people.filter((p) => matches(p, query)) : people),
-    [people, query],
+    () => (query && !onSearchChange ? people.filter((p) => matches(p, query)) : people),
+    [people, query, onSearchChange],
   )
-  const groups = React.useMemo(() => groupPeople(filtered), [filtered])
+  const capped = React.useMemo(
+    () => filtered.slice(0, maxRenderedOptions),
+    [filtered, maxRenderedOptions],
+  )
+  const groups = React.useMemo(() => groupPeople(capped), [capped])
 
   const choose = (id: string) => {
     setSelectedId(id)
-    setOpen(false)
-    setQuery("")
+    changeOpen(false)
+  }
+
+  // Closing is the moment the field is left, which is what react-hook-form
+  // counts as a blur; the guard keeps it from firing on the initial render.
+  const opened = React.useRef(false)
+  const changeOpen = (next: boolean) => {
+    setOpen(next)
+    if (next) {
+      opened.current = true
+      return
+    }
+    if (query) runSearch("")
+    if (opened.current) onBlur?.()
   }
 
   return (
-    <PopoverPrimitive.Root
-      open={open}
-      onOpenChange={(o) => {
-        setOpen(o)
-        if (!o) setQuery("")
-      }}
-    >
+    <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild>
         <button
+          ref={ref}
           type="button"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-controls={panelId}
+          aria-invalid={invalid || undefined}
+          aria-required={required || undefined}
+          aria-describedby={ariaDescribedBy}
+          aria-labelledby={ariaLabelledBy}
           data-slot="person-picker-trigger"
-          className={cn(TRIGGER_CLASS, "py-1.5 text-left", className)}
+          className={cn(
+            TRIGGER_CLASS,
+            "py-1.5 text-left",
+            invalid && TRIGGER_INVALID_CLASS,
+            className,
+          )}
         >
           {selected ? (
             <>
@@ -281,6 +400,8 @@ function PersonPicker({
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
+          id={panelId}
+          role="listbox"
           data-slot="person-picker-popover"
           align="start"
           sideOffset={6}
@@ -289,12 +410,14 @@ function PersonPicker({
           {searchable && (
             <PickerSearch
               value={query}
-              onChange={setQuery}
+              onChange={runSearch}
               placeholder="Search by name, email, team…"
             />
           )}
           <div className="max-h-[300px] overflow-y-auto py-1.5">
-            {filtered.length === 0 && <EmptyState>No people found</EmptyState>}
+            {loading && <LoadingRow />}
+            {!loading && filtered.length === 0 &&
+              (emptyState ?? <EmptyState>No people found</EmptyState>)}
             {groups.map((g, gi) => (
               <div key={g.label ?? `g-${gi}`}>
                 {g.label && <GroupHeading>{g.label}</GroupHeading>}
@@ -304,6 +427,8 @@ function PersonPicker({
                     <button
                       key={person.id}
                       type="button"
+                      role="option"
+                      aria-selected={isSelected}
                       data-slot="person-picker-option"
                       onClick={() => choose(person.id)}
                       className={cn(
@@ -344,8 +469,7 @@ function PersonPicker({
               data-slot="person-picker-invite"
               onClick={() => {
                 onInvite(query)
-                setOpen(false)
-                setQuery("")
+                changeOpen(false)
               }}
               className="flex w-full items-center gap-2.5 border-t px-3 py-2.5 text-left text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
             >
@@ -355,14 +479,21 @@ function PersonPicker({
               Invite someone by email…
             </button>
           )}
+          {filtered.length > capped.length && (
+            <TruncatedRow shown={capped.length} total={filtered.length} />
+          )}
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
+      <HiddenField name={name} value={selectedId} />
     </PopoverPrimitive.Root>
   )
-}
+  },
+)
 
 // ── PersonMultiPicker ───────────────────────────────────────────────
-export interface PersonMultiPickerProps {
+export interface PersonMultiPickerProps
+  extends PickerFieldProps,
+    PickerAsyncProps {
   value?: string[]
   defaultValue?: string[]
   onValueChange?: (ids: string[]) => void
@@ -373,16 +504,33 @@ export interface PersonMultiPickerProps {
   className?: string
 }
 
-function PersonMultiPicker({
-  value,
-  defaultValue,
-  onValueChange,
-  people,
-  placeholder = "Add assignees…",
-  searchable = true,
-  showFooter = true,
-  className,
-}: PersonMultiPickerProps) {
+const PersonMultiPicker = React.forwardRef<
+  HTMLButtonElement,
+  PersonMultiPickerProps
+>(function PersonMultiPicker(
+  {
+    value,
+    defaultValue,
+    onValueChange,
+    people,
+    placeholder = "Add assignees…",
+    searchable = true,
+    showFooter = true,
+    className,
+    name,
+    onBlur,
+    error,
+    required,
+    "aria-invalid": ariaInvalid,
+    "aria-describedby": ariaDescribedBy,
+    "aria-labelledby": ariaLabelledBy,
+    onSearchChange,
+    loading,
+    emptyState,
+    maxRenderedOptions = DEFAULT_MAX_RENDERED,
+  },
+  ref,
+) {
   const [selectedIds, setSelectedIds] = useControllable<string[]>(
     value,
     defaultValue ?? [],
@@ -391,10 +539,33 @@ function PersonMultiPicker({
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState("")
 
+  const invalid = error || (ariaInvalid != null && ariaInvalid !== "false")
+  const panelId = React.useId()
+
+  const runSearch = (q: string) => {
+    setQuery(q)
+    onSearchChange?.(q)
+  }
+
+  const opened = React.useRef(false)
+  const changeOpen = (next: boolean) => {
+    setOpen(next)
+    if (next) {
+      opened.current = true
+      return
+    }
+    if (query) runSearch("")
+    if (opened.current) onBlur?.()
+  }
+
   const selected = people.filter((p) => selectedIds.includes(p.id))
   const filtered = React.useMemo(
-    () => (query ? people.filter((p) => matches(p, query)) : people),
-    [people, query],
+    () => (query && !onSearchChange ? people.filter((p) => matches(p, query)) : people),
+    [people, query, onSearchChange],
+  )
+  const capped = React.useMemo(
+    () => filtered.slice(0, maxRenderedOptions),
+    [filtered, maxRenderedOptions],
   )
 
   const toggle = (id: string) => {
@@ -406,20 +577,24 @@ function PersonMultiPicker({
   }
 
   return (
-    <PopoverPrimitive.Root
-      open={open}
-      onOpenChange={(o) => {
-        setOpen(o)
-        if (!o) setQuery("")
-      }}
-    >
+    <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild>
         <button
+          ref={ref}
           type="button"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-controls={panelId}
+          aria-invalid={invalid || undefined}
+          aria-required={required || undefined}
+          aria-describedby={ariaDescribedBy}
+          aria-labelledby={ariaLabelledBy}
           data-slot="person-multi-trigger"
           className={cn(
             TRIGGER_CLASS,
             "min-h-[42px] flex-wrap py-1.5",
+            invalid && TRIGGER_INVALID_CLASS,
             className,
           )}
         >
@@ -464,6 +639,9 @@ function PersonMultiPicker({
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
+          id={panelId}
+          role="listbox"
+          aria-multiselectable
           data-slot="person-multi-popover"
           align="start"
           sideOffset={6}
@@ -472,18 +650,22 @@ function PersonMultiPicker({
           {searchable && (
             <PickerSearch
               value={query}
-              onChange={setQuery}
+              onChange={runSearch}
               placeholder="Search people…"
             />
           )}
           <div className="max-h-[280px] overflow-y-auto py-1.5">
-            {filtered.length === 0 && <EmptyState>No people found</EmptyState>}
-            {filtered.map((person) => {
+            {loading && <LoadingRow />}
+            {!loading && filtered.length === 0 &&
+              (emptyState ?? <EmptyState>No people found</EmptyState>)}
+            {capped.map((person) => {
               const checked = selectedIds.includes(person.id)
               return (
                 <button
                   key={person.id}
                   type="button"
+                  role="option"
+                  aria-selected={checked}
                   data-slot="person-multi-option"
                   onClick={() => toggle(person.id)}
                   className="flex w-full items-center gap-2.5 px-3 py-1.5 text-left transition-colors hover:bg-accent"
@@ -533,18 +715,22 @@ function PersonMultiPicker({
               </button>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={() => changeOpen(false)}
                 className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Assign ({selectedIds.length})
               </button>
             </div>
           )}
+          {filtered.length > capped.length && (
+            <TruncatedRow shown={capped.length} total={filtered.length} />
+          )}
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
+      <HiddenField name={name} value={selectedIds} />
     </PopoverPrimitive.Root>
   )
-}
+})
 
 // ── ReviewerStack ───────────────────────────────────────────────────
 export interface ReviewerStackProps {

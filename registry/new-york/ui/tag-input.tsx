@@ -20,7 +20,34 @@ export interface TagInputProps
   allowDuplicates?: boolean
   /** Characters that commit the typed tag. Enter always commits. Defaults to [","]. */
   separator?: string[]
+  /**
+   * Reject entries that do not belong — an email field, say. Return `false` or
+   * a message to refuse; the text stays in the field so it can be corrected.
+   */
+  validate?: (value: string) => boolean | string
+  /** Called for every entry `validate` refused, including each one in a paste. */
+  onReject?: (value: string, reason: string) => void
+  /**
+   * Characters that split a *pasted* blob. Wider than `separator` on purpose:
+   * a list copied out of a mail client arrives semicolon- or newline-delimited
+   * whichever key the field commits on.
+   */
+  pasteSeparator?: string[]
+  /** Emitted as hidden inputs so the tags reach a native form submit. */
+  name?: string
   containerClassName?: string
+}
+
+const DEFAULT_PASTE_SEPARATORS = [",", ";", "\n", "\r", "\t"]
+
+/** Split a pasted blob on every configured separator. */
+function splitPasted(text: string, separators: string[]): string[] {
+  const marks = [...new Set(separators)]
+  let parts = [text]
+  for (const mark of marks) {
+    parts = parts.flatMap((part) => part.split(mark))
+  }
+  return parts.map((p) => p.trim()).filter(Boolean)
 }
 
 const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
@@ -33,6 +60,10 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       max,
       allowDuplicates = false,
       separator = [","],
+      pasteSeparator = DEFAULT_PASTE_SEPARATORS,
+      validate,
+      onReject,
+      name,
       disabled,
       className,
       containerClassName,
@@ -59,16 +90,41 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
     )
 
     const atMax = max != null && tags.length >= max
+    const [rejected, setRejected] = React.useState<string | null>(null)
+
+    /** Returns the entries that were accepted, so callers can clear the draft. */
+    const addTags = React.useCallback(
+      (raws: string[]): string[] => {
+        const accepted: string[] = []
+        const next = [...tags]
+        for (const raw of raws) {
+          const trimmed = raw.trim()
+          if (!trimmed) continue
+          if (max != null && next.length >= max) break
+          if (!allowDuplicates && next.includes(trimmed)) continue
+          const verdict = validate ? validate(trimmed) : true
+          if (verdict !== true) {
+            const reason =
+              typeof verdict === "string" ? verdict : "Invalid entry"
+            setRejected(reason)
+            onReject?.(trimmed, reason)
+            continue
+          }
+          next.push(trimmed)
+          accepted.push(trimmed)
+        }
+        if (accepted.length) {
+          setRejected(null)
+          setTags(next)
+        }
+        return accepted
+      },
+      [max, allowDuplicates, tags, setTags, validate, onReject],
+    )
 
     const addTag = React.useCallback(
-      (raw: string) => {
-        const trimmed = raw.trim()
-        if (!trimmed) return
-        if (atMax) return
-        if (!allowDuplicates && tags.includes(trimmed)) return
-        setTags([...tags, trimmed])
-      },
-      [atMax, allowDuplicates, tags, setTags],
+      (raw: string) => addTags([raw]),
+      [addTags],
     )
 
     const removeAt = React.useCallback(
@@ -82,8 +138,8 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
       if (e.key === "Enter" || separator.includes(e.key)) {
         if (draft.trim()) {
           e.preventDefault()
-          addTag(draft)
-          setDraft("")
+          // Keep a refused entry in the field so it can be corrected in place.
+          if (addTag(draft).length) setDraft("")
         } else if (e.key === "Enter") {
           // prevent submitting a surrounding form on empty Enter
           e.preventDefault()
@@ -112,6 +168,10 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           containerClassName,
         )}
       >
+        {name &&
+          tags.map((tag, i) => (
+            <input key={`hidden-${tag}-${i}`} type="hidden" name={name} value={tag} />
+          ))}
         {tags.map((tag, i) => (
           <span
             key={`${tag}-${i}`}
@@ -137,7 +197,21 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
           value={draft}
           disabled={disabled}
           placeholder={atMax ? undefined : placeholder}
-          onChange={(e) => setDraft(e.target.value)}
+          aria-invalid={rejected ? true : undefined}
+          onPaste={(e) => {
+            const text = e.clipboardData.getData("text")
+            const parts = splitPasted(text, [...separator, ...pasteSeparator])
+            // A single unsplittable value is an ordinary paste — let it land in
+            // the field so it can still be edited before committing.
+            if (parts.length < 2) return
+            e.preventDefault()
+            addTags(parts)
+            setDraft("")
+          }}
+          onChange={(e) => {
+            setRejected(null)
+            setDraft(e.target.value)
+          }}
           onKeyDown={onKeyDown}
           onBlur={() => {
             if (draft.trim()) {

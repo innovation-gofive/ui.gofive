@@ -49,11 +49,14 @@ function addDays(d: Date, n: number): Date {
 
 // ── Shared popover surface ─────────────────────────────────────────
 function PopoverSurface({
+  id,
   className,
   align = "start",
   sideOffset = 6,
   children,
 }: {
+  /** Target of the trigger's aria-controls. */
+  id?: string
   className?: string
   align?: "start" | "center" | "end"
   sideOffset?: number
@@ -62,6 +65,7 @@ function PopoverSurface({
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content
+        id={id}
         data-slot="datetime-popover"
         align={align}
         sideOffset={sideOffset}
@@ -245,7 +249,49 @@ function PresetSidebar({
 }
 
 // ── DatePicker ─────────────────────────────────────────────────────
-export interface DatePickerProps {
+// ── Shared picker contract ──────────────────────────────────────────
+// Canonical definition lives in select.tsx; repeated here so this file stays
+// installable on its own. `error` is declared per-component below because these
+// pickers also accept a message string.
+export interface PickerFieldProps {
+  /** Emitted in a hidden input so the value reaches a native form submit. */
+  name?: string
+  /** Fires when the panel closes — the moment the field is actually left. */
+  onBlur?: () => void
+  required?: boolean
+  "aria-invalid"?: boolean | "true" | "false"
+  "aria-describedby"?: string
+  "aria-labelledby"?: string
+}
+
+/**
+ * Hidden mirror of the value so a native <form> submit still carries it.
+ * Dates serialise as ISO 8601 so the server parses them unambiguously.
+ */
+function HiddenDateField({
+  name,
+  value,
+}: {
+  name?: string
+  value: Date | CalendarRange | null | undefined
+}) {
+  if (!name || !value) return null
+  if (value instanceof Date) {
+    return <input type="hidden" name={name} value={value.toISOString()} />
+  }
+  return (
+    <>
+      {value.from && (
+        <input type="hidden" name={`${name}.from`} value={value.from.toISOString()} />
+      )}
+      {value.to && (
+        <input type="hidden" name={`${name}.to`} value={value.to.toISOString()} />
+      )}
+    </>
+  )
+}
+
+export interface DatePickerProps extends PickerFieldProps {
   mode?: "single" | "range"
   /** Selection granularity — day, month, year, or quarter. */
   calendar?: CalendarType
@@ -263,19 +309,29 @@ export interface DatePickerProps {
   className?: string
 }
 
-function DatePicker({
-  mode = "single",
-  calendar = "day",
-  value,
-  onChange,
-  placeholder = "Select date",
-  disabled,
-  disabledDate,
-  footer,
-  presets,
-  error,
-  className,
-}: DatePickerProps) {
+const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
+  function DatePicker(
+    {
+      mode = "single",
+      calendar = "day",
+      value,
+      onChange,
+      placeholder = "Select date",
+      disabled,
+      disabledDate,
+      footer,
+      presets,
+      error,
+      className,
+      name,
+      onBlur,
+      required,
+      "aria-invalid": ariaInvalid,
+      "aria-describedby": ariaDescribedBy,
+      "aria-labelledby": ariaLabelledBy,
+    },
+    ref,
+  ) {
   const [open, setOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<Date | CalendarRange | null>(value ?? null)
 
@@ -286,11 +342,22 @@ function DatePicker({
     return Array.isArray(presets) ? presets : buildDefaultPresets()
   }, [presets, mode])
 
+  const invalid = Boolean(error) || (ariaInvalid != null && ariaInvalid !== "false")
+  const panelId = React.useId()
+
   // Re-sync the draft from the committed value whenever the popover opens.
   // Opening only ever happens through the trigger, so the handler covers it.
+  // Closing is the moment the field is left, which is what react-hook-form
+  // counts as a blur; the guard keeps it from firing on the initial render.
+  const opened = React.useRef(false)
   const changeOpen = (next: boolean) => {
     setOpen(next)
-    if (next) setDraft(value ?? null)
+    if (next) {
+      setDraft(value ?? null)
+      opened.current = true
+      return
+    }
+    if (opened.current) onBlur?.()
   }
 
   // Trigger label is always derived from the committed value.
@@ -342,7 +409,20 @@ function DatePicker({
     <div className={cn("flex flex-col gap-1.5", className)}>
       <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
         <PopoverPrimitive.Trigger asChild disabled={disabled}>
-          <button type="button" data-slot="date-picker-trigger" className={triggerWidth}>
+          <button
+            ref={ref}
+            type="button"
+            role="combobox"
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            aria-controls={panelId}
+            aria-invalid={invalid || undefined}
+            aria-required={required || undefined}
+            aria-describedby={ariaDescribedBy}
+            aria-labelledby={ariaLabelledBy}
+            data-slot="date-picker-trigger"
+            className={triggerWidth}
+          >
             <TriggerField
               icon={<CalendarIcon />}
               value={label}
@@ -351,7 +431,7 @@ function DatePicker({
             />
           </button>
         </PopoverPrimitive.Trigger>
-        <PopoverSurface>
+        <PopoverSurface id={panelId}>
           {mode === "range" && presetList ? (
             <>
               <div className="flex items-center gap-2 px-1 pb-3">
@@ -407,12 +487,15 @@ function DatePicker({
         </PopoverSurface>
       </PopoverPrimitive.Root>
 
+      <HiddenDateField name={name} value={value} />
+
       {typeof error === "string" && error && (
         <p className="text-[12px] text-destructive">{error}</p>
       )}
     </div>
   )
-}
+  },
+)
 
 // ── TimePicker ─────────────────────────────────────────────────────
 interface ColumnOption {
@@ -577,7 +660,7 @@ function TimePicker({
 }
 
 // ── DateTimePicker ─────────────────────────────────────────────────
-export interface DateTimePickerProps {
+export interface DateTimePickerProps extends PickerFieldProps {
   value?: Date | null
   onChange?: (value: Date) => void
   placeholder?: string
@@ -592,25 +675,45 @@ export interface DateTimePickerProps {
   className?: string
 }
 
-function DateTimePicker({
-  value,
-  onChange,
-  placeholder = "Select date & time",
-  disabled,
-  disabledDate,
-  minuteStep = 1,
-  hourCycle = 24,
-  footer,
-  error,
-  className,
-}: DateTimePickerProps) {
+const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
+  function DateTimePicker(
+    {
+      value,
+      onChange,
+      placeholder = "Select date & time",
+      disabled,
+      disabledDate,
+      minuteStep = 1,
+      hourCycle = 24,
+      footer,
+      error,
+      className,
+      name,
+      onBlur,
+      required,
+      "aria-invalid": ariaInvalid,
+      "aria-describedby": ariaDescribedBy,
+      "aria-labelledby": ariaLabelledBy,
+    },
+    ref,
+  ) {
   const [open, setOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<Date | null>(value ?? null)
 
+  const invalid = Boolean(error) || (ariaInvalid != null && ariaInvalid !== "false")
+  const panelId = React.useId()
+
   // Opening only ever happens through the trigger, so the handler covers it.
+  // See <DatePicker> for why close is the blur.
+  const opened = React.useRef(false)
   const changeOpen = (next: boolean) => {
     setOpen(next)
-    if (next) setDraft(value ?? null)
+    if (next) {
+      setDraft(value ?? null)
+      opened.current = true
+      return
+    }
+    if (opened.current) onBlur?.()
   }
 
   const label = value ? `${formatDate(value)}, ${formatTime(value)}` : ""
@@ -640,7 +743,20 @@ function DateTimePicker({
     <div className={cn("flex flex-col gap-1.5", className)}>
       <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
         <PopoverPrimitive.Trigger asChild disabled={disabled}>
-          <button type="button" data-slot="datetime-picker-trigger" className="w-[260px]">
+          <button
+            ref={ref}
+            type="button"
+            role="combobox"
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            aria-controls={panelId}
+            aria-invalid={invalid || undefined}
+            aria-required={required || undefined}
+            aria-describedby={ariaDescribedBy}
+            aria-labelledby={ariaLabelledBy}
+            data-slot="datetime-picker-trigger"
+            className="w-[260px]"
+          >
             <TriggerField
               icon={<CalendarIcon />}
               value={label}
@@ -649,7 +765,7 @@ function DateTimePicker({
             />
           </button>
         </PopoverPrimitive.Trigger>
-        <PopoverSurface>
+        <PopoverSurface id={panelId}>
           <div className="flex items-start gap-3">
             <Calendar
               mode="single"
@@ -682,11 +798,14 @@ function DateTimePicker({
         </PopoverSurface>
       </PopoverPrimitive.Root>
 
+      <HiddenDateField name={name} value={value} />
+
       {typeof error === "string" && error && (
         <p className="text-[12px] text-destructive">{error}</p>
       )}
     </div>
   )
-}
+  },
+)
 
 export { DatePicker, TimePicker, DateTimePicker, formatDate, formatTime }

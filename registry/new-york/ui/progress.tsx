@@ -9,15 +9,24 @@ import { cn } from "@/lib/utils"
 export type ProgressColor = "primary" | "success" | "warn" | "danger" | "info"
 export type ProgressSize = "sm" | "md" | "lg"
 
-// Theme tokens with literal fallbacks — see the same pattern in tag-badge.tsx.
+// Tailwind classes, not inline style — see the note in tag-badge.tsx for why.
 // NOTE: `primary` still resolves to the info blue, not --primary. Changing it
 // would recolor every existing <Progress color="primary"> at once.
 const FILL_COLOR: Record<ProgressColor, string> = {
-  primary: "var(--info, #0A66E0)",
-  success: "var(--success, #1DA577)",
-  warn: "var(--warning, #F9D423)",
-  danger: "var(--danger, #D93A1A)",
-  info: "var(--info, #0A66E0)",
+  primary: "bg-info",
+  success: "bg-success",
+  warn: "bg-warning",
+  danger: "bg-danger",
+  info: "bg-info",
+}
+
+// The ring paints the same colors on an SVG stroke.
+const STROKE_COLOR: Record<ProgressColor, string> = {
+  primary: "text-info",
+  success: "text-success",
+  warn: "text-warning",
+  danger: "text-danger",
+  info: "text-info",
 }
 
 const TRACK_SIZE: Record<ProgressSize, string> = {
@@ -46,7 +55,7 @@ function Progress({
       data-slot="progress"
       value={value}
       className={cn(
-        "relative w-full overflow-hidden rounded-full bg-[var(--muted,#ECECF0)]",
+        "relative w-full overflow-hidden rounded-full bg-muted",
         TRACK_SIZE[size],
         className,
       )}
@@ -54,11 +63,12 @@ function Progress({
     >
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
-        className="h-full w-full flex-1 rounded-full transition-transform duration-500 ease-out"
-        style={{
-          backgroundColor: FILL_COLOR[color],
-          transform: `translateX(-${100 - pct}%)`,
-        }}
+        className={cn(
+          "h-full w-full flex-1 rounded-full transition-transform duration-500 ease-out",
+          FILL_COLOR[color],
+        )}
+        // Only the offset stays inline — it is a computed value, not a color.
+        style={{ transform: `translateX(-${100 - pct}%)` }}
       />
     </ProgressPrimitive.Root>
   )
@@ -111,20 +121,22 @@ function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="var(--muted, #ECECF0)"
           strokeWidth={strokeWidth}
+          className="text-muted stroke-current"
         />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke={FILL_COLOR[color]}
           strokeWidth={strokeWidth}
           strokeDasharray={circ}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          className="transition-[stroke-dashoffset] duration-500 ease-out"
+          className={cn(
+            "stroke-current transition-[stroke-dashoffset] duration-500 ease-out",
+            STROKE_COLOR[color],
+          )}
         />
       </svg>
       <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold">

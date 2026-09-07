@@ -18,6 +18,16 @@
    ============================================================ */
 
 @theme inline {
+  /* Chart categorical ramp */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+
   /* Semantic colors (brand-tunable) */
   --color-primary-soft: var(--primary-soft);
   --color-primary-soft-foreground: var(--primary-soft-foreground);
@@ -118,6 +128,22 @@
 
   --destructive: var(--danger);
   --destructive-foreground: var(--danger-foreground);
+
+  /* Chart categorical ramp — a series palette, deliberately NOT the status
+     colors. Slot order is the colour-blind-safety mechanism: validated on
+     adjacent pairs in both modes (worst CVD ΔE 9.1 light / 8.4 dark, worst
+     normal-vision ΔE 19.6 / 19.3). Re-order only by re-running the validator.
+     Slots 3/4/5 fall under 3:1 on the light surface, so charts using them must
+     ship direct labels or a table view. Fixed across brands on purpose — a
+     series keeps its colour when the palette changes. */
+  --chart-1: #f05b2f;
+  --chart-2: #2a78d6;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --chart-6: #008300;
+  --chart-7: #4a3aa7;
+  --chart-8: #e34948;
 }
 
 [data-brand="empeo"],
@@ -300,4 +326,14 @@
   --danger-soft-foreground: color-mix(in oklab, var(--danger) 72%, white);
   --info-soft: color-mix(in oklab, var(--info) 22%, var(--card));
   --info-soft-foreground: color-mix(in oklab, var(--info) 72%, white);
+
+  /* Same eight hues restepped for the dark surface — not an auto-flip. */
+  --chart-1: #d95926;
+  --chart-2: #3987e5;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+  --chart-6: #008300;
+  --chart-7: #9085e9;
+  --chart-8: #e66767;
 }

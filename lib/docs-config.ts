@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react"
 import {
   BookOpen,
   Download,
+  ScrollText,
   Tag,
   Type,
   AArrowUp,
@@ -68,6 +69,7 @@ export const docsNav: NavGroup[] = [
     items: [
       { title: "Introduction", href: "/docs/introduction", icon: BookOpen },
       { title: "Installation", href: "/docs/installation", icon: Download },
+      { title: "Contracts", href: "/docs/contracts", icon: ScrollText },
     ],
   },
   {

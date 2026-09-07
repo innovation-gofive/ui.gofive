@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { ResponsivePopover as PopoverPrimitive } from "./responsive-popover"
-import { ChevronRight, ChevronDown, Check, Search, Folder, Minus } from "lucide-react"
+import { ChevronRight, ChevronDown, Check, Loader2, Search, Folder, Minus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // ── Data model ──────────────────────────────────────────────────────
@@ -97,7 +97,62 @@ function NodeIcon({ node, expanded }: { node: TreeNode; expanded: boolean }) {
 }
 
 // ── TreeSelect (single) ─────────────────────────────────────────────
-export interface TreeSelectProps {
+// ── Shared picker contracts ─────────────────────────────────────────
+// Canonical definition lives in select.tsx; repeated here so this file stays
+// installable on its own. Keep the pickers in sync.
+export interface PickerFieldProps {
+  /** Emitted in a hidden input so the value reaches a native form submit. */
+  name?: string
+  /** Fires when the panel closes — the moment the field is actually left. */
+  onBlur?: () => void
+  /** Paints the invalid state and sets aria-invalid on the trigger. */
+  error?: boolean
+  required?: boolean
+  "aria-invalid"?: boolean | "true" | "false"
+  "aria-describedby"?: string
+  "aria-labelledby"?: string
+}
+
+export interface PickerAsyncProps {
+  /** Receives the query as the user types; providing it hands filtering to the caller. */
+  onSearchChange?: (query: string) => void
+  /** Show a loading row while the tree is in flight. */
+  loading?: boolean
+  /** Replaces the built-in empty panel. */
+  emptyState?: React.ReactNode
+}
+
+const TRIGGER_INVALID_CLASS =
+  "border-danger data-[state=open]:border-danger data-[state=open]:ring-danger/30"
+
+function LoadingRow() {
+  return (
+    <div
+      data-slot="tree-select-loading"
+      className="flex items-center justify-center gap-2 px-3 py-6 text-sm text-muted-foreground"
+    >
+      <Loader2 className="size-4 animate-spin" />
+      Searching…
+    </div>
+  )
+}
+
+/** Hidden mirror of the value so a native <form> submit still carries it. */
+function HiddenField({ name, value }: { name?: string; value: string | string[] }) {
+  if (!name) return null
+  const values = Array.isArray(value) ? value : [value]
+  return (
+    <>
+      {values
+        .filter((v) => v !== "" && v != null)
+        .map((v) => (
+          <input key={v} type="hidden" name={name} value={v} />
+        ))}
+    </>
+  )
+}
+
+export interface TreeSelectProps extends PickerFieldProps, PickerAsyncProps {
   value?: string
   defaultValue?: string
   onValueChange?: (value: string) => void
@@ -111,19 +166,33 @@ export interface TreeSelectProps {
   align?: "start" | "center" | "end"
 }
 
-function TreeSelect({
-  value,
-  defaultValue,
-  onValueChange,
-  data,
-  placeholder = "Select…",
-  searchable = false,
-  defaultExpanded,
-  disabled,
-  breadcrumb = true,
-  className,
-  align = "start",
-}: TreeSelectProps) {
+const TreeSelect = React.forwardRef<HTMLButtonElement, TreeSelectProps>(
+  function TreeSelect(
+    {
+      value,
+      defaultValue,
+      onValueChange,
+      data,
+      placeholder = "Select…",
+      searchable = false,
+      defaultExpanded,
+      disabled,
+      breadcrumb = true,
+      className,
+      align = "start",
+      name,
+      onBlur,
+      error,
+      required,
+      "aria-invalid": ariaInvalid,
+      "aria-describedby": ariaDescribedBy,
+      "aria-labelledby": ariaLabelledBy,
+      onSearchChange,
+      loading,
+      emptyState,
+    },
+    ref,
+  ) {
   const isControlled = value !== undefined
   const [internal, setInternal] = React.useState(defaultValue)
   const current = isControlled ? value : internal
@@ -134,10 +203,33 @@ function TreeSelect({
     () => new Set(defaultExpanded ?? [])
   )
 
+  const invalid = error || (ariaInvalid != null && ariaInvalid !== "false")
+  const panelId = React.useId()
+
+  const runSearch = (q: string) => {
+    setQuery(q)
+    onSearchChange?.(q)
+  }
+
+  // Closing is the moment the field is left — what react-hook-form counts as a
+  // blur; the guard keeps it from firing on the initial render.
+  const opened = React.useRef(false)
+  const changeOpen = (next: boolean) => {
+    setOpen(next)
+    if (next) {
+      opened.current = true
+      return
+    }
+    if (query) runSearch("")
+    if (opened.current) onBlur?.()
+  }
+
   const { pathByValue } = React.useMemo(() => buildIndex(data), [data])
+  // With onSearchChange the caller owns the tree, so filtering here would apply
+  // the query a second time to results that already match it.
   const filtered = React.useMemo(
-    () => (searchable ? filterTree(data, query) : data),
-    [data, query, searchable]
+    () => (searchable && !onSearchChange ? filterTree(data, query) : data),
+    [data, query, searchable, onSearchChange]
   )
 
   // auto-expand all when searching
@@ -158,7 +250,7 @@ function TreeSelect({
   const select = (val: string) => {
     if (!isControlled) setInternal(val)
     onValueChange?.(val)
-    setOpen(false)
+    changeOpen(false)
   }
 
   const path = current ? pathByValue.get(current) : undefined
@@ -213,12 +305,21 @@ function TreeSelect({
   }
 
   return (
-    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+    <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild disabled={disabled}>
         <button
+          ref={ref}
           type="button"
+          role="combobox"
+          aria-haspopup="tree"
+          aria-expanded={open}
+          aria-controls={panelId}
+          aria-invalid={invalid || undefined}
+          aria-required={required || undefined}
+          aria-describedby={ariaDescribedBy}
+          aria-labelledby={ariaLabelledBy}
           data-slot="tree-select-trigger"
-          className={cn(TRIGGER_CLASS, className)}
+          className={cn(TRIGGER_CLASS, invalid && TRIGGER_INVALID_CLASS, className)}
         >
           {hasValue ? (
             <span className="flex min-w-0 flex-1 items-center gap-1 truncate">
@@ -239,6 +340,8 @@ function TreeSelect({
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
+          id={panelId}
+          role="tree"
           data-slot="tree-select-popover"
           align={align}
           sideOffset={6}
@@ -249,27 +352,35 @@ function TreeSelect({
               <Search className="size-3.5 shrink-0 text-muted-foreground" />
               <input
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => runSearch(e.target.value)}
                 placeholder="Search…"
                 className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
               />
             </div>
           )}
           <div className="max-h-[300px] overflow-y-auto pr-0.5">
-            {filtered.length === 0 ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">No results</p>
+            {loading ? (
+              <LoadingRow />
+            ) : filtered.length === 0 ? (
+              (emptyState ?? (
+                <p className="py-6 text-center text-sm text-muted-foreground">No results</p>
+              ))
             ) : (
               filtered.map((node) => renderNode(node, 0))
             )}
           </div>
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
+      <HiddenField name={name} value={current ?? ""} />
     </PopoverPrimitive.Root>
   )
-}
+  },
+)
 
 // ── TreeMultiSelect ─────────────────────────────────────────────────
-export interface TreeMultiSelectProps {
+export interface TreeMultiSelectProps
+  extends PickerFieldProps,
+    PickerAsyncProps {
   value?: string[]
   defaultValue?: string[]
   onValueChange?: (value: string[]) => void
@@ -285,7 +396,10 @@ export interface TreeMultiSelectProps {
 
 type NodeState = "checked" | "indeterminate" | "unchecked"
 
-function TreeMultiSelect({
+const TreeMultiSelect = React.forwardRef<
+  HTMLButtonElement,
+  TreeMultiSelectProps
+>(function TreeMultiSelect({
   value,
   defaultValue,
   onValueChange,
@@ -297,7 +411,17 @@ function TreeMultiSelect({
   disabled,
   className,
   align = "start",
-}: TreeMultiSelectProps) {
+  name,
+  onBlur,
+  error,
+  required,
+  "aria-invalid": ariaInvalid,
+  "aria-describedby": ariaDescribedBy,
+  "aria-labelledby": ariaLabelledBy,
+  onSearchChange,
+  loading,
+  emptyState,
+}: TreeMultiSelectProps, ref) {
   const isControlled = value !== undefined
   const [internal, setInternal] = React.useState<string[]>(defaultValue ?? [])
   const committed = isControlled ? value! : internal
@@ -310,11 +434,27 @@ function TreeMultiSelect({
     () => new Set(defaultExpanded ?? [])
   )
 
+  const invalid = error || (ariaInvalid != null && ariaInvalid !== "false")
+  const panelId = React.useId()
+
+  const runSearch = (q: string) => {
+    setQuery(q)
+    onSearchChange?.(q)
+  }
+
   // sync draft with committed when (re)opening — opening only ever happens
-  // through the trigger, so the handler covers it
+  // through the trigger, so the handler covers it. Closing is also the moment
+  // the field is left, which is what react-hook-form counts as a blur.
+  const opened = React.useRef(false)
   const changeOpen = (next: boolean) => {
     setOpen(next)
-    if (next) setDraft(committed)
+    if (next) {
+      setDraft(committed)
+      opened.current = true
+      return
+    }
+    if (query) runSearch("")
+    if (opened.current) onBlur?.()
   }
 
   const live = showFooter ? draft : committed
@@ -323,8 +463,8 @@ function TreeMultiSelect({
   const { nodeByValue, pathByValue } = React.useMemo(() => buildIndex(data), [data])
 
   const filtered = React.useMemo(
-    () => (searchable ? filterTree(data, query) : data),
-    [data, query, searchable]
+    () => (searchable && !onSearchChange ? filterTree(data, query) : data),
+    [data, query, searchable, onSearchChange]
   )
   const effectiveExpanded = React.useMemo(() => {
     if (searchable && query.trim()) return new Set(collectFolderValues(filtered))
@@ -476,11 +616,21 @@ function TreeMultiSelect({
     <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
       <PopoverPrimitive.Trigger asChild disabled={disabled}>
         <button
+          ref={ref}
           type="button"
+          role="combobox"
+          aria-haspopup="tree"
+          aria-expanded={open}
+          aria-controls={panelId}
+          aria-invalid={invalid || undefined}
+          aria-required={required || undefined}
+          aria-describedby={ariaDescribedBy}
+          aria-labelledby={ariaLabelledBy}
           data-slot="tree-multi-select-trigger"
           className={cn(
             TRIGGER_CLASS,
             "h-auto min-h-[38px] flex-wrap py-1.5",
+            invalid && TRIGGER_INVALID_CLASS,
             className
           )}
         >
@@ -524,6 +674,9 @@ function TreeMultiSelect({
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
+          id={panelId}
+          role="tree"
+          aria-multiselectable
           data-slot="tree-multi-select-popover"
           align={align}
           sideOffset={6}
@@ -535,7 +688,7 @@ function TreeMultiSelect({
                 <Search className="size-3.5 shrink-0 text-muted-foreground" />
                 <input
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(e) => runSearch(e.target.value)}
                   placeholder="Search…"
                   className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                 />
@@ -553,8 +706,12 @@ function TreeMultiSelect({
             </button>
           </div>
           <div className="max-h-[300px] overflow-y-auto px-2 pb-2">
-            {filtered.length === 0 ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">No results</p>
+            {loading ? (
+              <LoadingRow />
+            ) : filtered.length === 0 ? (
+              (emptyState ?? (
+                <p className="py-6 text-center text-sm text-muted-foreground">No results</p>
+              ))
             ) : (
               filtered.map((node) => renderNode(node, 0))
             )}
@@ -579,8 +736,9 @@ function TreeMultiSelect({
           )}
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
+      <HiddenField name={name} value={committed} />
     </PopoverPrimitive.Root>
   )
-}
+})
 
 export { TreeSelect, TreeMultiSelect }

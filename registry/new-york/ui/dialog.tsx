@@ -12,6 +12,27 @@ function Dialog({
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
+// Radix locks the page by setting `pointer-events: none` on <body> while a modal
+// is open, and removes it on close. If a popover/select inside the dialog closes
+// during that teardown, the style can be left behind and the whole page stops
+// taking clicks. Clearing it when the content unmounts is the documented escape
+// hatch; it is a no-op when Radix has already cleaned up after itself.
+function useReleaseBodyPointerEvents() {
+  React.useEffect(
+    () => () => {
+      // Deferred so it runs after Radix's own cleanup, not before it. The
+      // open-modal check keeps a second dialog that opened in the same tick
+      // from having its lock stripped.
+      window.setTimeout(() => {
+        if (document.body.style.pointerEvents !== "none") return
+        if (document.querySelector("[data-slot=dialog-content]")) return
+        document.body.style.pointerEvents = ""
+      }, 0)
+    },
+    [],
+  )
+}
+
 function DialogTrigger({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
@@ -48,15 +69,20 @@ function DialogOverlay({
 
 function DialogContent({
   className,
+  overlayClassName,
   children,
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
+  /** Style the backdrop (blur, a lighter scrim, a custom z-index). */
+  overlayClassName?: string
 }) {
+  useReleaseBodyPointerEvents()
+
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay className={overlayClassName} />
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(

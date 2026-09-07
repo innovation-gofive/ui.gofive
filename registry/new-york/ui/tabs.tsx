@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -10,6 +11,10 @@ interface TabsContextValue {
   value: string | undefined
   setValue: (value: string) => void
   variant: TabsVariant
+  /** Arrow keys move focus only; Enter/Space then selects. */
+  activationMode: "automatic" | "manual"
+  /** Namespaces the trigger/panel ids that link them via aria-controls. */
+  baseId: string
 }
 
 const TabsContext = React.createContext<TabsContextValue | null>(null)
@@ -32,18 +37,27 @@ export interface TabsProps
   defaultValue?: string
   onValueChange?: (value: string) => void
   variant?: TabsVariant
+  /**
+   * "automatic" (default) selects a tab as soon as an arrow key lands on it,
+   * matching the WAI-ARIA tabs pattern; "manual" only moves focus.
+   */
+  activationMode?: "automatic" | "manual"
   children: React.ReactNode
 }
 
-function Tabs({
-  value,
-  defaultValue,
-  onValueChange,
-  variant = "underline",
-  className,
-  children,
-  ...props
-}: TabsProps) {
+const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(function Tabs(
+  {
+    value,
+    defaultValue,
+    onValueChange,
+    variant = "underline",
+    activationMode = "automatic",
+    className,
+    children,
+    ...props
+  },
+  ref,
+) {
   const isControlled = value !== undefined
   const [internal, setInternal] = React.useState<string | undefined>(
     defaultValue,
@@ -58,14 +72,16 @@ function Tabs({
     [isControlled, onValueChange],
   )
 
+  const baseId = React.useId()
   const ctx = React.useMemo<TabsContextValue>(
-    () => ({ value: current, setValue, variant }),
-    [current, setValue, variant],
+    () => ({ value: current, setValue, variant, activationMode, baseId }),
+    [current, setValue, variant, activationMode, baseId],
   )
 
   return (
     <TabsContext.Provider value={ctx}>
       <div
+        ref={ref}
         data-slot="tabs"
         data-variant={variant}
         className={cn(variant === "vertical" && "flex gap-4", className)}
@@ -75,7 +91,7 @@ function Tabs({
       </div>
     </TabsContext.Provider>
   )
-}
+})
 
 // ── TabsList ───────────────────────────────────────────────────────
 const LIST_CLASSES: Record<TabsVariant, string> = {
@@ -86,13 +102,13 @@ const LIST_CLASSES: Record<TabsVariant, string> = {
   vertical: "flex min-w-[180px] flex-col gap-0.5",
 }
 
-function TabsList({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+const TabsList = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  function TabsList({ className, children, ...props }, forwardedRef) {
   const { variant, value } = useTabsContext("TabsList")
   const listRef = React.useRef<HTMLDivElement>(null)
+  // The list measures itself for the sliding indicator and still has to hand
+  // the node to the caller.
+  React.useImperativeHandle(forwardedRef, () => listRef.current as HTMLDivElement)
   const [indicator, setIndicator] = React.useState<{
     left: number
     top: number
@@ -140,6 +156,7 @@ function TabsList({
     <div
       ref={listRef}
       role="tablist"
+      aria-orientation={variant === "vertical" ? "vertical" : "horizontal"}
       data-slot="tabs-list"
       data-variant={variant}
       className={cn(hasIndicator && "relative", LIST_CLASSES[variant], className)}
@@ -171,6 +188,101 @@ function TabsList({
       {children}
     </div>
   )
+})
+
+// ── ScrollableTabsList ─────────────────────────────────────────────
+// A <TabsList> for bars too wide to fit — horizontal scrolling with arrow
+// buttons that appear only on the side that still has content. The buttons are
+// aria-hidden: the tabs themselves already answer to arrow keys (roving focus),
+// so these are a pointer affordance, not a second control.
+function ScrollableTabsList({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  const wrapRef = React.useRef<HTMLDivElement>(null)
+  const [edges, setEdges] = React.useState({ start: false, end: false })
+
+  const measure = React.useCallback(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    setEdges({
+      start: el.scrollLeft > 1,
+      // 1px of slack: fractional layout widths never land exactly on `max`.
+      end: el.scrollLeft < max - 1,
+    })
+  }, [])
+
+  React.useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    measure()
+    el.addEventListener("scroll", measure, { passive: true })
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    for (const child of el.children) ro.observe(child)
+    return () => {
+      el.removeEventListener("scroll", measure)
+      ro.disconnect()
+    }
+  }, [measure, children])
+
+  const nudge = (dir: 1 | -1) => {
+    const el = wrapRef.current
+    if (!el) return
+    el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: "smooth" })
+  }
+
+  return (
+    <div data-slot="scrollable-tabs" className="relative flex items-center">
+      {edges.start && (
+        <ArrowButton side="start" onClick={() => nudge(-1)} />
+      )}
+      <div
+        ref={wrapRef}
+        data-slot="scrollable-tabs-viewport"
+        // The scrollbar itself is hidden; the arrows and swipe are the affordance.
+        className="w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <TabsList className={cn("w-max min-w-full", className)} {...props}>
+          {children}
+        </TabsList>
+      </div>
+      {edges.end && <ArrowButton side="end" onClick={() => nudge(1)} />}
+    </div>
+  )
+}
+
+function ArrowButton({
+  side,
+  onClick,
+}: {
+  side: "start" | "end"
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      tabIndex={-1}
+      aria-hidden
+      data-slot="scrollable-tabs-arrow"
+      data-side={side}
+      onClick={onClick}
+      className={cn(
+        "absolute top-0 bottom-0 z-[2] flex w-8 items-center bg-gradient-to-r from-background via-background to-transparent text-muted-foreground transition-colors hover:text-foreground",
+        side === "start"
+          ? "left-0 justify-start"
+          : "right-0 justify-end bg-gradient-to-l",
+      )}
+    >
+      {side === "start" ? (
+        <ChevronLeft className="size-4" />
+      ) : (
+        <ChevronRight className="size-4" />
+      )}
+    </button>
+  )
 }
 
 // ── TabsTrigger ────────────────────────────────────────────────────
@@ -193,24 +305,69 @@ export interface TabsTriggerProps
   badge?: React.ReactNode
 }
 
-function TabsTrigger({
-  value,
-  badge,
-  className,
-  children,
-  onClick,
-  ...props
-}: TabsTriggerProps) {
-  const { value: current, setValue, variant } = useTabsContext("TabsTrigger")
+const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
+  function TabsTrigger(
+    { value, badge, className, children, onClick, onKeyDown, ...props },
+    ref,
+  ) {
+  const { value: current, setValue, variant, activationMode, baseId } =
+    useTabsContext("TabsTrigger")
   const selected = current === value
+
+  // Roving tabindex: one stop for the whole tablist, arrows move within it.
+  const move = (el: HTMLElement, dir: 1 | -1 | "first" | "last") => {
+    const list = el.closest('[role="tablist"]')
+    if (!list) return
+    const tabs = [
+      ...list.querySelectorAll<HTMLButtonElement>(
+        '[data-slot="tabs-trigger"]:not([disabled])',
+      ),
+    ]
+    if (!tabs.length) return
+    const i = tabs.indexOf(el as HTMLButtonElement)
+    const next =
+      dir === "first"
+        ? tabs[0]
+        : dir === "last"
+          ? tabs[tabs.length - 1]
+          : tabs[(i + dir + tabs.length) % tabs.length]
+    next.focus()
+    if (activationMode === "automatic") next.click()
+  }
+
+  const vertical = variant === "vertical"
 
   return (
     <button
+      ref={ref}
       type="button"
       role="tab"
+      id={`${baseId}-tab-${value}`}
+      aria-controls={`${baseId}-panel-${value}`}
       aria-selected={selected}
+      // Only the selected tab is in the tab order; arrows reach the rest.
+      tabIndex={selected ? 0 : -1}
       data-slot="tabs-trigger"
       data-state={selected ? "active" : "inactive"}
+      onKeyDown={(e) => {
+        onKeyDown?.(e)
+        if (e.defaultPrevented) return
+        const prevKey = vertical ? "ArrowUp" : "ArrowLeft"
+        const nextKey = vertical ? "ArrowDown" : "ArrowRight"
+        if (e.key === nextKey) {
+          e.preventDefault()
+          move(e.currentTarget, 1)
+        } else if (e.key === prevKey) {
+          e.preventDefault()
+          move(e.currentTarget, -1)
+        } else if (e.key === "Home") {
+          e.preventDefault()
+          move(e.currentTarget, "first")
+        } else if (e.key === "End") {
+          e.preventDefault()
+          move(e.currentTarget, "last")
+        }
+      }}
       onClick={(e) => {
         onClick?.(e)
         if (!e.defaultPrevented) setValue(value)
@@ -241,7 +398,7 @@ function TabsTrigger({
       )}
     </button>
   )
-}
+})
 
 // ── TabsContent ────────────────────────────────────────────────────
 export interface TabsContentProps
@@ -249,20 +406,29 @@ export interface TabsContentProps
   value: string
 }
 
-function TabsContent({ value, className, ...props }: TabsContentProps) {
-  const { value: current } = useTabsContext("TabsContent")
-  if (current !== value) return null
-  return (
-    <div
-      role="tabpanel"
-      data-slot="tabs-content"
-      className={cn(
-        "animate-in fade-in-0 slide-in-from-bottom-1 duration-200 motion-reduce:animate-none",
-        className,
-      )}
-      {...props}
-    />
-  )
-}
+const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
+  function TabsContent({ value, className, ...props }, ref) {
+    const { value: current, baseId } = useTabsContext("TabsContent")
+    if (current !== value) return null
+    return (
+      <div
+        ref={ref}
+        role="tabpanel"
+        id={`${baseId}-panel-${value}`}
+        aria-labelledby={`${baseId}-tab-${value}`}
+        // Panels are focusable so keyboard users can reach content that has no
+        // focusable child of its own.
+        tabIndex={0}
+        data-slot="tabs-content"
+        className={cn(
+          // mt-2 matches shadcn's spacing, which callers already expect.
+          "mt-2 outline-none animate-in fade-in-0 slide-in-from-bottom-1 duration-200 motion-reduce:animate-none",
+          className,
+        )}
+        {...props}
+      />
+    )
+  },
+)
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsList, ScrollableTabsList, TabsTrigger, TabsContent }
