@@ -172,7 +172,11 @@ function PeopleList({
       className={className}
     >
       {placeholder ?? (
-        <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
+        <div
+          role="presentation"
+          className="relative w-full"
+          style={{ height: virtualizer.getTotalSize() }}
+        >
           {virtualizer.getVirtualItems().map((item) => (
             <div
               key={item.key}

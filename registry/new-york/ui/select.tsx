@@ -212,7 +212,11 @@ function OptionList({
       className="max-h-64 min-h-0 flex-1 overflow-y-auto"
     >
       {placeholder ?? (
-        <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
+        <div
+          role="presentation"
+          className="relative w-full"
+          style={{ height: virtualizer.getTotalSize() }}
+        >
           {virtualizer.getVirtualItems().map((item) => (
             <div
               key={item.key}
