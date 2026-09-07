@@ -5,6 +5,7 @@ import {
   ResponsivePopover as PopoverPrimitive,
   useIsBottomSheet,
 } from "./responsive-popover"
+import { useVirtualizer } from "@tanstack/react-virtual"
 import { Check, ChevronDown, Loader2, Plus, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -52,14 +53,16 @@ export interface PickerAsyncProps {
   /** Replaces the built-in "No matches" panel. */
   emptyState?: React.ReactNode
   /**
-   * Ceiling on rows rendered at once; the rest are reachable by searching.
-   * Long option lists (thousands of rows from an API) otherwise block the main
-   * thread on every open.
+   * Hard ceiling on how many options the panel will list at all. Off by
+   * default: the list is virtualized, so a few thousand options cost the same
+   * as a few dozen and truncating them only hides data. Set it when the list
+   * itself is the problem — an unbounded API response you would rather cut off
+   * than scroll through.
    */
   maxRenderedOptions?: number
 }
 
-const DEFAULT_MAX_RENDERED = 200
+const DEFAULT_MAX_RENDERED = Number.POSITIVE_INFINITY
 
 const TRIGGER_INVALID_CLASS =
   "border-danger data-[state=open]:border-danger data-[state=open]:ring-danger/30"
@@ -107,7 +110,7 @@ const TRIGGER_CLASS =
   "flex h-[38px] w-full items-center gap-2 rounded-lg border bg-card px-3 text-sm outline-none transition-[color,box-shadow] data-[state=open]:border-ring data-[state=open]:ring-ring/50 data-[state=open]:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
 
 const PANEL_CLASS =
-  "z-50 max-h-64 w-[var(--radix-popover-trigger-width)] origin-(--radix-popover-content-transform-origin) overflow-auto rounded-xl border bg-popover p-1 text-popover-foreground shadow-lg outline-none animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+  "z-50 flex max-h-80 w-[var(--radix-popover-trigger-width)] flex-col origin-(--radix-popover-content-transform-origin) overflow-hidden rounded-xl border bg-popover p-1 text-popover-foreground shadow-lg outline-none animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
 
 // ── filtering / grouping helpers ────────────────────────────────────
 function filterOptions(options: SelectOption[], query: string): SelectOption[] {
@@ -129,6 +132,104 @@ function groupOptions(
     map.get(o.group)!.push(o)
   }
   return order.map((group) => ({ group, options: map.get(group)! }))
+}
+
+// ── Virtualized listbox ─────────────────────────────────────────────
+// Only the rows in view exist in the DOM, so a 1,500-option list costs about
+// what a 20-option one does. Two consequences drive the shape below:
+//
+//  · Headings and options share one virtualizer. Interleaving two would need
+//    the heights of the other's rows to place its own, so the list is flattened
+//    into a single row array first.
+//  · A screen reader can no longer count the options it can see, so every
+//    option carries aria-setsize / aria-posinset. Without them the list
+//    announces itself as however many rows happen to be rendered.
+
+type OptionRow =
+  | { kind: "heading"; key: string; label: string }
+  | { kind: "option"; key: string; option: SelectOption; position: number }
+
+/** Flattens groups into the row list the virtualizer measures. */
+function toRows(
+  groups: { group: string | undefined; options: SelectOption[] }[],
+): OptionRow[] {
+  const rows: OptionRow[] = []
+  let position = 0
+  for (const g of groups) {
+    if (g.group) rows.push({ kind: "heading", key: `heading:${g.group}`, label: g.group })
+    for (const option of g.options) {
+      rows.push({ kind: "option", key: option.value, option, position: ++position })
+    }
+  }
+  return rows
+}
+
+// A plain option is 36px; one with a description is taller and a heading is
+// shorter. This is the starting guess only — every row is measured once it
+// mounts, which is what keeps the scrollbar honest on a mixed list.
+const ROW_ESTIMATE = 36
+
+function OptionList({
+  id,
+  rows,
+  total,
+  placeholder,
+  multiselectable,
+  children,
+}: {
+  id: string
+  rows: OptionRow[]
+  /** Option count for aria-setsize — headings do not count. */
+  total: number
+  /** Rendered instead of the rows: the loading, empty or error state. */
+  placeholder?: React.ReactNode
+  multiselectable?: boolean
+  children: (row: OptionRow, total: number) => React.ReactNode
+}) {
+  // The virtualizer hands back functions the React Compiler cannot memoize
+  // safely, so this component opts out of it. Harmless where the compiler is
+  // off; required where a consumer has turned it on.
+  "use no memo"
+
+  const scrollRef = React.useRef<HTMLDivElement>(null)
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => ROW_ESTIMATE,
+    overscan: 8,
+    getItemKey: (i) => rows[i].key,
+  })
+
+  return (
+    <div
+      ref={scrollRef}
+      id={id}
+      role="listbox"
+      aria-multiselectable={multiselectable}
+      data-slot="select-viewport"
+      // An explicit cap, not `flex-1`: the bottom-sheet layout does not apply
+      // PANEL_CLASS, and an unbounded scroll container renders every row.
+      className="max-h-64 min-h-0 flex-1 overflow-y-auto"
+    >
+      {placeholder ?? (
+        <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
+          {virtualizer.getVirtualItems().map((item) => (
+            <div
+              key={item.key}
+              role="presentation"
+              // measureElement reads this to know which row it just measured.
+              data-index={item.index}
+              ref={virtualizer.measureElement}
+              className="absolute top-0 left-0 w-full"
+              style={{ transform: `translateY(${item.start}px)` }}
+            >
+              {children(rows[item.index], total)}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 // ── Sub-pieces ──────────────────────────────────────────────────────
@@ -272,6 +373,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(function Select(
     [filtered, maxRenderedOptions],
   )
   const groups = React.useMemo(() => groupOptions(capped), [capped])
+  const rows = React.useMemo(() => toRows(groups), [groups])
 
   const choose = (opt: SelectOption) => {
     if (opt.disabled) return
@@ -326,9 +428,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(function Select(
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
-          id={panelId}
           data-slot="select-content"
-          role="listbox"
           align={align}
           sideOffset={6}
           className={PANEL_CLASS}
@@ -340,69 +440,75 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(function Select(
               placeholder={searchPlaceholder}
             />
           )}
-          {loading ? (
-            <LoadingRow />
-          ) : filtered.length === 0 ? (
-            (emptyState ?? <EmptyState />)
-          ) : (
-            groups.map((g, gi) => (
-              <div key={g.group ?? `__nogroup-${gi}`} data-slot="select-group">
-                {g.group && <GroupHeading>{g.group}</GroupHeading>}
-                {g.options.map((opt) => {
-                  const isSelected = opt.value === current
-                  return (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      role="option"
-                      aria-selected={isSelected}
-                      data-slot="select-option"
-                      data-selected={isSelected || undefined}
-                      data-disabled={opt.disabled || undefined}
-                      disabled={opt.disabled}
-                      onClick={() => choose(opt)}
-                      className={cn(
-                        "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors",
-                        "hover:bg-accent",
-                        isSelected && "bg-primary/10 font-medium",
-                        opt.disabled &&
-                          "pointer-events-none text-muted-foreground opacity-60",
-                      )}
-                    >
-                      {opt.dot && (
-                        <span
-                          aria-hidden
-                          className="size-2 shrink-0 rounded-full"
-                          style={{ backgroundColor: opt.dot }}
-                        />
-                      )}
-                      {opt.icon && (
-                        <span className="flex shrink-0 [&_svg]:size-4">
-                          {opt.icon}
-                        </span>
-                      )}
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate">{opt.label}</span>
-                        {opt.description && (
-                          <span className="block truncate text-[11.5px] font-normal text-muted-foreground">
-                            {opt.description}
-                          </span>
-                        )}
+          <OptionList
+            id={panelId}
+            rows={rows}
+            total={capped.length}
+            placeholder={
+              loading ? (
+                <LoadingRow />
+              ) : filtered.length === 0 ? (
+                (emptyState ?? <EmptyState />)
+              ) : undefined
+            }
+          >
+            {(row, total) => {
+              if (row.kind === "heading")
+                return <GroupHeading>{row.label}</GroupHeading>
+              const opt = row.option
+              const isSelected = opt.value === current
+              return (
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  aria-setsize={total}
+                  aria-posinset={row.position}
+                  data-slot="select-option"
+                  data-selected={isSelected || undefined}
+                  data-disabled={opt.disabled || undefined}
+                  disabled={opt.disabled}
+                  onClick={() => choose(opt)}
+                  className={cn(
+                    "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors",
+                    "hover:bg-accent",
+                    isSelected && "bg-primary/10 font-medium",
+                    opt.disabled &&
+                      "pointer-events-none text-muted-foreground opacity-60",
+                  )}
+                >
+                  {opt.dot && (
+                    <span
+                      aria-hidden
+                      className="size-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: opt.dot }}
+                    />
+                  )}
+                  {opt.icon && (
+                    <span className="flex shrink-0 [&_svg]:size-4">
+                      {opt.icon}
+                    </span>
+                  )}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate">{opt.label}</span>
+                    {opt.description && (
+                      <span className="block truncate text-[11.5px] font-normal text-muted-foreground">
+                        {opt.description}
                       </span>
-                      {opt.trailing != null && (
-                        <span className="shrink-0 text-[11.5px] text-muted-foreground">
-                          {opt.trailing}
-                        </span>
-                      )}
-                      {isSelected && (
-                        <Check className="size-4 shrink-0 text-primary" />
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-            ))
-          )}
+                    )}
+                  </span>
+                  {opt.trailing != null && (
+                    <span className="shrink-0 text-[11.5px] text-muted-foreground">
+                      {opt.trailing}
+                    </span>
+                  )}
+                  {isSelected && (
+                    <Check className="size-4 shrink-0 text-primary" />
+                  )}
+                </button>
+              )
+            }}
+          </OptionList>
           {filtered.length > capped.length && (
             <TruncatedRow shown={capped.length} total={filtered.length} />
           )}
@@ -520,6 +626,11 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
     [filtered, maxRenderedOptions],
   )
 
+  // MultiSelect does not group, so the whole list is one nameless group.
+  const rows = React.useMemo(
+    () => toRows([{ group: undefined, options: capped }]),
+    [capped],
+  )
   const selectableValues = React.useMemo(
     () => options.filter((o) => !o.disabled).map((o) => o.value),
     [options],
@@ -633,10 +744,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
-          id={panelId}
           data-slot="multi-select-content"
-          role="listbox"
-          aria-multiselectable
           align={align}
           sideOffset={6}
           className={PANEL_CLASS}
@@ -649,7 +757,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             />
           )}
 
-          <div className="flex items-center justify-between px-2.5 pb-1.5 pt-1 text-[10.5px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
+          <div className="flex shrink-0 items-center justify-between px-2.5 pb-1.5 pt-1 text-[10.5px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
             <span>{options.length} options</span>
             {selectAll && (
               <button
@@ -662,19 +770,31 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             )}
           </div>
 
-          {loading ? (
-            <LoadingRow />
-          ) : filtered.length === 0 ? (
-            (emptyState ?? <EmptyState />)
-          ) : (
-            capped.map((opt) => {
+          <OptionList
+            id={panelId}
+            rows={rows}
+            total={capped.length}
+            multiselectable
+            placeholder={
+              loading ? (
+                <LoadingRow />
+              ) : filtered.length === 0 ? (
+                (emptyState ?? <EmptyState />)
+              ) : undefined
+            }
+          >
+            {(row, total) => {
+              if (row.kind === "heading")
+                return <GroupHeading>{row.label}</GroupHeading>
+              const opt = row.option
               const isSelected = current.includes(opt.value)
               return (
                 <button
-                  key={opt.value}
                   type="button"
                   role="option"
                   aria-selected={isSelected}
+                  aria-setsize={total}
+                  aria-posinset={row.position}
                   data-slot="multi-select-option"
                   data-selected={isSelected || undefined}
                   data-disabled={opt.disabled || undefined}
@@ -725,8 +845,8 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                   )}
                 </button>
               )
-            })
-          )}
+            }}
+          </OptionList>
 
           {canCreate && (
             <>

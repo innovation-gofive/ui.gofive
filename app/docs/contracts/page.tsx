@@ -213,9 +213,18 @@ export default function ContractsPage() {
         next open does not show a list still narrowed by the last query. Pair it
         with <code>loading</code> for the in-flight row and{" "}
         <code>emptyState</code> for &ldquo;no results&rdquo;.{" "}
-        <code>maxRenderedOptions</code> (200 by default) caps how many rows are
-        rendered at once — a thousand-row response would otherwise block the main
-        thread on every open.
+        The panel is virtualized, so a thousand-row response costs about what a
+        dozen rows do: only the options in view exist in the DOM.{" "}
+        <code>maxRenderedOptions</code> is off by default and exists for the case
+        where the list itself is the problem — an unbounded response you would
+        rather cut off than scroll through.
+      </p>
+      <p className="mt-4 leading-7 text-muted-foreground">
+        Because the rows are not all present, a screen reader cannot count them,
+        so every option carries <code>aria-setsize</code> and{" "}
+        <code>aria-posinset</code> — a list of 1,482 announces itself as 1,482
+        however few rows happen to be rendered. The same applies to{" "}
+        <code>PersonPicker</code> and <code>TreeSelect</code>.
       </p>
       <CodeBlock
         className="mt-4"

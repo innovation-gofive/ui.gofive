@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { ResponsivePopover as PopoverPrimitive } from "./responsive-popover"
+import { useVirtualizer } from "@tanstack/react-virtual"
 import { ChevronRight, ChevronDown, Check, Loader2, Search, Folder, Minus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -81,6 +82,132 @@ function collectFolderValues(nodes: TreeNode[]): string[] {
 }
 
 // ── Chevron / icon column ───────────────────────────────────────────
+// ── Flattening + virtualization ─────────────────────────────────────
+// A tree renders as nested containers, and the guide line down each level is
+// drawn once per container. Virtualization needs the opposite shape: one flat
+// list of the rows currently visible, because only some of them exist in the
+// DOM at a time and a container cannot span rows that were never rendered.
+//
+// So the guide lines move onto the rows. A row at depth D draws one segment per
+// ancestor level, and the row that ends an ancestor's block stops that segment
+// 4px short — which is what the container's `bottom-1` used to do.
+
+interface FlatNode {
+  node: TreeNode
+  depth: number
+  leaf: boolean
+  expanded: boolean
+  /** Ancestor depths whose guide line ends on this row (its last descendant). */
+  closes: number[]
+}
+
+function flattenTree(nodes: TreeNode[], expanded: Set<string>): FlatNode[] {
+  const rows: FlatNode[] = []
+  const walk = (list: TreeNode[], depth: number) => {
+    for (const node of list) {
+      const leaf = isLeaf(node)
+      const isOpen = !leaf && expanded.has(node.value)
+      rows.push({ node, depth, leaf, expanded: isOpen, closes: [] })
+      if (isOpen) {
+        walk(node.children!, depth + 1)
+        rows[rows.length - 1].closes.push(depth)
+      }
+    }
+  }
+  walk(nodes, 0)
+  return rows
+}
+
+/** The vertical guides an indented row sits behind. */
+function TreeGuides({
+  depth,
+  closes,
+  offset,
+}: {
+  depth: number
+  closes: number[]
+  /** Distance from the row's left edge to the first guide. */
+  offset: number
+}) {
+  if (depth === 0) return null
+  return (
+    <>
+      {Array.from({ length: depth }, (_, level) => (
+        <span
+          key={level}
+          aria-hidden
+          className="absolute top-0 w-px bg-border"
+          style={{
+            left: level * 18 + offset,
+            bottom: closes.includes(level) ? 4 : 0,
+          }}
+        />
+      ))}
+    </>
+  )
+}
+
+// One row is 32px. Rows are measured as they mount, so this only seeds the
+// scrollbar before anything has been laid out.
+const TREE_ROW_ESTIMATE = 32
+
+function TreeList({
+  id,
+  rows,
+  className,
+  multiselectable,
+  placeholder,
+  children,
+}: {
+  id: string
+  rows: FlatNode[]
+  className?: string
+  multiselectable?: boolean
+  /** Rendered instead of the rows: the loading or empty state. */
+  placeholder?: React.ReactNode
+  children: (row: FlatNode) => React.ReactNode
+}) {
+  // The virtualizer returns functions the React Compiler cannot memoize safely.
+  "use no memo"
+
+  const scrollRef = React.useRef<HTMLDivElement>(null)
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => TREE_ROW_ESTIMATE,
+    overscan: 10,
+    getItemKey: (i) => rows[i].node.value,
+  })
+
+  return (
+    <div
+      ref={scrollRef}
+      id={id}
+      role="tree"
+      aria-multiselectable={multiselectable}
+      data-slot="tree-viewport"
+      className={className}
+    >
+      {placeholder ?? (
+        <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
+          {virtualizer.getVirtualItems().map((item) => (
+            <div
+              key={item.key}
+              data-slot="tree-node"
+              data-index={item.index}
+              ref={virtualizer.measureElement}
+              className="absolute top-0 left-0 w-full"
+              style={{ transform: `translateY(${item.start}px)` }}
+            >
+              {children(rows[item.index])}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function NodeIcon({ node, expanded }: { node: TreeNode; expanded: boolean }) {
   if (isLeaf(node)) {
     return <span className="size-4 shrink-0" aria-hidden />
@@ -256,20 +383,23 @@ const TreeSelect = React.forwardRef<HTMLButtonElement, TreeSelectProps>(
   const path = current ? pathByValue.get(current) : undefined
   const hasValue = path != null
 
-  const renderNode = (node: TreeNode, depth: number): React.ReactNode => {
-    const leaf = isLeaf(node)
-    const isOpen = effectiveExpanded.has(node.value)
-    const selected = current === node.value
+  const rows = React.useMemo(
+    () => flattenTree(filtered, effectiveExpanded),
+    [filtered, effectiveExpanded],
+  )
 
+  const renderRow = ({ node, depth, leaf, expanded: isOpen, closes }: FlatNode) => {
+    const selected = current === node.value
     return (
-      <div key={node.value} data-slot="tree-node">
+      <>
+        <TreeGuides depth={depth} closes={closes} offset={13} />
         <button
           type="button"
           disabled={node.disabled}
           onClick={() => (leaf ? select(node.value) : toggleExpand(node.value))}
           data-selected={selected || undefined}
           className={cn(
-            "flex w-full items-center gap-1.5 rounded-md py-1.5 pr-2 text-left text-sm outline-none transition-colors",
+            "relative flex w-full items-center gap-1.5 rounded-md py-1.5 pr-2 text-left text-sm outline-none transition-colors",
             "hover:bg-accent focus-visible:bg-accent",
             selected && "bg-primary/10 font-semibold text-foreground",
             node.disabled && "pointer-events-none opacity-50"
@@ -290,17 +420,7 @@ const TreeSelect = React.forwardRef<HTMLButtonElement, TreeSelectProps>(
           )}
           {selected && <Check className="size-4 shrink-0 text-primary" />}
         </button>
-        {!leaf && isOpen && (
-          <div data-slot="tree-children" className="relative">
-            <span
-              className="absolute bottom-1 top-0 w-px bg-border"
-              style={{ left: depth * 18 + 13 }}
-              aria-hidden
-            />
-            {node.children!.map((child) => renderNode(child, depth + 1))}
-          </div>
-        )}
-      </div>
+      </>
     )
   }
 
@@ -340,8 +460,6 @@ const TreeSelect = React.forwardRef<HTMLButtonElement, TreeSelectProps>(
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
-          id={panelId}
-          role="tree"
           data-slot="tree-select-popover"
           align={align}
           sideOffset={6}
@@ -358,17 +476,22 @@ const TreeSelect = React.forwardRef<HTMLButtonElement, TreeSelectProps>(
               />
             </div>
           )}
-          <div className="max-h-[300px] overflow-y-auto pr-0.5">
-            {loading ? (
-              <LoadingRow />
-            ) : filtered.length === 0 ? (
-              (emptyState ?? (
-                <p className="py-6 text-center text-sm text-muted-foreground">No results</p>
-              ))
-            ) : (
-              filtered.map((node) => renderNode(node, 0))
-            )}
-          </div>
+          <TreeList
+            id={panelId}
+            rows={rows}
+            className="max-h-[300px] overflow-y-auto pr-0.5"
+            placeholder={
+              loading ? (
+                <LoadingRow />
+              ) : filtered.length === 0 ? (
+                (emptyState ?? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">No results</p>
+                ))
+              ) : undefined
+            }
+          >
+            {renderRow}
+          </TreeList>
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
       <HiddenField name={name} value={current ?? ""} />
@@ -540,17 +663,21 @@ const TreeMultiSelect = React.forwardRef<
     [committed, nodeByValue]
   )
 
-  const renderNode = (node: TreeNode, depth: number): React.ReactNode => {
-    const leaf = isLeaf(node)
-    const isOpen = effectiveExpanded.has(node.value)
+  const rows = React.useMemo(
+    () => flattenTree(filtered, effectiveExpanded),
+    [filtered, effectiveExpanded],
+  )
+
+  const renderRow = ({ node, depth, leaf, expanded: isOpen, closes }: FlatNode) => {
     const state = nodeState(node)
 
     return (
-      <div key={node.value} data-slot="tree-node">
+      <>
+        <TreeGuides depth={depth} closes={closes} offset={15} />
         <div
           data-state={state}
           className={cn(
-            "group flex w-full items-center gap-1.5 rounded-md py-1.5 pr-2 text-sm transition-colors hover:bg-accent",
+            "group relative flex w-full items-center gap-1.5 rounded-md py-1.5 pr-2 text-sm transition-colors hover:bg-accent",
             state !== "unchecked" && "text-foreground",
             node.disabled && "pointer-events-none opacity-50"
           )}
@@ -597,18 +724,7 @@ const TreeMultiSelect = React.forwardRef<
             )}
           </button>
         </div>
-        {!leaf && isOpen && (
-          <div data-slot="tree-children" className="relative">
-            <span
-              className="absolute bottom-1 top-0 w-px bg-border"
-              // centred on the parent checkbox, clear of the children's boxes
-              style={{ left: depth * 18 + 15 }}
-              aria-hidden
-            />
-            {node.children!.map((child) => renderNode(child, depth + 1))}
-          </div>
-        )}
-      </div>
+      </>
     )
   }
 
@@ -674,9 +790,6 @@ const TreeMultiSelect = React.forwardRef<
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
-          id={panelId}
-          role="tree"
-          aria-multiselectable
           data-slot="tree-multi-select-popover"
           align={align}
           sideOffset={6}
@@ -705,17 +818,23 @@ const TreeMultiSelect = React.forwardRef<
               Expand all
             </button>
           </div>
-          <div className="max-h-[300px] overflow-y-auto px-2 pb-2">
-            {loading ? (
-              <LoadingRow />
-            ) : filtered.length === 0 ? (
-              (emptyState ?? (
-                <p className="py-6 text-center text-sm text-muted-foreground">No results</p>
-              ))
-            ) : (
-              filtered.map((node) => renderNode(node, 0))
-            )}
-          </div>
+          <TreeList
+            id={panelId}
+            rows={rows}
+            multiselectable
+            className="max-h-[300px] overflow-y-auto px-2 pb-2"
+            placeholder={
+              loading ? (
+                <LoadingRow />
+              ) : filtered.length === 0 ? (
+                (emptyState ?? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">No results</p>
+                ))
+              ) : undefined
+            }
+          >
+            {renderRow}
+          </TreeList>
           {showFooter && (
             <div className="flex items-center justify-between gap-2 border-t px-3 py-2">
               <button

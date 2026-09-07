@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Popover as RadixPopover } from "radix-ui"
 import { ResponsivePopover as PopoverPrimitive, useIsBottomSheet } from "./responsive-popover"
+import { useVirtualizer } from "@tanstack/react-virtual"
 import { Check, ChevronDown, Loader2, Search, X, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -99,6 +100,95 @@ function groupPeople(people: Person[]): { label: string | null; items: Person[] 
     map.get(key)!.push(p)
   }
   return order.map((label) => ({ label, items: map.get(label)! }))
+}
+
+// ── Virtualized people list ─────────────────────────────────────────
+// Only the rows in view exist in the DOM, so a directory of a few thousand
+// costs what a handful does. Headings and people share one virtualizer, which
+// is why the groups are flattened into a single row array first; and because a
+// screen reader can no longer count what it cannot see, every option carries
+// aria-setsize / aria-posinset.
+
+type PersonRow =
+  | { kind: "heading"; key: string; label: string }
+  | { kind: "person"; key: string; person: Person; position: number }
+
+function toPersonRows(
+  groups: { label: string | null; items: Person[] }[],
+): PersonRow[] {
+  const rows: PersonRow[] = []
+  let position = 0
+  for (const g of groups) {
+    if (g.label) rows.push({ kind: "heading", key: `heading:${g.label}`, label: g.label })
+    for (const person of g.items) {
+      rows.push({ kind: "person", key: person.id, person, position: ++position })
+    }
+  }
+  return rows
+}
+
+// A person row is 40px; a heading is shorter. Every row is measured once it
+// mounts, so this is only the first guess that gets the scrollbar started.
+const ROW_ESTIMATE = 40
+
+function PeopleList({
+  id,
+  rows,
+  total,
+  placeholder,
+  multiselectable,
+  className,
+  children,
+}: {
+  id: string
+  rows: PersonRow[]
+  /** People count for aria-setsize — headings do not count. */
+  total: number
+  /** Rendered instead of the rows: the loading or empty state. */
+  placeholder?: React.ReactNode
+  multiselectable?: boolean
+  className?: string
+  children: (row: PersonRow, total: number) => React.ReactNode
+}) {
+  // The virtualizer returns functions the React Compiler cannot memoize safely.
+  "use no memo"
+
+  const scrollRef = React.useRef<HTMLDivElement>(null)
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => ROW_ESTIMATE,
+    overscan: 8,
+    getItemKey: (i) => rows[i].key,
+  })
+
+  return (
+    <div
+      ref={scrollRef}
+      id={id}
+      role="listbox"
+      aria-multiselectable={multiselectable}
+      data-slot="person-picker-viewport"
+      className={className}
+    >
+      {placeholder ?? (
+        <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
+          {virtualizer.getVirtualItems().map((item) => (
+            <div
+              key={item.key}
+              role="presentation"
+              data-index={item.index}
+              ref={virtualizer.measureElement}
+              className="absolute top-0 left-0 w-full"
+              style={{ transform: `translateY(${item.start}px)` }}
+            >
+              {children(rows[item.index], total)}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 // ── PersonAvatar (self-contained colored-initials circle) ──────────
@@ -236,7 +326,8 @@ export interface PickerAsyncProps {
   maxRenderedOptions?: number
 }
 
-const DEFAULT_MAX_RENDERED = 200
+// Off by default: the list is virtualized, so capping it only hides people.
+const DEFAULT_MAX_RENDERED = Number.POSITIVE_INFINITY
 
 const TRIGGER_INVALID_CLASS =
   "border-danger data-[state=open]:border-danger data-[state=open]:ring-danger/30"
@@ -339,6 +430,7 @@ const PersonPicker = React.forwardRef<HTMLButtonElement, PersonPickerProps>(
     [filtered, maxRenderedOptions],
   )
   const groups = React.useMemo(() => groupPeople(capped), [capped])
+  const rows = React.useMemo(() => toPersonRows(groups), [groups])
 
   const choose = (id: string) => {
     setSelectedId(id)
@@ -400,8 +492,6 @@ const PersonPicker = React.forwardRef<HTMLButtonElement, PersonPickerProps>(
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
-          id={panelId}
-          role="listbox"
           data-slot="person-picker-popover"
           align="start"
           sideOffset={6}
@@ -414,55 +504,63 @@ const PersonPicker = React.forwardRef<HTMLButtonElement, PersonPickerProps>(
               placeholder="Search by name, email, team…"
             />
           )}
-          <div className="max-h-[300px] overflow-y-auto py-1.5">
-            {loading && <LoadingRow />}
-            {!loading && filtered.length === 0 &&
-              (emptyState ?? <EmptyState>No people found</EmptyState>)}
-            {groups.map((g, gi) => (
-              <div key={g.label ?? `g-${gi}`}>
-                {g.label && <GroupHeading>{g.label}</GroupHeading>}
-                {g.items.map((person) => {
-                  const isSelected = person.id === selectedId
-                  return (
-                    <button
-                      key={person.id}
-                      type="button"
-                      role="option"
-                      aria-selected={isSelected}
-                      data-slot="person-picker-option"
-                      onClick={() => choose(person.id)}
+          <PeopleList
+            id={panelId}
+            rows={rows}
+            total={capped.length}
+            className="max-h-[300px] overflow-y-auto py-1.5"
+            placeholder={
+              loading ? (
+                <LoadingRow />
+              ) : filtered.length === 0 ? (
+                (emptyState ?? <EmptyState>No people found</EmptyState>)
+              ) : undefined
+            }
+          >
+            {(row, total) => {
+              if (row.kind === "heading")
+                return <GroupHeading>{row.label}</GroupHeading>
+              const person = row.person
+              const isSelected = person.id === selectedId
+              return (
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  aria-setsize={total}
+                  aria-posinset={row.position}
+                  data-slot="person-picker-option"
+                  onClick={() => choose(person.id)}
+                  className={cn(
+                    "flex w-full items-center gap-2.5 px-3 py-1.5 text-left transition-colors hover:bg-accent",
+                    isSelected && "bg-accent",
+                  )}
+                >
+                  <PersonAvatar person={person} showPresence />
+                  <span className="flex min-w-0 flex-col leading-tight">
+                    <span className="truncate text-sm font-medium">{person.name}</span>
+                    {(person.email || person.role) && (
+                      <span className="truncate text-[11.5px] text-muted-foreground">
+                        {person.email ?? person.role}
+                      </span>
+                    )}
+                  </span>
+                  {isSelected ? (
+                    <Check className="ml-auto size-4 shrink-0 text-primary" />
+                  ) : person.presence ? (
+                    <span
                       className={cn(
-                        "flex w-full items-center gap-2.5 px-3 py-1.5 text-left transition-colors hover:bg-accent",
-                        isSelected && "bg-accent",
+                        "ml-auto shrink-0 text-[11.5px] font-semibold",
+                        PRESENCE_TEXT[person.presence],
                       )}
                     >
-                      <PersonAvatar person={person} showPresence />
-                      <span className="flex min-w-0 flex-col leading-tight">
-                        <span className="truncate text-sm font-medium">{person.name}</span>
-                        {(person.email || person.role) && (
-                          <span className="truncate text-[11.5px] text-muted-foreground">
-                            {person.email ?? person.role}
-                          </span>
-                        )}
-                      </span>
-                      {isSelected ? (
-                        <Check className="ml-auto size-4 shrink-0 text-primary" />
-                      ) : person.presence ? (
-                        <span
-                          className={cn(
-                            "ml-auto shrink-0 text-[11.5px] font-semibold",
-                            PRESENCE_TEXT[person.presence],
-                          )}
-                        >
-                          {PRESENCE_LABEL[person.presence]}
-                        </span>
-                      ) : null}
-                    </button>
-                  )
-                })}
-              </div>
-            ))}
-          </div>
+                      {PRESENCE_LABEL[person.presence]}
+                    </span>
+                  ) : null}
+                </button>
+              )
+            }}
+          </PeopleList>
           {onInvite && (
             <button
               type="button"
@@ -567,6 +665,11 @@ const PersonMultiPicker = React.forwardRef<
     () => filtered.slice(0, maxRenderedOptions),
     [filtered, maxRenderedOptions],
   )
+  // The multi picker does not group, so the whole list is one nameless group.
+  const rows = React.useMemo(
+    () => toPersonRows([{ label: null, items: capped }]),
+    [capped],
+  )
 
   const toggle = (id: string) => {
     setSelectedIds(
@@ -639,9 +742,6 @@ const PersonMultiPicker = React.forwardRef<
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
-          id={panelId}
-          role="listbox"
-          aria-multiselectable
           data-slot="person-multi-popover"
           align="start"
           sideOffset={6}
@@ -654,18 +754,32 @@ const PersonMultiPicker = React.forwardRef<
               placeholder="Search people…"
             />
           )}
-          <div className="max-h-[280px] overflow-y-auto py-1.5">
-            {loading && <LoadingRow />}
-            {!loading && filtered.length === 0 &&
-              (emptyState ?? <EmptyState>No people found</EmptyState>)}
-            {capped.map((person) => {
+          <PeopleList
+            id={panelId}
+            rows={rows}
+            total={capped.length}
+            multiselectable
+            className="max-h-[280px] overflow-y-auto py-1.5"
+            placeholder={
+              loading ? (
+                <LoadingRow />
+              ) : filtered.length === 0 ? (
+                (emptyState ?? <EmptyState>No people found</EmptyState>)
+              ) : undefined
+            }
+          >
+            {(row, total) => {
+              if (row.kind === "heading")
+                return <GroupHeading>{row.label}</GroupHeading>
+              const person = row.person
               const checked = selectedIds.includes(person.id)
               return (
                 <button
-                  key={person.id}
                   type="button"
                   role="option"
                   aria-selected={checked}
+                  aria-setsize={total}
+                  aria-posinset={row.position}
                   data-slot="person-multi-option"
                   onClick={() => toggle(person.id)}
                   className="flex w-full items-center gap-2.5 px-3 py-1.5 text-left transition-colors hover:bg-accent"
@@ -702,8 +816,8 @@ const PersonMultiPicker = React.forwardRef<
                   )}
                 </button>
               )
-            })}
-          </div>
+            }}
+          </PeopleList>
           {showFooter && (
             <div className="flex items-center justify-between gap-2 border-t px-3 py-2.5">
               <button

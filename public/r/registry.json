@@ -638,7 +638,8 @@
       "description": "A popover-based single Select and MultiSelect with searchable combobox filtering, grouped and rich rows, status dots, disabled options, an empty state, and a multi-select chips trigger with select-all and an apply footer.",
       "dependencies": [
         "radix-ui",
-        "lucide-react"
+        "lucide-react",
+        "@tanstack/react-virtual"
       ],
       "files": [
         {
@@ -674,7 +675,8 @@
       "description": "A hierarchical TreeSelect for single category picks with a breadcrumb trigger, plus a TreeMultiSelect with cascading parent/child checkboxes, indeterminate state, chips, and an apply footer.",
       "dependencies": [
         "radix-ui",
-        "lucide-react"
+        "lucide-react",
+        "@tanstack/react-virtual"
       ],
       "files": [
         {
@@ -694,7 +696,8 @@
       "description": "Single and multi person pickers with avatars, presence dots, grouped search, removable assignee chips, an invite-by-email fallback, and a ReviewerStack with stacked avatars and per-person review status.",
       "dependencies": [
         "radix-ui",
-        "lucide-react"
+        "lucide-react",
+        "@tanstack/react-virtual"
       ],
       "files": [
         {
