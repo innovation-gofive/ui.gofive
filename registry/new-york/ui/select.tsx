@@ -282,7 +282,12 @@ function EmptyState() {
 
 function GroupHeading({ children }: { children: React.ReactNode }) {
   return (
-    <div className="px-2.5 pb-1 pt-2 text-[10.5px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
+    // The wrapper that used to enclose a whole group is gone — a virtualized
+    // list has no element that can span rows it never rendered. This heading is
+    // the hook left for styling a group boundary.
+    <div
+      data-slot="select-group-heading"
+      className="px-2.5 pb-1 pt-2 text-[10.5px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
       {children}
     </div>
   )
