@@ -213,7 +213,7 @@ function TriggerField({
       >
         {icon}
       </span>
-      <span className={cn("flex-1 text-left", !value && "text-muted-foreground")}>
+      <span className={cn("flex-1 truncate text-left", !value && "text-muted-foreground")}>
         {value || placeholder}
       </span>
     </span>
@@ -376,6 +376,7 @@ export interface DatePickerProps extends PickerFieldProps {
   presets?: boolean | RangePreset[]
   /** Render the field in an error state; a string is shown below as a message. */
   error?: boolean | string
+  /** Extra classes on the trigger — this is where the field is sized. */
   className?: string
 }
 
@@ -476,10 +477,8 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     setDraft(mode === "range" ? { from: null, to: null } : null)
   }
 
-  const triggerWidth = mode === "range" ? "w-[280px]" : "w-[240px]"
-
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
+    <div className="flex flex-col gap-1.5">
       <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
         <PopoverPrimitive.Trigger asChild disabled={disabled}>
           <button
@@ -494,7 +493,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             aria-describedby={ariaDescribedBy}
             aria-labelledby={ariaLabelledBy}
             data-slot="date-picker-trigger"
-            className={triggerWidth}
+            className={cn("w-full", className)}
           >
             <TriggerField
               icon={<CalendarIcon />}
@@ -749,6 +748,7 @@ export interface DateTimePickerProps extends PickerFieldProps {
   footer?: boolean
   /** Render the field in an error state; a string is shown below as a message. */
   error?: boolean | string
+  /** Extra classes on the trigger — this is where the field is sized. */
   className?: string
 }
 
@@ -819,7 +819,7 @@ const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
   }
 
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
+    <div className="flex flex-col gap-1.5">
       <PopoverPrimitive.Root open={open} onOpenChange={changeOpen}>
         <PopoverPrimitive.Trigger asChild disabled={disabled}>
           <button
@@ -834,7 +834,7 @@ const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
             aria-describedby={ariaDescribedBy}
             aria-labelledby={ariaLabelledBy}
             data-slot="datetime-picker-trigger"
-            className="w-[260px]"
+            className={cn("w-full", className)}
           >
             <TriggerField
               icon={<CalendarIcon />}

@@ -112,6 +112,7 @@ export default function DateTimePickerPage() {
         { prop: "placeholder", type: "string", default: '"Select date"', desc: "Trigger text when no value is set" },
         { prop: "disabledDate", type: "(date: Date) => boolean", default: "—", desc: "Disable individual calendar days" },
         { prop: "disabled", type: "boolean", default: "false", desc: "Disable the whole field" },
+        { prop: "className", type: "string", default: "—", desc: "Extra classes on the trigger — the field fills its parent, so size it from there or here" },
       ]} />
 
       <DocH3 id="api-timepicker">TimePicker</DocH3>
@@ -133,6 +134,7 @@ export default function DateTimePickerPage() {
         { prop: "minuteStep", type: "number", default: "1", desc: "Increment between selectable minutes" },
         { prop: "disabledDate", type: "(date: Date) => boolean", default: "—", desc: "Disable individual calendar days" },
         { prop: "disabled", type: "boolean", default: "false", desc: "Disable the whole field" },
+        { prop: "className", type: "string", default: "—", desc: "Extra classes on the trigger — the field fills its parent, so size it from there or here" },
       ]} />
 
       <DocH3 id="api-provider">CalendarConfigProvider</DocH3>
@@ -153,7 +155,9 @@ function DateExample() {
 
 <DatePicker value={date} onChange={(v) => setDate(v as Date)} />`}
     >
-      <DatePicker value={date} onChange={(v) => setDate(v as Date)} />
+      <div className="w-full max-w-xs">
+        <DatePicker value={date} onChange={(v) => setDate(v as Date)} />
+      </div>
     </ComponentPreview>
   )
 }
@@ -171,13 +175,17 @@ function LocaleExample() {
     >
       <CalendarConfigProvider locale="th">
         <div className="flex flex-wrap gap-3">
-          <DateTimePicker value={date} onChange={setDate} />
-          <DatePicker
-            mode="range"
-            presets
-            value={range}
-            onChange={(v) => setRange(v as CalendarRange)}
-          />
+          <div className="w-[230px]">
+            <DateTimePicker value={date} onChange={setDate} />
+          </div>
+          <div className="w-[290px]">
+            <DatePicker
+              mode="range"
+              presets
+              value={range}
+              onChange={(v) => setRange(v as CalendarRange)}
+            />
+          </div>
         </div>
       </CalendarConfigProvider>
     </ComponentPreview>
@@ -196,27 +204,30 @@ function GranularityExample() {
 <DatePicker calendar="quarter" value={quarter} onChange={(v) => setQuarter(v as Date)} placeholder="Select quarter" />`}
     >
       <div className="flex flex-wrap gap-3">
-        <DatePicker
-          calendar="month"
-          value={month}
-          onChange={(v) => setMonth(v as Date)}
-          placeholder="Select month"
-          className="w-auto"
-        />
-        <DatePicker
-          calendar="year"
-          value={year}
-          onChange={(v) => setYear(v as Date)}
-          placeholder="Select year"
-          className="w-auto"
-        />
-        <DatePicker
-          calendar="quarter"
-          value={quarter}
-          onChange={(v) => setQuarter(v as Date)}
-          placeholder="Select quarter"
-          className="w-auto"
-        />
+        <div className="w-[190px]">
+          <DatePicker
+            calendar="month"
+            value={month}
+            onChange={(v) => setMonth(v as Date)}
+            placeholder="Select month"
+          />
+        </div>
+        <div className="w-[190px]">
+          <DatePicker
+            calendar="year"
+            value={year}
+            onChange={(v) => setYear(v as Date)}
+            placeholder="Select year"
+          />
+        </div>
+        <div className="w-[190px]">
+          <DatePicker
+            calendar="quarter"
+            value={quarter}
+            onChange={(v) => setQuarter(v as Date)}
+            placeholder="Select quarter"
+          />
+        </div>
       </div>
     </ComponentPreview>
   )
@@ -237,13 +248,15 @@ function RangeExample() {
   placeholder="Select range"
 />`}
     >
-      <DatePicker
-        mode="range"
-        presets
-        value={range}
-        onChange={(v) => setRange(v as CalendarRange)}
-        placeholder="Select range"
-      />
+      <div className="w-full max-w-sm">
+        <DatePicker
+          mode="range"
+          presets
+          value={range}
+          onChange={(v) => setRange(v as CalendarRange)}
+          placeholder="Select range"
+        />
+      </div>
     </ComponentPreview>
   )
 }
@@ -282,7 +295,9 @@ function DateTimeExample() {
 
 <DateTimePicker value={value} onChange={setValue} minuteStep={5} />`}
     >
-      <DateTimePicker value={value} onChange={setValue} minuteStep={5} />
+      <div className="w-full max-w-xs">
+        <DateTimePicker value={value} onChange={setValue} minuteStep={5} />
+      </div>
     </ComponentPreview>
   )
 }
@@ -298,11 +313,13 @@ function ErrorExample() {
   error={!date ? "A date is required" : false}
 />`}
     >
-      <DatePicker
-        value={date}
-        onChange={(v) => setDate(v as Date)}
-        error={!date ? "A date is required" : false}
-      />
+      <div className="w-full max-w-xs">
+        <DatePicker
+          value={date}
+          onChange={(v) => setDate(v as Date)}
+          error={!date ? "A date is required" : false}
+        />
+      </div>
     </ComponentPreview>
   )
 }
