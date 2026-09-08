@@ -7,16 +7,74 @@ import { Calendar as CalendarIcon, Clock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   Calendar,
+  type CalendarConfig,
+  type CalendarLocale,
   type CalendarRange,
   type CalendarType,
-  MONTHS_SHORT,
+  calendarStrings,
+  displayYear,
   isSameDay,
   startOfDay,
+  useCalendarConfig,
 } from "./calendar"
 
+// ── Locale ─────────────────────────────────────────────────────────
+// Month and weekday names live in calendar.tsx; these are the picker's own
+// chrome. Both are read through <CalendarConfigProvider>.
+const PICKER_STRINGS = {
+  en: {
+    selectDate: "Select date",
+    selectDateTime: "Select date & time",
+    start: "Start",
+    end: "End",
+    clear: "Clear",
+    cancel: "Cancel",
+    apply: "Apply",
+    applyRange: "Apply range",
+    set: "Set",
+    custom: "Custom",
+    time: "Time",
+    hours: "Hours",
+    minutes: "Minutes",
+    dayPeriod: "AM/PM",
+    presets: [
+      "Today", "Yesterday", "Last 7 days", "Last 14 days", "Last 30 days",
+      "This month", "Last month",
+    ],
+  },
+  th: {
+    selectDate: "เลือกวันที่",
+    selectDateTime: "เลือกวันที่และเวลา",
+    start: "เริ่มต้น",
+    end: "สิ้นสุด",
+    clear: "ล้าง",
+    cancel: "ยกเลิก",
+    apply: "ตกลง",
+    applyRange: "ใช้ช่วงนี้",
+    set: "ตกลง",
+    custom: "กำหนดเอง",
+    time: "เวลา",
+    hours: "ชั่วโมง",
+    minutes: "นาที",
+    dayPeriod: "ช่วงเวลา",
+    presets: [
+      "วันนี้", "เมื่อวาน", "7 วันล่าสุด", "14 วันล่าสุด", "30 วันล่าสุด",
+      "เดือนนี้", "เดือนที่แล้ว",
+    ],
+  },
+} satisfies Record<CalendarLocale, Record<string, string | readonly string[]>>
+
+function pickerStrings(locale: CalendarLocale) {
+  return PICKER_STRINGS[locale]
+}
+
 // ── Formatting helpers ─────────────────────────────────────────────
-function formatDate(d: Date): string {
-  return `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`
+function formatDate(
+  d: Date,
+  { locale = "en", era = "ce" }: Partial<CalendarConfig> = {},
+): string {
+  const m = calendarStrings(locale).monthsShort[d.getMonth()]
+  return `${d.getDate()} ${m} ${displayYear(d.getFullYear(), era)}`
 }
 
 function pad(n: number): string {
@@ -28,16 +86,23 @@ function formatTime(d: Date): string {
 }
 
 /** Format a Date according to the calendar granularity. */
-function formatByType(d: Date, type: CalendarType): string {
+function formatByType(
+  d: Date,
+  type: CalendarType,
+  config: Partial<CalendarConfig> = {},
+): string {
+  const { locale = "en", era = "ce" } = config
+  const t = calendarStrings(locale)
+  const y = displayYear(d.getFullYear(), era)
   switch (type) {
     case "month":
-      return `${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`
+      return `${t.monthsShort[d.getMonth()]} ${y}`
     case "year":
-      return `${d.getFullYear()}`
+      return `${y}`
     case "quarter":
-      return `Q${Math.floor(d.getMonth() / 3) + 1} ${d.getFullYear()}`
+      return `${t.quarters[Math.floor(d.getMonth() / 3)]} ${y}`
     default:
-      return formatDate(d)
+      return formatDate(d, config)
   }
 }
 
@@ -161,29 +226,32 @@ export interface RangePreset {
   getValue: () => CalendarRange
 }
 
-function buildDefaultPresets(): RangePreset[] {
+function buildDefaultPresets(locale: CalendarLocale): RangePreset[] {
   const today = startOfDay(new Date())
+  const [
+    todayLabel, yesterday, last7, last14, last30, thisMonth, lastMonth,
+  ] = pickerStrings(locale).presets
   return [
-    { label: "Today", getValue: () => ({ from: today, to: today }) },
+    { label: todayLabel, getValue: () => ({ from: today, to: today }) },
     {
-      label: "Yesterday",
+      label: yesterday,
       getValue: () => {
         const y = addDays(today, -1)
         return { from: y, to: y }
       },
     },
-    { label: "Last 7 days", getValue: () => ({ from: addDays(today, -6), to: today }) },
-    { label: "Last 14 days", getValue: () => ({ from: addDays(today, -13), to: today }) },
-    { label: "Last 30 days", getValue: () => ({ from: addDays(today, -29), to: today }) },
+    { label: last7, getValue: () => ({ from: addDays(today, -6), to: today }) },
+    { label: last14, getValue: () => ({ from: addDays(today, -13), to: today }) },
+    { label: last30, getValue: () => ({ from: addDays(today, -29), to: today }) },
     {
-      label: "This month",
+      label: thisMonth,
       getValue: () => ({
         from: new Date(today.getFullYear(), today.getMonth(), 1),
         to: today,
       }),
     },
     {
-      label: "Last month",
+      label: lastMonth,
       getValue: () => ({
         from: new Date(today.getFullYear(), today.getMonth() - 1, 1),
         to: new Date(today.getFullYear(), today.getMonth(), 0),
@@ -207,11 +275,13 @@ function PresetSidebar({
   value,
   onSelect,
   onCustom,
+  customLabel,
 }: {
   presets: RangePreset[]
   value: CalendarRange | null
   onSelect: (p: RangePreset) => void
   onCustom: () => void
+  customLabel: string
 }) {
   const activeIdx = presets.findIndex((p) => presetMatches(p, value))
   return (
@@ -242,7 +312,7 @@ function PresetSidebar({
             : "text-foreground/80 hover:bg-accent hover:text-foreground max-md:border-input",
         )}
       >
-        Custom
+        {customLabel}
       </button>
     </div>
   )
@@ -316,7 +386,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       calendar = "day",
       value,
       onChange,
-      placeholder = "Select date",
+      placeholder,
       disabled,
       disabledDate,
       footer,
@@ -337,13 +407,16 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 
   // Presets imply a staged (footer) workflow.
   const showFooter = footer ?? (mode === "range" && Boolean(presets))
+  const config = useCalendarConfig()
+  const t = pickerStrings(config.locale)
   const presetList = React.useMemo<RangePreset[] | null>(() => {
     if (!presets || mode !== "range") return null
-    return Array.isArray(presets) ? presets : buildDefaultPresets()
-  }, [presets, mode])
+    return Array.isArray(presets) ? presets : buildDefaultPresets(config.locale)
+  }, [presets, mode, config.locale])
 
   const invalid = Boolean(error) || (ariaInvalid != null && ariaInvalid !== "false")
   const panelId = React.useId()
+  const fmt = (d: Date) => formatDate(d, config)
 
   // Re-sync the draft from the committed value whenever the popover opens.
   // Opening only ever happens through the trigger, so the handler covers it.
@@ -363,11 +436,11 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
   // Trigger label is always derived from the committed value.
   let label = ""
   if (mode === "single" && value) {
-    label = formatByType(value as Date, calendar)
+    label = formatByType(value as Date, calendar, config)
   } else if (mode === "range") {
     const r = value as CalendarRange | null
     if (r?.from) {
-      label = r.to ? `${formatDate(r.from)} → ${formatDate(r.to)}` : formatDate(r.from)
+      label = r.to ? `${fmt(r.from)} → ${fmt(r.to)}` : fmt(r.from)
     }
   }
 
@@ -426,7 +499,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             <TriggerField
               icon={<CalendarIcon />}
               value={label}
-              placeholder={placeholder}
+              placeholder={placeholder ?? t.selectDate}
               error={Boolean(error)}
             />
           </button>
@@ -437,15 +510,15 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               <div className="flex items-center gap-2 px-1 pb-3">
                 <TriggerField
                   icon={<CalendarIcon />}
-                  value={draftRange?.from ? formatDate(draftRange.from) : undefined}
-                  placeholder="Start"
+                  value={draftRange?.from ? fmt(draftRange.from) : undefined}
+                  placeholder={t.start}
                   className="h-8 w-[150px] text-[13px] max-md:w-auto max-md:flex-1"
                 />
                 <span className="text-muted-foreground">→</span>
                 <TriggerField
                   icon={<CalendarIcon />}
-                  value={draftRange?.to ? formatDate(draftRange.to) : undefined}
-                  placeholder="End"
+                  value={draftRange?.to ? fmt(draftRange.to) : undefined}
+                  placeholder={t.end}
                   className="h-8 w-[150px] text-[13px] max-md:w-auto max-md:flex-1"
                 />
               </div>
@@ -455,6 +528,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                   value={draftRange}
                   onSelect={applyPreset}
                   onCustom={clearDraft}
+                  customLabel={t.custom}
                 />
                 <Calendar
                   mode="range"
@@ -478,8 +552,8 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 
           {showFooter && (
             <PopoverFooter
-              ghostLabel={mode === "range" ? "Cancel" : "Clear"}
-              primaryLabel={mode === "range" ? "Apply range" : "Apply"}
+              ghostLabel={mode === "range" ? t.cancel : t.clear}
+              primaryLabel={mode === "range" ? t.applyRange : t.apply}
               onGhost={mode === "range" ? () => setOpen(false) : clearDraft}
               onPrimary={commit}
             />
@@ -591,6 +665,8 @@ function TimePicker({
   const hours24 = current?.getHours() ?? 0
   const minutes = current?.getMinutes() ?? 0
   const is12 = hourCycle === 12
+  const { locale } = useCalendarConfig()
+  const t = pickerStrings(locale)
   const period = hours24 < 12 ? 0 : 1 // 0 = AM, 1 = PM
 
   const hourOptions = React.useMemo<ColumnOption[]>(() => {
@@ -633,24 +709,25 @@ function TimePicker({
       <ScrollColumn
         options={hourOptions}
         selected={selectedHour}
-        ariaLabel="Hours"
+        ariaLabel={t.hours}
         onSelect={(h) => emit(is12 ? to24(h, period) : h, minutes)}
       />
       <span className="text-sm font-semibold text-muted-foreground">:</span>
       <ScrollColumn
         options={minuteOptions}
         selected={minutes}
-        ariaLabel="Minutes"
+        ariaLabel={t.minutes}
         onSelect={(m) => emit(hours24, m)}
       />
       {is12 && (
         <ScrollColumn
+          // AM/PM stays Latin in every locale — Thai clock UIs use it as-is.
           options={[
             { value: 0, label: "AM" },
             { value: 1, label: "PM" },
           ]}
           selected={period}
-          ariaLabel="AM/PM"
+          ariaLabel={t.dayPeriod}
           width="w-11"
           onSelect={(p) => emit(to24(selectedHour, p), minutes)}
         />
@@ -680,7 +757,7 @@ const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
     {
       value,
       onChange,
-      placeholder = "Select date & time",
+      placeholder,
       disabled,
       disabledDate,
       minuteStep = 1,
@@ -700,6 +777,8 @@ const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
   const [open, setOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<Date | null>(value ?? null)
 
+  const config = useCalendarConfig()
+  const t = pickerStrings(config.locale)
   const invalid = Boolean(error) || (ariaInvalid != null && ariaInvalid !== "false")
   const panelId = React.useId()
 
@@ -716,7 +795,7 @@ const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
     if (opened.current) onBlur?.()
   }
 
-  const label = value ? `${formatDate(value)}, ${formatTime(value)}` : ""
+  const label = value ? `${formatDate(value, config)}, ${formatTime(value)}` : ""
 
   function update(next: Date) {
     setDraft(next)
@@ -760,7 +839,7 @@ const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
             <TriggerField
               icon={<CalendarIcon />}
               value={label}
-              placeholder={placeholder}
+              placeholder={placeholder ?? t.selectDateTime}
               error={Boolean(error)}
             />
           </button>
@@ -775,7 +854,7 @@ const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
             />
             <div className="self-stretch border-l pl-3">
               <div className="flex items-center gap-1.5 px-1 pb-2 text-xs font-medium text-muted-foreground">
-                <Clock className="size-3.5" /> Time
+                <Clock className="size-3.5" /> {t.time}
               </div>
               <TimePicker
                 value={draft}
@@ -789,8 +868,8 @@ const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
           </div>
           {footer && (
             <PopoverFooter
-              ghostLabel="Cancel"
-              primaryLabel="Set"
+              ghostLabel={t.cancel}
+              primaryLabel={t.set}
               onGhost={() => setOpen(false)}
               onPrimary={commit}
             />

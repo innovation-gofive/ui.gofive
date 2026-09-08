@@ -6,7 +6,10 @@ import {
   TimePicker,
   DateTimePicker,
 } from "@/registry/new-york/ui/datetime-picker"
-import type { CalendarRange } from "@/registry/new-york/ui/calendar"
+import {
+  CalendarConfigProvider,
+  type CalendarRange,
+} from "@/registry/new-york/ui/calendar"
 import { DocPage, DocH2, DocH3 } from "@/components/docs/doc-page"
 import { InstallTabs } from "@/components/docs/install-tabs"
 import { CodeBlock } from "@/components/docs/code-block"
@@ -23,6 +26,7 @@ const toc = [
   { title: "Time picker", href: "#time", depth: 1 },
   { title: "DateTime", href: "#datetime", depth: 1 },
   { title: "Error state", href: "#error", depth: 1 },
+  { title: "Thai / Buddhist era", href: "#locale", depth: 1 },
   { title: "API Reference", href: "#api-reference" },
 ]
 
@@ -86,6 +90,14 @@ export default function DateTimePickerPage() {
       </p>
       <ErrorExample />
 
+      <DocH3 id="locale">Thai / Buddhist era</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Wrap the app once in <code>CalendarConfigProvider</code> and every picker switches
+        language and year numbering — month names, presets, and footer buttons included. The
+        value stays a plain Gregorian <code>Date</code>; only the display changes.
+      </p>
+      <LocaleExample />
+
       <DocH2 id="api-reference">API Reference</DocH2>
 
       <DocH3 id="api-datepicker">DatePicker</DocH3>
@@ -122,6 +134,12 @@ export default function DateTimePickerPage() {
         { prop: "disabledDate", type: "(date: Date) => boolean", default: "—", desc: "Disable individual calendar days" },
         { prop: "disabled", type: "boolean", default: "false", desc: "Disable the whole field" },
       ]} />
+
+      <DocH3 id="api-provider">CalendarConfigProvider</DocH3>
+      <PropsTable rows={[
+        { prop: "locale", type: '"en" | "th"', default: '"en"', desc: "Language of month, weekday, preset and button labels" },
+        { prop: "era", type: '"ce" | "be"', default: '"be" under th, else "ce"', desc: "Year numbering shown in the UI — พ.ศ. adds 543; values stay Gregorian" },
+      ]} />
     </DocPage>
   )
 }
@@ -136,6 +154,32 @@ function DateExample() {
 <DatePicker value={date} onChange={(v) => setDate(v as Date)} />`}
     >
       <DatePicker value={date} onChange={(v) => setDate(v as Date)} />
+    </ComponentPreview>
+  )
+}
+
+function LocaleExample() {
+  const [date, setDate] = useState<Date | null>(new Date())
+  const [range, setRange] = useState<CalendarRange>({ from: null, to: null })
+  return (
+    <ComponentPreview
+      className="min-h-[140px]"
+      code={`<CalendarConfigProvider locale="th">
+  <DateTimePicker value={date} onChange={setDate} />
+  <DatePicker mode="range" presets value={range} onChange={(v) => setRange(v as CalendarRange)} />
+</CalendarConfigProvider>`}
+    >
+      <CalendarConfigProvider locale="th">
+        <div className="flex flex-wrap gap-3">
+          <DateTimePicker value={date} onChange={setDate} />
+          <DatePicker
+            mode="range"
+            presets
+            value={range}
+            onChange={(v) => setRange(v as CalendarRange)}
+          />
+        </div>
+      </CalendarConfigProvider>
     </ComponentPreview>
   )
 }

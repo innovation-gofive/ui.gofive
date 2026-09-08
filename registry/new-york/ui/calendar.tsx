@@ -15,12 +15,85 @@ const MONTHS_SHORT = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ]
-const QUARTERS = [
-  { label: "Q1", span: "Jan – Mar", month: 0 },
-  { label: "Q2", span: "Apr – Jun", month: 3 },
-  { label: "Q3", span: "Jul – Sep", month: 6 },
-  { label: "Q4", span: "Oct – Dec", month: 9 },
-]
+const QUARTER_MONTHS = [0, 3, 6, 9]
+
+// ── Locale ─────────────────────────────────────────────────────────
+/** UI language for month, weekday and quarter names. */
+export type CalendarLocale = "en" | "th"
+/** Year numbering shown in the UI. BE (พ.ศ.) is CE + 543. */
+export type CalendarEra = "ce" | "be"
+
+export interface CalendarConfig {
+  locale: CalendarLocale
+  era: CalendarEra
+}
+
+// Thai names are what Intl.DateTimeFormat("th-TH") produces, kept as plain
+// tables so this file stays formatter- and dependency-free like its date
+// helpers — and so the UI chrome below can live in the same place.
+const CALENDAR_STRINGS = {
+  en: {
+    weekdays: WEEKDAYS,
+    months: MONTHS,
+    monthsShort: MONTHS_SHORT,
+    quarters: ["Q1", "Q2", "Q3", "Q4"],
+    prev: "Previous",
+    next: "Next",
+  },
+  th: {
+    weekdays: ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"],
+    months: [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม",
+    ],
+    monthsShort: [
+      "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
+      "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.",
+    ],
+    quarters: ["ไตรมาส 1", "ไตรมาส 2", "ไตรมาส 3", "ไตรมาส 4"],
+    prev: "ก่อนหน้า",
+    next: "ถัดไป",
+  },
+} satisfies Record<CalendarLocale, Record<string, readonly string[] | string>>
+
+function calendarStrings(locale: CalendarLocale) {
+  return CALENDAR_STRINGS[locale]
+}
+
+const CalendarConfigContext = React.createContext<CalendarConfig>({
+  locale: "en",
+  era: "ce",
+})
+
+/**
+ * App-wide date display settings. Wrap the app once; Calendar, DatePicker,
+ * TimePicker and DateTimePicker all read from here. Nest another provider to
+ * override a subtree.
+ */
+function CalendarConfigProvider({
+  locale = "en",
+  era,
+  children,
+}: {
+  locale?: CalendarLocale
+  /** Defaults to พ.ศ. under Thai, ค.ศ. otherwise. */
+  era?: CalendarEra
+  children: React.ReactNode
+}) {
+  const value = React.useMemo<CalendarConfig>(
+    () => ({ locale, era: era ?? (locale === "th" ? "be" : "ce") }),
+    [locale, era],
+  )
+  return (
+    <CalendarConfigContext.Provider value={value}>
+      {children}
+    </CalendarConfigContext.Provider>
+  )
+}
+
+function useCalendarConfig(): CalendarConfig {
+  return React.useContext(CalendarConfigContext)
+}
 
 function startOfDay(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
@@ -58,6 +131,14 @@ function getMonthGrid(month: Date): Date[] {
 /** First year of the 12-year block shown for `year` (e.g. 2026 → 2020). */
 function yearBlockStart(year: number): number {
   return year - 6
+}
+
+/**
+ * Display-only year conversion. Values stay Gregorian everywhere else —
+ * state, arithmetic and form submission — so only labels are converted.
+ */
+function displayYear(y: number, era: CalendarEra = "ce"): number {
+  return era === "be" ? y + 543 : y
 }
 
 export type CalendarRange = { from: Date | null; to: Date | null }
@@ -100,6 +181,8 @@ function Calendar({
   disabled,
   className,
 }: CalendarProps) {
+  const { locale, era } = useCalendarConfig()
+  const t = calendarStrings(locale)
   const isRange = calendar === "day" && mode === "range"
   const single = !isRange ? (value as Date | null | undefined) : null
   const range = isRange ? (value as CalendarRange | null | undefined) : null
@@ -182,11 +265,11 @@ function Calendar({
 
   // ── Header ───────────────────────────────────────────────────────
   let title: React.ReactNode
-  if (view === "day") title = `${MONTHS[cursor.getMonth()]} ${year}`
+  if (view === "day") title = `${t.months[cursor.getMonth()]} ${displayYear(year, era)}`
   else if (view === "year") {
     const s = yearBlockStart(year)
-    title = `${s} — ${s + 11}`
-  } else title = `${year}` // month / quarter view
+    title = `${displayYear(s, era)} — ${displayYear(s + 11, era)}`
+  } else title = `${displayYear(year, era)}` // month / quarter view
 
   const titleClickable = view !== "year" && viewIdx > 0
 
@@ -211,7 +294,7 @@ function Calendar({
       <div className="flex gap-1">
         <button
           type="button"
-          aria-label="Previous"
+          aria-label={t.prev}
           onClick={() => navigate(-1)}
           className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
@@ -219,7 +302,7 @@ function Calendar({
         </button>
         <button
           type="button"
-          aria-label="Next"
+          aria-label={t.next}
           onClick={() => navigate(1)}
           className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
@@ -232,9 +315,9 @@ function Calendar({
   // ── Day grid ─────────────────────────────────────────────────────
   const dayGrid = (
     <div className="grid grid-cols-7 gap-y-0.5">
-      {WEEKDAYS.map((wd) => (
+      {t.weekdays.map((wd, i) => (
         <div
-          key={wd}
+          key={i}
           className="flex h-8 w-full min-w-9 items-center justify-center text-[11px] font-medium text-muted-foreground"
         >
           {wd}
@@ -303,7 +386,7 @@ function Calendar({
   // ── Month grid ───────────────────────────────────────────────────
   const monthGrid = (
     <div className="grid w-full min-w-[252px] grid-cols-3 gap-1.5 px-0.5">
-      {MONTHS_SHORT.map((m, i) => {
+      {t.monthsShort.map((m, i) => {
         const selected =
           mode === "single" &&
           single != null &&
@@ -349,7 +432,7 @@ function Calendar({
                 "bg-primary font-medium text-primary-foreground hover:bg-primary hover:text-primary-foreground",
             )}
           >
-            {y}
+            {displayYear(y, era)}
           </button>
         )
       })}
@@ -359,18 +442,18 @@ function Calendar({
   // ── Quarter grid ─────────────────────────────────────────────────
   const quarterGrid = (
     <div className="grid w-full min-w-[252px] grid-cols-2 gap-2 px-0.5">
-      {QUARTERS.map((q) => {
+      {QUARTER_MONTHS.map((qm, qi) => {
         const selected =
           mode === "single" &&
           single != null &&
           single.getFullYear() === year &&
-          single.getMonth() >= q.month &&
-          single.getMonth() < q.month + 3
+          single.getMonth() >= qm &&
+          single.getMonth() < qm + 3
         return (
           <button
-            key={q.label}
+            key={qm}
             type="button"
-            onClick={() => pickQuarter(q.month)}
+            onClick={() => pickQuarter(qm)}
             data-selected={selected || undefined}
             className={cn(
               "flex h-[60px] flex-col items-center justify-center gap-0.5 rounded-lg border text-foreground transition-colors",
@@ -380,14 +463,14 @@ function Calendar({
                 : "border-input bg-transparent",
             )}
           >
-            <span className="text-sm font-semibold">{q.label}</span>
+            <span className="text-sm font-semibold">{t.quarters[qi]}</span>
             <span
               className={cn(
                 "text-[11px]",
                 selected ? "text-primary-foreground/85" : "text-muted-foreground",
               )}
             >
-              {q.span}
+              {`${t.monthsShort[qm]} – ${t.monthsShort[qm + 2]}`}
             </span>
           </button>
         )
@@ -408,6 +491,10 @@ function Calendar({
 
 export {
   Calendar,
+  CalendarConfigProvider,
+  useCalendarConfig,
+  calendarStrings,
+  displayYear,
   isSameDay,
   startOfDay,
   MONTHS,

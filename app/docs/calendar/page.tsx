@@ -1,7 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar, type CalendarRange } from "@/registry/new-york/ui/calendar"
+import {
+  Calendar,
+  CalendarConfigProvider,
+  type CalendarRange,
+} from "@/registry/new-york/ui/calendar"
 import { DocPage, DocH2, DocH3 } from "@/components/docs/doc-page"
 import { InstallTabs } from "@/components/docs/install-tabs"
 import { CodeBlock } from "@/components/docs/code-block"
@@ -14,6 +18,7 @@ const toc = [
   { title: "Examples", href: "#examples" },
   { title: "Single select", href: "#single", depth: 1 },
   { title: "Range", href: "#range", depth: 1 },
+  { title: "Thai / Buddhist era", href: "#locale", depth: 1 },
   { title: "API Reference", href: "#api-reference" },
 ]
 
@@ -49,6 +54,14 @@ export default function CalendarPage() {
       </p>
       <RangeExample />
 
+      <DocH3 id="locale">Thai / Buddhist era</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Wrap the app once in <code>CalendarConfigProvider</code> to switch month names and
+        year numbering. The selected value stays a plain Gregorian <code>Date</code> — only
+        the display changes.
+      </p>
+      <LocaleExample />
+
       <DocH2 id="api-reference">API Reference</DocH2>
       <DocH3 id="api-calendar">Calendar</DocH3>
       <PropsTable rows={[
@@ -58,6 +71,12 @@ export default function CalendarPage() {
         { prop: "defaultMonth", type: "Date", default: "today", desc: "Month displayed on first render" },
         { prop: "disabled", type: "(date: Date) => boolean", default: "—", desc: "Return true to make a day non-selectable" },
         { prop: "className", type: "string", default: "—", desc: "Extra classes on the root" },
+      ]} />
+
+      <DocH3 id="api-provider">CalendarConfigProvider</DocH3>
+      <PropsTable rows={[
+        { prop: "locale", type: '"en" | "th"', default: '"en"', desc: "Language of month, weekday, quarter and button labels" },
+        { prop: "era", type: '"ce" | "be"', default: '"be" under th, else "ce"', desc: "Year numbering shown in the UI — พ.ศ. adds 543; values stay Gregorian" },
       ]} />
     </DocPage>
   )
@@ -78,6 +97,22 @@ function SingleExample() {
           {date ? date.toDateString() : "No date selected"}
         </p>
       </div>
+    </ComponentPreview>
+  )
+}
+
+function LocaleExample() {
+  const [date, setDate] = useState<Date | null>(new Date())
+  return (
+    <ComponentPreview
+      className="min-h-[340px]"
+      code={`<CalendarConfigProvider locale="th">
+  <Calendar mode="single" value={date} onChange={(v) => setDate(v as Date)} />
+</CalendarConfigProvider>`}
+    >
+      <CalendarConfigProvider locale="th">
+        <Calendar mode="single" value={date} onChange={(v) => setDate(v as Date)} />
+      </CalendarConfigProvider>
     </ComponentPreview>
   )
 }
