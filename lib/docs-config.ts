@@ -49,6 +49,16 @@ import {
   Smartphone,
   ImagePlus,
   Sparkles,
+  Wrench,
+  ThumbsUp,
+  Mail,
+  History,
+  Heart,
+  Layers,
+  UserRound,
+  Lightbulb,
+  Hash,
+  Grid3x3,
 } from "lucide-react"
 
 export interface NavItem {
@@ -116,6 +126,37 @@ export const docsNav: NavGroup[] = [
       { title: "Media Picker", href: "/docs/media-picker", icon: ImagePlus },
       { title: "Menubar", href: "/docs/menubar", icon: Menu },
       { title: "Context Menu", href: "/docs/context-menu", icon: MousePointerClick },
+    ],
+  },
+  {
+    title: "AI",
+    items: [
+      { title: "Tool Call", href: "/docs/tool-call", icon: Wrench },
+      { title: "Thinking Indicator", href: "/docs/thinking-indicator", icon: Sparkles },
+      { title: "Message Actions", href: "/docs/message-actions", icon: ThumbsUp },
+      { title: "Decision Inbox", href: "/docs/decision-inbox", icon: Inbox },
+      { title: "Email Draft", href: "/docs/email-draft", icon: Mail },
+      { title: "Recommendation Card", href: "/docs/recommendation-card", icon: Sparkles },
+      { title: "Change Summary", href: "/docs/change-summary", icon: History },
+    ],
+  },
+  {
+    title: "Collaboration",
+    items: [
+      { title: "Comment Thread", href: "/docs/comment-thread", icon: MessageSquare },
+      { title: "Reaction Bar", href: "/docs/reaction-bar", icon: Heart },
+      { title: "Notification Stack", href: "/docs/notification-stack", icon: Layers },
+      { title: "Profile Menu", href: "/docs/profile-menu", icon: UserRound },
+      { title: "Checklist", href: "/docs/checklist", icon: ListChecks },
+      { title: "Tips Panel", href: "/docs/tips-panel", icon: Lightbulb },
+    ],
+  },
+  {
+    title: "Motion",
+    items: [
+      { title: "Number Ticker", href: "/docs/number-ticker", icon: Hash },
+      { title: "Text Reveal", href: "/docs/text-reveal", icon: TextCursorInput },
+      { title: "Grid Background", href: "/docs/grid-background", icon: Grid3x3 },
     ],
   },
   {
