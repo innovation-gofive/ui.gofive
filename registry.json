@@ -363,7 +363,10 @@
       "name": "scheduler",
       "type": "registry:ui",
       "title": "Scheduler",
-      "description": "An event calendar with Month, Week, and Day/Agenda views, a segmented view switcher, Today navigation, and color-coded events, built on plain JS dates with no external date library.",
+      "description": "An event calendar with Month, Week, and Day/Agenda views, a segmented view switcher, Today navigation, and color-coded events, built on plain JS dates with no external date library. Follows CalendarConfigProvider for Thai labels and พ.ศ. years.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/calendar.json"
+      ],
       "dependencies": [
         "lucide-react"
       ],
@@ -786,6 +789,286 @@
       ]
     },
     {
+      "name": "tool-call",
+      "type": "registry:ui",
+      "title": "Tool Call",
+      "description": "A collapsible AI-agent tool-invocation row with live timer, status, pretty-printed arguments and result, copy, retry, and a ToolCallGroup that folds several calls into one line.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/collapsible.json",
+        "https://ui.go5.online/r/spinner.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/tool-call.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/tool-call.tsx"
+        }
+      ]
+    },
+    {
+      "name": "thinking-indicator",
+      "type": "registry:ui",
+      "title": "Thinking Indicator",
+      "description": "A small status pill for AI replies with an animated spinner, a shimmering label that rolls through caller-supplied phases (timer-driven or controlled), and a check plus completion message when done.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/thinking-indicator.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/thinking-indicator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "message-actions",
+      "type": "registry:ui",
+      "title": "Message Actions",
+      "description": "The quiet icon toolbar under an AI answer: copy with confirmation, regenerate with busy state and version pager, thumbs up/down with a portalled reasons popover, and read-aloud toggle, with every label localizable.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/popover.json",
+        "https://ui.go5.online/r/tooltip.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/message-actions.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/message-actions.tsx"
+        }
+      ]
+    },
+    {
+      "name": "decision-inbox",
+      "type": "registry:ui",
+      "title": "Decision Inbox",
+      "description": "A tray of open decisions, each a card with a title, optional detail and two quick answers, that confirms briefly then folds away, with a live pending count and an all-clear empty state.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/decision-inbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/decision-inbox.tsx"
+        }
+      ]
+    },
+    {
+      "name": "email-draft",
+      "type": "registry:ui",
+      "title": "Email Draft",
+      "description": "An agent-written email held for human review, with recipient chips, editable subject and body, a streaming state, and send / edit / discard with sent and discarded receipts.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/avatar.json",
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/input.json",
+        "https://ui.go5.online/r/badge.json",
+        "https://ui.go5.online/r/textarea.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/email-draft.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/email-draft.tsx"
+        }
+      ]
+    },
+    {
+      "name": "recommendation-card",
+      "type": "registry:ui",
+      "title": "Recommendation Card",
+      "description": "A suggestion card with a recommended option, a reason, a low/medium/high confidence signal, switchable alternatives, accept with a timed undo, and dismiss.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/dropdown-menu.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/recommendation-card.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/recommendation-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "change-summary",
+      "type": "registry:ui",
+      "title": "Change Summary",
+      "description": "A \"what changed since last time\" panel with a headline and grouped added/changed/removed items, optional before-to-after values and timestamps, collapsible when long.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/change-summary.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/change-summary.tsx"
+        }
+      ]
+    },
+    {
+      "name": "comment-thread",
+      "type": "registry:ui",
+      "title": "Comment Thread",
+      "description": "One comment with nested replies, a collapsible reply group, an optional resolve action, and a multiline reply composer that submits on Ctrl/Cmd + Enter.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/avatar.json",
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/textarea.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/comment-thread.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/comment-thread.tsx"
+        }
+      ]
+    },
+    {
+      "name": "reaction-bar",
+      "type": "registry:ui",
+      "title": "Reaction Bar",
+      "description": "A compact set of toggleable social actions (like, comment, repost, share) with animated compact counts, controlled or uncontrolled state, and localizable labels.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/tooltip.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/reaction-bar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/reaction-bar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "notification-stack",
+      "type": "registry:ui",
+      "title": "Notification Stack",
+      "description": "Inline, declarative stack of dismissible notice cards layered with scale/offset that expands on hover, focus or click to a full list, with semantic tones and a hidden-count summary.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/notification-stack.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/notification-stack.tsx"
+        }
+      ]
+    },
+    {
+      "name": "profile-menu",
+      "type": "registry:ui",
+      "title": "Profile Menu",
+      "description": "Account trigger (avatar + name) that opens a portalled menu with a user header, profile-setup progress row with next-step CTA, grouped actions with icons, badges and shortcut hints, and a destructive sign-out item.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/avatar.json",
+        "https://ui.go5.online/r/dropdown-menu.json",
+        "https://ui.go5.online/r/progress.json",
+        "https://ui.go5.online/r/badge.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/profile-menu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/profile-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checklist",
+      "type": "registry:ui",
+      "title": "Checklist",
+      "description": "An onboarding task card with an animated progress bar, self-drawing checks, optional descriptions and actions, and a current-item highlight, fully controlled via completedIds and onToggle.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/checklist.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/checklist.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tips-panel",
+      "type": "registry:ui",
+      "title": "Tips Panel",
+      "description": "A container-query responsive grid of short tip cards with icon tile, one action, done confirmation, optional per-tip and bulk dismiss, and a scrolling body.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/tips-panel.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/tips-panel.tsx"
+        }
+      ]
+    },
+    {
+      "name": "number-ticker",
+      "type": "registry:ui",
+      "title": "Number Ticker",
+      "description": "Odometer-style animated number with Intl.NumberFormat formatting, per-digit rolling columns, count-in on first view, and reduced-motion support.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/number-ticker.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/number-ticker.tsx"
+        }
+      ]
+    },
+    {
+      "name": "text-reveal",
+      "type": "registry:ui",
+      "title": "Text Reveal",
+      "description": "Text that arrives word by word or letter by letter with a staggered fade, blur and rise, with Thai-aware segmentation, mount or scroll trigger and reduced-motion support.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/text-reveal.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/text-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "grid-background",
+      "type": "registry:ui",
+      "title": "Grid Background",
+      "description": "A decorative hairline grid that drifts behind its children, fades toward the edges, and can be uncovered by a growing circle on first view.",
+      "files": [
+        {
+          "path": "registry/new-york/ui/grid-background.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/grid-background.tsx"
+        }
+      ]
+    },
+    {
       "name": "all",
       "type": "registry:ui",
       "title": "Gofive — All Components",
@@ -853,7 +1136,23 @@
         "https://ui.go5.online/r/form.json",
         "https://ui.go5.online/r/breadcrumb.json",
         "https://ui.go5.online/r/pagination.json",
-        "https://ui.go5.online/r/resizable.json"
+        "https://ui.go5.online/r/resizable.json",
+        "https://ui.go5.online/r/tool-call.json",
+        "https://ui.go5.online/r/thinking-indicator.json",
+        "https://ui.go5.online/r/message-actions.json",
+        "https://ui.go5.online/r/decision-inbox.json",
+        "https://ui.go5.online/r/email-draft.json",
+        "https://ui.go5.online/r/recommendation-card.json",
+        "https://ui.go5.online/r/change-summary.json",
+        "https://ui.go5.online/r/comment-thread.json",
+        "https://ui.go5.online/r/reaction-bar.json",
+        "https://ui.go5.online/r/notification-stack.json",
+        "https://ui.go5.online/r/profile-menu.json",
+        "https://ui.go5.online/r/checklist.json",
+        "https://ui.go5.online/r/tips-panel.json",
+        "https://ui.go5.online/r/number-ticker.json",
+        "https://ui.go5.online/r/text-reveal.json",
+        "https://ui.go5.online/r/grid-background.json"
       ],
       "files": []
     },

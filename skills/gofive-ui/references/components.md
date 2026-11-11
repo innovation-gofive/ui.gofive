@@ -392,11 +392,157 @@ File dropzone, uploaded-file rows (type icon, size, progress, remove), and link 
 ### Scheduler — `@gofive/scheduler`
 `import { Scheduler } from "@/components/ui/gofive/scheduler"`
 Event calendar with Month/Week/Day views. Props: `events: SchedulerEvent[]`, `view?: "month" | "week" | "day"`.
+Thai: wrap in `<CalendarConfigProvider locale="th">` (from `@gofive/calendar`, installed with it) for Thai labels, 24-hour times and พ.ศ. years.
 ```tsx
 <Scheduler events={events} view="month" />
 ```
 
 ---
+
+## AI
+
+### Tool Call — `@gofive/tool-call`
+`import { ToolCall, ToolCallGroup } from "@/components/ui/gofive/tool-call"`
+Props: `name`, `status: "running" | "success" | "error"`, `summary`, `icon`, `args`, `result`, `error`, `startedAt`, `duration`, `defaultOpen`/`open` + `onOpenChange`, `openOnError`, `onRetry`, `maxCodeHeight`, `labels`. `ToolCallGroup` takes `ToolCall` children plus `label`, `runningLabel`, `duration`, `open`/`defaultOpen`, `labels`.
+```tsx
+<ToolCall name="search_docs" status="error" error="Timed out" onRetry={retry} args={{ q: "x" }} />
+<ToolCallGroup>{calls.map((c) => <ToolCall key={c.id} {...c} />)}</ToolCallGroup>
+```
+
+### Thinking Indicator — `@gofive/thinking-indicator`
+`import { ThinkingIndicator, formatElapsed } from "@/components/ui/gofive/thinking-indicator"`
+Props: `phases` (string[]), `interval`, `phase` (controlled index, disables timer), `loop`, `done`, `doneLabel` (string or `(seconds) => string`), `size?: "sm" | "md"`, `variant?: "pill" | "plain"`.
+```tsx
+<ThinkingIndicator phases={["Reading", "Searching", "Writing"]} loop />
+<ThinkingIndicator done doneLabel={(s) => `Finished in ${s}s`} />
+```
+
+### Message Actions — `@gofive/message-actions`
+`import { MessageActions } from "@/components/ui/gofive/message-actions"`
+Props: `text`, `actions?: ("copy" | "regenerate" | "feedback" | "speak")[]`, `versions`, `version`/`defaultVersion` + `onVersionChange`, `onCopy`, `onRegenerate`, `regenerating`, `onFeedback(vote, reason?, text?)`, `reasons` (`{ value, label, freeText? }[]`), `speaking` + `onSpeak`, `speakDuration`, `quiet`, `labels` (every string). Put `group/message` on the message wrapper so hovering anywhere reveals the bar.
+```tsx
+<div className="group/message">
+  <p>{answer}</p>
+  <MessageActions text={answer} versions={3} onRegenerate={regenerate} onFeedback={save} />
+</div>
+```
+
+### Decision Inbox — `@gofive/decision-inbox`
+`import { DecisionInbox } from "@/components/ui/gofive/decision-inbox"`
+Props: `decisions: { id, title, detail?, primary, secondary, collapsed? }[]`, `onDecide(decision, "primary" | "secondary")`, `labels`, `locale`, `confirmDelay`, `ref`.
+```tsx
+<DecisionInbox decisions={decisions} onDecide={(d, answer) => save(d.id, answer)} />
+```
+
+### Email Draft — `@gofive/email-draft`
+`import { EmailDraft } from "@/components/ui/gofive/email-draft"`
+Props: `recipients`/`defaultRecipients` (`{ email, name? }[]`), `subject`/`defaultSubject`, `body`/`defaultBody` (each with `on…Change`), `streaming`, `agent`, `attachment`, `phase`/`defaultPhase`/`onPhaseChange` (`"draft" | "sending" | "sent" | "discarded"`), `onSend` (sync or async; rejection returns to draft), `onDiscard`, `onUndo`, `error`, `labels` (all strings; `sentMessage` is a function).
+```tsx
+<EmailDraft
+  agent="Billing agent"
+  defaultRecipients={[{ name: "Narin", email: "narin@example.com" }]}
+  defaultSubject="Renewal" defaultBody="Hi Narin, ..."
+  onSend={async (email) => { await api.send(email) }}
+/>
+```
+
+### Recommendation Card — `@gofive/recommendation-card`
+`import { RecommendationCard } from "@/components/ui/gofive/recommendation-card"`
+Props: `options: { id, label, reason, confidence?: "low" | "medium" | "high" }[]` (first = recommended), `title`, `value`/`defaultValue`/`onValueChange` (option id), `open`/`defaultOpen`/`onOpenChange`, `undoTimeout` (ms, `0` = no undo), `onAccept`/`onUndo`/`onCommit`/`onDismiss`, `dismissible`, `labels` (localize every string).
+```tsx
+<RecommendationCard
+  title="Suggested plan"
+  options={[
+    { id: "weekly", label: "Weekly digest", reason: "Team prefers summaries.", confidence: "high" },
+    { id: "daily", label: "Daily summary", reason: "You open the app daily.", confidence: "medium" },
+  ]}
+  onAccept={(o) => save(o.id)}
+/>
+```
+
+### Change Summary — `@gofive/change-summary`
+`import { ChangeSummary } from "@/components/ui/gofive/change-summary"`
+Props: `items` (`{ label, kind: "added" | "changed" | "removed", before?, after?, description?, timestamp?, datetime? }[]`), `title`, `headline`, `period`, `icon`, `grouped`, `collapseAfter`, `open`/`defaultOpen`/`onOpenChange`, `labels` (all strings, for Thai).
+```tsx
+<ChangeSummary title="Release 4.2" headline="8 changes shipped" items={items} collapseAfter={5} />
+```
+
+## Collaboration
+
+### Comment Thread — `@gofive/comment-thread`
+`import { CommentThread } from "@/components/ui/gofive/comment-thread"`
+Props: `comment`, `replies` (`{ id, author: { name, avatarSrc?, avatar? }, body, time, dateTime? }`), `resolved`/`onResolve`, `onReply(text)` (return a promise for pending/error state), `collapsed`/`defaultCollapsed`/`onCollapsedChange`, `labels`. Replies are one level deep and fold open/closed; Ctrl/Cmd+Enter submits.
+```tsx
+<CommentThread
+  comment={{ id: "c1", author: { name: "Napat" }, time: "2 hours ago", body: "Looks good?" }}
+  replies={replies}
+  resolved={resolved}
+  onResolve={() => setResolved((r) => !r)}
+  onReply={(text) => save(text)}
+/>
+```
+
+### Reaction Bar — `@gofive/reaction-bar`
+`import { ReactionBar } from "@/components/ui/gofive/reaction-bar"`
+Props: `reactions`/`defaultReactions` (`{ like|comment|repost|share: { count, active? } }`), `onReact(key, state)`, `actions`, `variant?: "pill" | "chips"`, `size?: "sm" | "md" | "lg"`, `locale`, `labels`.
+```tsx
+<ReactionBar defaultReactions={{ like: { count: 24 } }} onReact={(key, s) => save(key, s)} />
+```
+
+### Notification Stack — `@gofive/notification-stack`
+`import { NotificationStack } from "@/components/ui/gofive/notification-stack"`
+Props: `notices` (`{ id, title, text?, badge?, tone?, action? }[]`), `onDismiss`, `maxVisible`, `expanded`/`defaultExpanded`, `onExpandedChange`, `expandOnHover`, `labels`. Inline (not a Toast): layered cards, expands on hover/focus/click, dismissible, tones via semantic tokens, shows hidden count.
+```tsx
+<NotificationStack notices={notices} onDismiss={(n) => remove(n.id)} />
+```
+
+### Profile Menu — `@gofive/profile-menu`
+`import { ProfileMenu } from "@/components/ui/gofive/profile-menu"`
+Props: `name`, `email`, `role`, `avatarSrc`/`avatar`, `items` (items or `{ label?, items }` groups: `label`, `icon`, `badge`, `shortcut`, `destructive`, `disabled`, `onSelect(event)`), `setup: { done, total, next?, onContinue? }`, `labels: { account, setupTitle, nextStep }`, `locale`, `open`/`defaultOpen`/`onOpenChange`, `side`, `align`, `compact`, `panelClassName`.
+```tsx
+<ProfileMenu name="Nattaya" email="n@gofive.co.th" role="Admin"
+  setup={{ done: 3, total: 5, next: "Add a photo" }}
+  items={[{ label: "Settings", icon: <Settings /> }, { label: "Sign out", destructive: true, onSelect: signOut }]} />
+```
+
+### Checklist — `@gofive/checklist`
+`import { Checklist } from "@/components/ui/gofive/checklist"`
+Props: `items` (`{ id, label, description?, action?, icon? }[]`), `completedIds`, `onToggle(id, nextChecked)`, `title?` (default "First steps"), `currentId?` (`null` = none), `headingLevel?`, `labels?` (`progress`, `empty`), `locale?`, demo-only `autoPlay`/`interval`/`onAutoPlayReset`. Controlled only; root has `data-complete` when all done.
+```tsx
+<Checklist title="First steps" items={items} completedIds={done} onToggle={(id, next) => toggle(id, next)} />
+```
+
+### Tips Panel — `@gofive/tips-panel`
+`import { TipsPanel, TipsPanelKbd } from "@/components/ui/gofive/tips-panel"`
+Props: `tips: TipsPanelTip[]` (`id`, `title`, `description`, `action`, `doneLabel`, `primary`, `onAction`, `icon`, `tone?: "primary" | "info"`), `title`, `dismissible`, `onDismiss`, `onDismissAll`, `onClose`, `closeLabel`, `maxHeight`, `locale`, `labels`. Pressing an action marks the tip done locally; columns follow the panel's own width.
+```tsx
+<TipsPanel title="First steps" dismissible onClose={close}
+  tips={[{ id: "s", icon: Search, title: "Search", description: <>Press <TipsPanelKbd>⌘K</TipsPanelKbd></>, action: "Try it", onAction: openSearch }]} />
+```
+
+## Motion
+
+### Number Ticker — `@gofive/number-ticker`
+`import { NumberTicker } from "@/components/ui/gofive/number-ticker"`
+Props: `value`, `format?: Intl.NumberFormatOptions`, `locale`, `duration`, `delay`, `animateOnView`, `announce`, `placeholder`, `emptyLabel`. Digits roll up/down; counts in from 0 when ~30% visible; inherits font size/colour via `className`.
+```tsx
+<NumberTicker value={total} locale="th-TH" format={{ style: "currency", currency: "THB" }} className="text-4xl font-semibold" />
+```
+
+### Text Reveal — `@gofive/text-reveal`
+`import { TextReveal } from "@/components/ui/gofive/text-reveal"`
+Props: `text`, `split?: "word" | "char"`, `locale` (use `"th"` for Thai), `stagger`/`delay`/`duration` (ms), `as`, `trigger?: "mount" | "inView"`, `once` (inView only).
+```tsx
+<TextReveal as="h2" trigger="mount" text="Hello world" className="text-2xl" />
+<TextReveal locale="th" split="char" text="สวัสดีครับ" />
+```
+
+### Grid Background — `@gofive/grid-background`
+`import { GridBackground } from "@/components/ui/gofive/grid-background"`
+Props: `size`, `color` (defaults to border token), `speed` (s per cell, 0 = still), `direction?: "up" | "down" | "left" | "right" | "diagonal"`, `reveal`, `fade`.
+```tsx
+<GridBackground className="py-16" direction="diagonal"><Hero /></GridBackground>
+```
 
 ## Foundations
 

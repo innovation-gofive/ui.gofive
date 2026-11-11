@@ -7,6 +7,7 @@ import {
   type SchedulerEvent,
   type SchedulerView,
 } from "@/registry/new-york/ui/scheduler"
+import { CalendarConfigProvider } from "@/registry/new-york/ui/calendar"
 import { DocPage, DocH2, DocH3 } from "@/components/docs/doc-page"
 import { InstallTabs } from "@/components/docs/install-tabs"
 import { CodeBlock } from "@/components/docs/code-block"
@@ -19,6 +20,7 @@ const toc = [
   { title: "Examples", href: "#examples" },
   { title: "Month, Week & Day", href: "#views", depth: 1 },
   { title: "Event variants", href: "#variants", depth: 1 },
+  { title: "Thai / Buddhist era", href: "#locale", depth: 1 },
   { title: "API Reference", href: "#api-reference" },
 ]
 
@@ -110,6 +112,16 @@ export default function SchedulerPage() {
 ]`}
       />
 
+      <DocH3 id="locale">Thai / Buddhist era</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Scheduler reads the same <code>CalendarConfigProvider</code> as Calendar
+        and DateTimePicker, so one provider switches them all: Thai month and
+        day names, toolbar and agenda labels, 24-hour times, and years in พ.ศ.
+        Event dates stay ordinary Gregorian <code>Date</code> values; only the
+        labels change.
+      </p>
+      <ThaiExample />
+
       <DocH2 id="api-reference">API Reference</DocH2>
 
       <DocH3 id="api-scheduler">Scheduler</DocH3>
@@ -163,6 +175,24 @@ function ViewsExample() {
         onViewChange={setView}
         defaultDate={friday}
       />
+    </ComponentPreview>
+  )
+}
+
+function ThaiExample() {
+  const { events, friday } = useSampleEvents()
+  return (
+    <ComponentPreview
+      className="min-h-[560px]"
+      code={`import { CalendarConfigProvider } from "@/components/ui/calendar"
+
+<CalendarConfigProvider locale="th">
+  <Scheduler events={events} defaultView="week" />
+</CalendarConfigProvider>`}
+    >
+      <CalendarConfigProvider locale="th">
+        <Scheduler events={events} defaultView="week" defaultDate={friday} />
+      </CalendarConfigProvider>
     </ComponentPreview>
   )
 }

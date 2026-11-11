@@ -53,6 +53,29 @@ See [`skills/gofive-migrate/README.md`](skills/gofive-migrate/README.md) for det
 
 ## Components
 
+### AI, Collaboration & Motion
+
+Full props and live examples on each component's docs page.
+
+| Component | Group | What it is | Install |
+| --- | --- | --- | --- |
+| Tool Call | AI | A collapsible AI-agent tool-invocation row with live timer, status, pretty-printed arguments and result, copy, retry, and a ToolCallGroup that folds several calls into one line. | `npx shadcn@latest add @gofive/tool-call` |
+| Thinking Indicator | AI | A small status pill for AI replies with an animated spinner, a shimmering label that rolls through caller-supplied phases (timer-driven or controlled), and a check plus completion message when done. | `npx shadcn@latest add @gofive/thinking-indicator` |
+| Message Actions | AI | The quiet icon toolbar under an AI answer: copy with confirmation, regenerate with busy state and version pager, thumbs up/down with a portalled reasons popover, and read-aloud toggle, with every label localizable. | `npx shadcn@latest add @gofive/message-actions` |
+| Decision Inbox | AI | A tray of open decisions, each a card with a title, optional detail and two quick answers, that confirms briefly then folds away, with a live pending count and an all-clear empty state. | `npx shadcn@latest add @gofive/decision-inbox` |
+| Email Draft | AI | An agent-written email held for human review, with recipient chips, editable subject and body, a streaming state, and send / edit / discard with sent and discarded receipts. | `npx shadcn@latest add @gofive/email-draft` |
+| Recommendation Card | AI | A suggestion card with a recommended option, a reason, a low/medium/high confidence signal, switchable alternatives, accept with a timed undo, and dismiss. | `npx shadcn@latest add @gofive/recommendation-card` |
+| Change Summary | AI | A "what changed since last time" panel with a headline and grouped added/changed/removed items, optional before-to-after values and timestamps, collapsible when long. | `npx shadcn@latest add @gofive/change-summary` |
+| Comment Thread | Collaboration | One comment with nested replies, a collapsible reply group, an optional resolve action, and a multiline reply composer that submits on Ctrl/Cmd + Enter. | `npx shadcn@latest add @gofive/comment-thread` |
+| Reaction Bar | Collaboration | A compact set of toggleable social actions (like, comment, repost, share) with animated compact counts, controlled or uncontrolled state, and localizable labels. | `npx shadcn@latest add @gofive/reaction-bar` |
+| Notification Stack | Collaboration | Inline, declarative stack of dismissible notice cards layered with scale/offset that expands on hover, focus or click to a full list, with semantic tones and a hidden-count summary. | `npx shadcn@latest add @gofive/notification-stack` |
+| Profile Menu | Collaboration | Account trigger (avatar + name) that opens a portalled menu with a user header, profile-setup progress row with next-step CTA, grouped actions with icons, badges and shortcut hints, and a destructive sign-out item. | `npx shadcn@latest add @gofive/profile-menu` |
+| Checklist | Collaboration | An onboarding task card with an animated progress bar, self-drawing checks, optional descriptions and actions, and a current-item highlight, fully controlled via completedIds and onToggle. | `npx shadcn@latest add @gofive/checklist` |
+| Tips Panel | Collaboration | A container-query responsive grid of short tip cards with icon tile, one action, done confirmation, optional per-tip and bulk dismiss, and a scrolling body. | `npx shadcn@latest add @gofive/tips-panel` |
+| Number Ticker | Motion | Odometer-style animated number with Intl.NumberFormat formatting, per-digit rolling columns, count-in on first view, and reduced-motion support. | `npx shadcn@latest add @gofive/number-ticker` |
+| Text Reveal | Motion | Text that arrives word by word or letter by letter with a staggered fade, blur and rise, with Thai-aware segmentation, mount or scroll trigger and reduced-motion support. | `npx shadcn@latest add @gofive/text-reveal` |
+| Grid Background | Motion | A decorative hairline grid that drifts behind its children, fades toward the edges, and can be uncovered by a growing circle on first view. | `npx shadcn@latest add @gofive/grid-background` |
+
 ### Gofive Font
 
 Custom font family with four weights.

@@ -4,6 +4,13 @@ import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import {
+  calendarStrings,
+  displayYear,
+  useCalendarConfig,
+  type CalendarEra,
+  type CalendarLocale,
+} from "./calendar"
 
 // ── Gofive palette ─────────────────────────────────────────────────
 // The brand accent and semantic event colors are hard-coded (as in the
@@ -32,6 +39,51 @@ const DAY_NAMES = [
   "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 ]
 const DOW_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+// Scheduler-only chrome. Month names and era come from the shared calendar
+// config, so one <CalendarConfigProvider locale="th"> switches every date
+// component together.
+const SCHEDULER_STRINGS = {
+  en: {
+    dayNames: DAY_NAMES,
+    dowShort: DOW_SHORT,
+    today: "Today",
+    prev: "Previous",
+    next: "Next",
+    views: { day: "Day", week: "Week", month: "Month" },
+    groups: ["Morning", "Afternoon", "Evening"],
+    empty: "No events scheduled.",
+    more: (n: number) => `+${n} more`,
+    dayTitle: (wd: string, d: number, m: string, y: number) => `${wd}, ${d} ${m} ${y}`,
+    hour: (h: number) => `${((h + 11) % 12) + 1}:00`,
+    clock: (d: Date) => clock12(d),
+  },
+  th: {
+    dayNames: ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"],
+    dowShort: ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."],
+    today: "วันนี้",
+    prev: "ก่อนหน้า",
+    next: "ถัดไป",
+    views: { day: "วัน", week: "สัปดาห์", month: "เดือน" },
+    groups: ["ช่วงเช้า", "ช่วงบ่าย", "ช่วงเย็น"],
+    empty: "ไม่มีนัดหมาย",
+    more: (n: number) => `อีก ${n} รายการ`,
+    dayTitle: (wd: string, d: number, m: string, y: number) => `วัน${wd}ที่ ${d} ${m} ${y}`,
+    // Thai schedules read 24-hour time.
+    hour: (h: number) => `${pad(h)}:00`,
+    clock: (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`,
+  },
+} satisfies Record<CalendarLocale, unknown>
+
+function useSchedulerStrings() {
+  const { locale, era } = useCalendarConfig()
+  return {
+    ...SCHEDULER_STRINGS[locale],
+    months: calendarStrings(locale).months,
+    era,
+    locale,
+  }
+}
 
 function startOfDay(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
@@ -137,11 +189,7 @@ export interface SchedulerProps {
   className?: string
 }
 
-const VIEW_LABELS: { value: SchedulerView; label: string }[] = [
-  { value: "day", label: "Day" },
-  { value: "week", label: "Week" },
-  { value: "month", label: "Month" },
-]
+const VIEWS: SchedulerView[] = ["day", "week", "month"]
 
 // ── Component ──────────────────────────────────────────────────────
 function Scheduler({
@@ -159,6 +207,7 @@ function Scheduler({
   hourHeight = 48,
   className,
 }: SchedulerProps) {
+  const t = useSchedulerStrings()
   const [viewState, setViewState] = React.useState<SchedulerView>(defaultView)
   const view = viewProp ?? viewState
   const setView = (v: SchedulerView) => {
@@ -187,10 +236,15 @@ function Scheduler({
 
   const title =
     view === "month"
-      ? `${MONTHS[date.getMonth()]} ${date.getFullYear()}`
+      ? `${t.months[date.getMonth()]} ${displayYear(date.getFullYear(), t.era)}`
       : view === "week"
-        ? formatWeekTitle(date, weekStartsOn)
-        : `${DAY_NAMES[date.getDay()]}, ${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`
+        ? formatWeekTitle(date, weekStartsOn, t.months, t.era)
+        : t.dayTitle(
+            t.dayNames[date.getDay()],
+            date.getDate(),
+            t.months[date.getMonth()],
+            displayYear(date.getFullYear(), t.era),
+          )
 
   return (
     <div
@@ -206,7 +260,7 @@ function Scheduler({
           <div className="flex gap-1.5">
             <button
               type="button"
-              aria-label="Previous"
+              aria-label={t.prev}
               onClick={() => navigate(-1)}
               className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-muted"
             >
@@ -214,7 +268,7 @@ function Scheduler({
             </button>
             <button
               type="button"
-              aria-label="Next"
+              aria-label={t.next}
               onClick={() => navigate(1)}
               className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-muted"
             >
@@ -226,7 +280,7 @@ function Scheduler({
             onClick={() => setDate(today)}
             className="h-8 rounded-lg border border-border bg-card px-3.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-muted"
           >
-            Today
+            {t.today}
           </button>
           <h3 className="text-lg font-semibold">{title}</h3>
         </div>
@@ -236,7 +290,7 @@ function Scheduler({
           role="tablist"
           className="flex gap-0.5 rounded-lg bg-muted p-0.5"
         >
-          {VIEW_LABELS.map(({ value, label }) => (
+          {VIEWS.map((value) => (
             <button
               key={value}
               type="button"
@@ -250,7 +304,7 @@ function Scheduler({
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
-              {label}
+              {t.views[value]}
             </button>
           ))}
         </div>
@@ -284,14 +338,22 @@ function Scheduler({
   )
 }
 
-function formatWeekTitle(date: Date, weekStartsOn: 0 | 1): string {
+function formatWeekTitle(
+  date: Date,
+  weekStartsOn: 0 | 1,
+  months: readonly string[] = MONTHS,
+  era: CalendarEra = "ce",
+): string {
   const days = weekDays(date, weekStartsOn)
   const a = days[0]
   const b = days[6]
+  const yb = displayYear(b.getFullYear(), era)
   if (a.getMonth() === b.getMonth()) {
-    return `${a.getDate()} – ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`
+    return `${a.getDate()} – ${b.getDate()} ${months[b.getMonth()]} ${yb}`
   }
-  return `${a.getDate()} ${MONTHS[a.getMonth()]} – ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`
+  // A week spanning New Year shows both years.
+  const ya = a.getFullYear() === b.getFullYear() ? "" : ` ${displayYear(a.getFullYear(), era)}`
+  return `${a.getDate()} ${months[a.getMonth()]}${ya} – ${b.getDate()} ${months[b.getMonth()]} ${yb}`
 }
 
 // ── Month view ─────────────────────────────────────────────────────
@@ -312,10 +374,11 @@ function MonthView({
     () => getMonthGrid(date, weekStartsOn),
     [date, weekStartsOn],
   )
+  const { dowShort, more } = useSchedulerStrings()
   const headers = React.useMemo(
     () =>
-      Array.from({ length: 7 }, (_, i) => DOW_SHORT[(i + weekStartsOn) % 7]),
-    [weekStartsOn],
+      Array.from({ length: 7 }, (_, i) => dowShort[(i + weekStartsOn) % 7]),
+    [weekStartsOn, dowShort],
   )
 
   return (
@@ -385,7 +448,7 @@ function MonthView({
             })}
             {extra > 0 && (
               <span className="px-0.5 text-[10.5px] text-muted-foreground">
-                +{extra} more
+                {more(extra)}
               </span>
             )}
           </div>
@@ -415,6 +478,7 @@ function WeekView({
   hourHeight: number
   onEventClick?: (e: SchedulerEvent) => void
 }) {
+  const t = useSchedulerStrings()
   const days = React.useMemo(
     () => weekDays(date, weekStartsOn),
     [date, weekStartsOn],
@@ -442,7 +506,7 @@ function WeekView({
               className="border-l border-border px-1 py-2 text-center"
             >
               <div className="text-[10.5px] font-semibold uppercase text-muted-foreground">
-                {DOW_SHORT[d.getDay()]}
+                {t.dowShort[d.getDay()]}
               </div>
               <div className="mt-0.5">
                 {isToday ? (
@@ -472,7 +536,7 @@ function WeekView({
                 style={{ height: hourHeight }}
                 className="pr-2 pt-1 text-right text-[10.5px] text-muted-foreground"
               >
-                {((h + 11) % 12) + 1}:00
+                {t.hour(h)}
               </div>
             ))}
           </div>
@@ -530,7 +594,7 @@ function WeekView({
                           compact && "shrink-0",
                         )}
                       >
-                        {clock12(e.start)}
+                        {t.clock(e.start)}
                       </span>
                       <span className="min-w-0 truncate font-medium">
                         {e.title}
@@ -548,10 +612,11 @@ function WeekView({
 }
 
 // ── Day / Agenda view ──────────────────────────────────────────────
-const AGENDA_GROUPS: { label: string; from: number; to: number }[] = [
-  { label: "Morning", from: 0, to: 12 },
-  { label: "Afternoon", from: 12, to: 17 },
-  { label: "Evening", from: 17, to: 24 },
+// Hour bands of the agenda; labels come from the locale's `groups`.
+const AGENDA_GROUPS: { from: number; to: number }[] = [
+  { from: 0, to: 12 },
+  { from: 12, to: 17 },
+  { from: 17, to: 24 },
 ]
 
 function AgendaView({
@@ -563,6 +628,7 @@ function AgendaView({
   events: SchedulerEvent[]
   onEventClick?: (e: SchedulerEvent) => void
 }) {
+  const t = useSchedulerStrings()
   const dayEvents = React.useMemo(
     () =>
       events
@@ -574,23 +640,23 @@ function AgendaView({
   if (dayEvents.length === 0) {
     return (
       <div className="rounded-[10px] border border-border py-12 text-center text-[13px] text-muted-foreground">
-        No events scheduled.
+        {t.empty}
       </div>
     )
   }
 
   return (
     <div className="flex flex-col gap-2">
-      {AGENDA_GROUPS.map((group) => {
+      {AGENDA_GROUPS.map((group, gi) => {
         const groupEvents = dayEvents.filter((e) => {
           const h = e.start.getHours()
           return h >= group.from && h < group.to
         })
         if (groupEvents.length === 0) return null
         return (
-          <div key={group.label}>
+          <div key={group.from}>
             <div className="px-0.5 py-1.5 text-[11.5px] font-semibold uppercase tracking-wide text-muted-foreground">
-              {group.label}
+              {t.groups[gi]}
             </div>
             <div className="flex flex-col gap-1.5">
               {groupEvents.map((e) => {
