@@ -392,6 +392,7 @@ File dropzone, uploaded-file rows (type icon, size, progress, remove), and link 
 ### Scheduler — `@gofive/scheduler`
 `import { Scheduler } from "@/components/ui/gofive/scheduler"`
 Event calendar with Month/Week/Day views. Props: `events: SchedulerEvent[]`, `view?: "month" | "week" | "day"`.
+Thai: wrap in `<CalendarConfigProvider locale="th">` (from `@gofive/calendar`, installed with it) for Thai labels, 24-hour times and พ.ศ. years.
 ```tsx
 <Scheduler events={events} view="month" />
 ```

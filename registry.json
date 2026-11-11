@@ -363,7 +363,10 @@
       "name": "scheduler",
       "type": "registry:ui",
       "title": "Scheduler",
-      "description": "An event calendar with Month, Week, and Day/Agenda views, a segmented view switcher, Today navigation, and color-coded events, built on plain JS dates with no external date library.",
+      "description": "An event calendar with Month, Week, and Day/Agenda views, a segmented view switcher, Today navigation, and color-coded events, built on plain JS dates with no external date library. Follows CalendarConfigProvider for Thai labels and พ.ศ. years.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/calendar.json"
+      ],
       "dependencies": [
         "lucide-react"
       ],
