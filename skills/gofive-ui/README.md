@@ -12,7 +12,7 @@ Once installed, ask your agent things like:
 
 The agent will run the correct install commands (`npx shadcn add @gofive/badge`, `@gofive/datetime-picker`, …) and import from the right paths (`@/components/ui/gofive/tag-badge`, …) with accurate props.
 
-It covers all 61 components, the theme (with runtime `data-brand` product palettes), fonts, and typography.
+It covers all 68 components, the theme (with runtime `data-brand` product palettes), fonts, and typography.
 
 ## Install
 

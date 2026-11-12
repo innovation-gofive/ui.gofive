@@ -1,11 +1,11 @@
 ---
 name: gofive-ui
-description: Install and use Gofive UI components (the shadcn registry @gofive/*) in a React + Tailwind app. Use when adding or using Gofive components — tags, badges, avatars, inputs, dialogs, sheets, drawers, pickers, date/time, select, toasts, tabs, nav, sidebar, AI agent UI (tool calls, thinking indicator, message actions, decision inbox, email draft, recommendations, change summary), collaboration (comments, reactions, notification stack, profile menu, checklist, tips), motion (number ticker, text reveal, grid background), theme/brand colors — or when the user mentions "@gofive", "Gofive component", or any component below by name.
+description: Install and use Gofive UI components (the shadcn registry @gofive/*) in a React + Tailwind app. Use when adding or using Gofive components — tags, badges, avatars, inputs, dialogs, sheets, drawers, pickers, date/time, select, toasts, tabs, nav, sidebar, AI agent UI (tool calls, thinking indicator, message actions, decision inbox, email draft, recommendations, change summary, agent tree, trace waterfall, agent handoff, thinking steps, AI answer, chat composer, assistant chat), collaboration (comments, reactions, notification stack, profile menu, checklist, tips), motion (number ticker, text reveal, grid background), theme/brand colors — or when the user mentions "@gofive", "Gofive component", or any component below by name.
 ---
 
 # Gofive UI
 
-Gofive is a [shadcn](https://ui.shadcn.com) component registry: 61 plug-and-play React + Tailwind components, a theme with runtime product-brand switching, and a custom font. Components are installed into the consumer's own codebase via the shadcn CLI (you own the source — no runtime package dependency).
+Gofive is a [shadcn](https://ui.shadcn.com) component registry: 68 plug-and-play React + Tailwind components, a theme with runtime product-brand switching, and a custom font. Components are installed into the consumer's own codebase via the shadcn CLI (you own the source — no runtime package dependency).
 
 ## Component priority — Gofive first (always)
 
@@ -120,6 +120,13 @@ For theming, brand palettes, fonts, and typography, read `references/theme.md`.
 | `@gofive/email-draft` | Email Draft | `@/components/ui/gofive/email-draft` |
 | `@gofive/recommendation-card` | Recommendation Card | `@/components/ui/gofive/recommendation-card` |
 | `@gofive/change-summary` | Change Summary | `@/components/ui/gofive/change-summary` |
+| `@gofive/agent-tree` | Agent Tree | `@/components/ui/gofive/agent-tree` |
+| `@gofive/trace-waterfall` | Trace Waterfall | `@/components/ui/gofive/trace-waterfall` |
+| `@gofive/agent-handoff` | Agent Handoff | `@/components/ui/gofive/agent-handoff` |
+| `@gofive/thinking-steps` | Thinking Steps | `@/components/ui/gofive/thinking-steps` |
+| `@gofive/ai-answer` | AI Answer | `@/components/ui/gofive/ai-answer` |
+| `@gofive/chat-composer` | Chat Composer | `@/components/ui/gofive/chat-composer` |
+| `@gofive/assistant-chat` | Assistant Chat | `@/components/ui/gofive/assistant-chat` |
 | `@gofive/comment-thread` | Comment Thread | `@/components/ui/gofive/comment-thread` |
 | `@gofive/reaction-bar` | Reaction Bar | `@/components/ui/gofive/reaction-bar` |
 | `@gofive/notification-stack` | Notification Stack | `@/components/ui/gofive/notification-stack` |

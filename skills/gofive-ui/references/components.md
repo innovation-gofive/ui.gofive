@@ -467,6 +467,55 @@ Props: `items` (`{ label, kind: "added" | "changed" | "removed", before?, after?
 <ChangeSummary title="Release 4.2" headline="8 changes shipped" items={items} collapseAfter={5} />
 ```
 
+### Agent Tree — `@gofive/agent-tree`
+`import { AgentTree } from "@/components/ui/gofive/agent-tree"`
+Props: `root: AgentNode` (`{ id, name, task, status: "queued" | "running" | "waiting" | "done" | "failed" | "stopped", startedAt, duration, cost, tools, needs, error, children }`), `onSelect` + `selectedId`, `onResolve(agent, "approve" | "reject" | "retry" | "dismiss")`, `collapsed`/`defaultCollapsed` + `onCollapsedChange`, `formatCost`, `now` (replays), `labels`. Branch cost rolls up the subtree.
+```tsx
+<AgentTree root={run} onResolve={(agent, action) => update(agent.id, action)} />
+```
+
+### Trace Waterfall — `@gofive/trace-waterfall`
+`import { TraceWaterfall, formatTraceDuration } from "@/components/ui/gofive/trace-waterfall"`
+Props: `spans: TraceSpan[]` (`id`, `name`, `kind: "agent" | "subagent" | "llm" | "tool"`, `status: "running" | "done" | "failed"`, `start`/`end` ms from run start, `detail`, `cost`, `tokensIn`, `tokensOut`, `input`, `output`, `error`, `children`), `title`, `now`, `minRange`, `markSlowest`, `formatCost`, `collapsed`/`defaultCollapsed` + `onCollapsedChange`, `openId`/`defaultOpenId` + `onOpenIdChange`, `detailsMode`, `labels`. Roving-tabindex tree keyboard.
+```tsx
+<TraceWaterfall spans={spans} formatCost={(n) => `฿${n.toFixed(2)}`} />
+```
+
+### Agent Handoff — `@gofive/agent-handoff`
+`import { AgentHandoff } from "@/components/ui/gofive/agent-handoff"`
+Props: `agents` (`{ id, name, role?, model?, avatarSrc?, description?, task? }[]`), `handoffs` (`{ id, from, to, title, summary?, items: { id, label, kind?, lost?, reason? }[], taskId? }[]`, oldest first), `tasks` (`{ id, title, status: "todo" | "working" | "done" | "warning", agent?, note? }[]`), `onAssign(task, agent, handoff)`, `onOpen`, `onRestore(item, handoff)`, `labels`. Drag a card onto a later agent, or grip button → Tab → Enter.
+```tsx
+<AgentHandoff agents={agents} handoffs={handoffs} tasks={tasks} onAssign={(t, a) => assign(t.id, a.id)} />
+```
+
+### Thinking Steps — `@gofive/thinking-steps`
+`import { ThinkingSteps } from "@/components/ui/gofive/thinking-steps"`
+Props: `steps: ThinkingStep[]` (`{ kind: "search", query, sources? } | { kind: "thought", text }`), `done`, `demo` + `delay`/`loop`, `doneLabel`, `elapsed`, `onDone(seconds)`, `maxSources`, `open`/`defaultOpen` + `onOpenChange`, `labels`. Larger panel than `ThinkingIndicator` (single pill).
+```tsx
+<ThinkingSteps steps={streamedSteps} done={finished} />
+```
+
+### AI Answer — `@gofive/ai-answer`  (uses `@gofive/message-actions`)
+`import { AIAnswer, answerToPlainText } from "@/components/ui/gofive/ai-answer"`
+Props: `answer` (`**bold**`, `- ` bullets, `[n]` citations), `question`, `sources: { title, site, shortName?, icon?, href?, snippet? }[]`, `streaming`, `onStop`, `animate`, `wordsPerSecond`, `followUps` + `onFollowUp`, `framed`, `onRegenerate`, `onFeedback`, `onCopy`, `actionProps`, `labels`.
+```tsx
+<AIAnswer question="How much leave do I get?" answer={text} sources={sources} streaming={busy} onStop={stop} />
+```
+
+### Chat Composer — `@gofive/chat-composer`
+`import { ChatComposer } from "@/components/ui/gofive/chat-composer"`
+Props: `value`/`defaultValue` + `onValueChange`, `placeholder`, `onSend(message, { model, folder, apps })`, `onAttach`, `models` + `model`/`defaultModel`/`onModelChange`, `folders` + `folder`/`onFolderChange`, `apps` + `connectedApps`/`onConnectedAppsChange`, `actionLabel`/`onAction`/`busy`, `speechLang`, `onVoice`, `labels`. Enter sends, Shift+Enter newline, never sends mid-IME (Thai-safe). Pickers hide when their list is empty.
+```tsx
+<ChatComposer models={models} onSend={(msg, { model }) => ask(msg, model)} speechLang="th-TH" />
+```
+
+### Assistant Chat — `@gofive/assistant-chat`
+`import { AssistantChat } from "@/components/ui/gofive/assistant-chat"`
+Props: `name`, `tagline`, `avatar`, `greeting`, `suggestions`, `respond(message, history) => string | Promise<string> | AsyncIterable<string>`, `messages`/`defaultMessages` + `onMessagesChange`, `onSend`, `pending`, `dictation` + `dictationLang`, `labels`. Omit `respond` and use `messages` + `onSend` + `pending` to answer yourself.
+```tsx
+<AssistantChat name="HR Assistant" suggestions={["How many vacation days do I have left?"]} respond={ask} />
+```
+
 ## Collaboration
 
 ### Comment Thread — `@gofive/comment-thread`
