@@ -82,7 +82,14 @@
     "https://ui.go5.online/r/tips-panel.json",
     "https://ui.go5.online/r/number-ticker.json",
     "https://ui.go5.online/r/text-reveal.json",
-    "https://ui.go5.online/r/grid-background.json"
+    "https://ui.go5.online/r/grid-background.json",
+    "https://ui.go5.online/r/agent-tree.json",
+    "https://ui.go5.online/r/trace-waterfall.json",
+    "https://ui.go5.online/r/agent-handoff.json",
+    "https://ui.go5.online/r/thinking-steps.json",
+    "https://ui.go5.online/r/ai-answer.json",
+    "https://ui.go5.online/r/chat-composer.json",
+    "https://ui.go5.online/r/assistant-chat.json"
   ],
   "files": [],
   "type": "registry:ui"

@@ -1069,6 +1069,152 @@
       ]
     },
     {
+      "name": "agent-tree",
+      "type": "registry:ui",
+      "title": "Agent Tree",
+      "description": "Live tree of an orchestrator agent and its sub-agents with status, task, time, cost and tool tiles per card, rolled-up branch costs, folding, selection, and a resolve dialog for agents that need a person or failed.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/dialog.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/agent-tree.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/agent-tree.tsx"
+        }
+      ]
+    },
+    {
+      "name": "trace-waterfall",
+      "type": "registry:ui",
+      "title": "Trace Waterfall",
+      "description": "One agent run as a foldable waterfall of agent, sub-agent, LLM and tool spans on a shared time axis, with a live now line, per-row tokens and cost, a slowest-call tag, and keyboard-navigable details.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/badge.json",
+        "https://ui.go5.online/r/popover.json",
+        "https://ui.go5.online/r/sheet.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/trace-waterfall.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/trace-waterfall.tsx"
+        }
+      ]
+    },
+    {
+      "name": "agent-handoff",
+      "type": "registry:ui",
+      "title": "Agent Handoff",
+      "description": "Relay view of a task passed between AI agents: one column per agent, handoff cards listing what was passed along (and lost), a task board, and forward-only assignment by drag or keyboard.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/avatar.json",
+        "https://ui.go5.online/r/badge.json",
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/popover.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/agent-handoff.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/agent-handoff.tsx"
+        }
+      ]
+    },
+    {
+      "name": "thinking-steps",
+      "type": "registry:ui",
+      "title": "Thinking Steps",
+      "description": "Collapsible AI reasoning panel with a live elapsed timer and an ordered trail of search steps (source chips with tooltips) and thought steps, driven by a stream or a timed demo.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/collapsible.json",
+        "https://ui.go5.online/r/thinking-indicator.json",
+        "https://ui.go5.online/r/tooltip.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/thinking-steps.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/thinking-steps.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ai-answer",
+      "type": "registry:ui",
+      "title": "AI Answer",
+      "description": "An assistant answer with source cards, hover-preview citation chips, a streaming typewriter, follow-up questions and a copy/regenerate/feedback bar.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/message-actions.json",
+        "https://ui.go5.online/r/popover.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/ai-answer.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/ai-answer.tsx"
+        }
+      ]
+    },
+    {
+      "name": "chat-composer",
+      "type": "registry:ui",
+      "title": "Chat Composer",
+      "description": "An auto-growing AI chat input with Enter-to-send, IME-safe composition, model, folder and app pickers, Web Speech dictation and an optional busy-aware secondary action.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/dropdown-menu.json",
+        "https://ui.go5.online/r/tooltip.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/chat-composer.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/chat-composer.tsx"
+        }
+      ]
+    },
+    {
+      "name": "assistant-chat",
+      "type": "registry:ui",
+      "title": "Assistant Chat",
+      "description": "Compact AI assistant chat card with welcome suggestions, streaming replies, inline retry, IME-safe input and optional voice dictation.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json",
+        "https://ui.go5.online/r/spinner.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/assistant-chat.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/assistant-chat.tsx"
+        }
+      ]
+    },
+    {
       "name": "all",
       "type": "registry:ui",
       "title": "Gofive — All Components",
@@ -1152,7 +1298,14 @@
         "https://ui.go5.online/r/tips-panel.json",
         "https://ui.go5.online/r/number-ticker.json",
         "https://ui.go5.online/r/text-reveal.json",
-        "https://ui.go5.online/r/grid-background.json"
+        "https://ui.go5.online/r/grid-background.json",
+        "https://ui.go5.online/r/agent-tree.json",
+        "https://ui.go5.online/r/trace-waterfall.json",
+        "https://ui.go5.online/r/agent-handoff.json",
+        "https://ui.go5.online/r/thinking-steps.json",
+        "https://ui.go5.online/r/ai-answer.json",
+        "https://ui.go5.online/r/chat-composer.json",
+        "https://ui.go5.online/r/assistant-chat.json"
       ],
       "files": []
     },
