@@ -795,7 +795,8 @@
       "description": "A collapsible AI-agent tool-invocation row with live timer, status, pretty-printed arguments and result, copy, retry, and a ToolCallGroup that folds several calls into one line.",
       "registryDependencies": [
         "https://ui.go5.online/r/collapsible.json",
-        "https://ui.go5.online/r/spinner.json"
+        "https://ui.go5.online/r/spinner.json",
+        "https://ui.go5.online/r/copy-button.json"
       ],
       "dependencies": [
         "lucide-react"
@@ -828,7 +829,8 @@
       "description": "The quiet icon toolbar under an AI answer: copy with confirmation, regenerate with busy state and version pager, thumbs up/down with a portalled reasons popover, and read-aloud toggle, with every label localizable.",
       "registryDependencies": [
         "https://ui.go5.online/r/popover.json",
-        "https://ui.go5.online/r/tooltip.json"
+        "https://ui.go5.online/r/tooltip.json",
+        "https://ui.go5.online/r/copy-button.json"
       ],
       "dependencies": [
         "lucide-react"
@@ -1324,6 +1326,25 @@
           "path": "registry/new-york/ui/button.tsx",
           "type": "registry:ui",
           "target": "@ui/gofive/button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "Copy Button",
+      "description": "A copy-to-clipboard button and useCopy() hook: Clipboard API with a fallback for non-secure origins, a Copy→Check swap and polite live-region announcement shown only when the copy succeeded, and a timer that cleans up after itself.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/copy-button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/copy-button.tsx"
         }
       ]
     },

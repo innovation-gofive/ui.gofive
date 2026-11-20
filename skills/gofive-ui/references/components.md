@@ -16,6 +16,13 @@ Props: `variant?: "default" | "secondary" | "outline" | "ghost" | "destructive" 
 <Button variant="link" size="inline" asChild><a href={url}><ExternalLink /> {url}</a></Button>
 ```
 
+### Copy Button — `@gofive/copy-button`
+`import { CopyButton, useCopy } from "@/components/ui/gofive/copy-button"`
+Props: `text` (copied verbatim), `labels?: { copy, copied }`, `showLabel` (icon-only by default), `resetAfter` (ms, default 2000), `onCopy(text)` (success only), plus Button props. `useCopy({ resetAfter, onCopy })` → `{ copied, copy(text): Promise<boolean> }` for custom triggers. Falls back when the Clipboard API is unavailable; never shows "Copied" for a failed write.
+```tsx
+<CopyButton text={token} labels={{ copy: "คัดลอก", copied: "คัดลอกแล้ว" }} />
+```
+
 ### Input — `@gofive/input`
 `import { Input, PasswordInput, NumberInput } from "@/components/ui/gofive/input"`
 Props: `variant?: "filled" | "underline"`, `inputSize?: "xs" | "sm" | "md" | "lg"`, `state?: "error" | "success"`, `leading`/`trailing` icons, `prefix`/`suffix`, `clearable`.
