@@ -28,6 +28,7 @@ import {
   SwatchBook,
   PanelRight,
   PanelBottom,
+  ClipboardCopy,
   ListChecks,
   Square,
   Inbox,
@@ -185,6 +186,7 @@ export const docsNav: NavGroup[] = [
     title: "Inputs",
     items: [
       { title: "Input", href: "/docs/input", icon: TextCursorInput },
+      { title: "Copy Field", href: "/docs/copy-field", icon: ClipboardCopy },
       { title: "Textarea", href: "/docs/textarea", icon: PencilLine },
       { title: "OTP Input", href: "/docs/otp-input", icon: KeyRound },
       { title: "Slider", href: "/docs/slider", icon: GripHorizontal },

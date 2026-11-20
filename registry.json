@@ -577,6 +577,24 @@
       ]
     },
     {
+      "name": "copy-field",
+      "type": "registry:ui",
+      "title": "Copy Field",
+      "description": "A labelled, read-only field with a copy button for URLs, tokens and IDs: selects on focus, falls back on non-secure origins, confirms (and announces) only a copy that succeeded, xs–lg sizes, icon-only option and localizable labels.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/input.json",
+        "https://ui.go5.online/r/label.json",
+        "https://ui.go5.online/r/copy-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/copy-field.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/copy-field.tsx"
+        }
+      ]
+    },
+    {
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",

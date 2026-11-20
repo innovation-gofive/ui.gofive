@@ -32,6 +32,13 @@ Props: `variant?: "filled" | "underline"`, `inputSize?: "xs" | "sm" | "md" | "lg
 <NumberInput defaultValue={1} min={0} max={10} />
 ```
 
+### Copy Field — `@gofive/copy-field`  (depends on `@gofive/copy-button`)
+`import { CopyField } from "@/components/ui/gofive/copy-field"`
+Props: `value` (read-only, copied verbatim), `label` (or `aria-label`), `inputSize?: "xs" | "sm" | "md" | "lg"`, `labels?: { copy, copied }`, `onCopy(value)`, `resetAfter`, `iconOnly`. Ref goes to the input. Use for URLs, tokens, IDs; use Code Block for commands.
+```tsx
+<CopyField label="Site link" value={url} labels={{ copy: "คัดลอก", copied: "คัดลอกแล้ว" }} />
+```
+
 ### Textarea — `@gofive/textarea`
 `import { Textarea } from "@/components/ui/gofive/textarea"`
 Props: `state?: "error" | "success"`, `maxLength` (shows counter), `autoResize`.
