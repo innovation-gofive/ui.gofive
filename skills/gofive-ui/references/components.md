@@ -410,6 +410,18 @@ Props: `size?: "xs" | "sm" | "md" | "lg" | "xl"`, `status?: "online" | "away" | 
 <AvatarGroup max={3}>{/* avatars */}</AvatarGroup>
 ```
 
+### Item — `@gofive/item`
+`import { Item, ItemGroup, ItemMedia, ItemContent, ItemTitle, ItemDescription, ItemMeta, ItemActions } from "@/components/ui/gofive/item"`
+Props: `ItemGroup` → `<ul role="list">`, `divided` (default true), flush first/last rows for Cards. `Item` → `size?: "sm" | "md"`, `asChild` (row as `<a>` with hover/focus; still wrapped in `<li>` inside a group). `ItemMedia variant?: "icon" | "avatar"`. `ItemTitle` truncates bare text, badges keep size; `ItemMeta` repeatable; `ItemActions` never shrink. Use instead of hand-rolled `ul.divide-y` rows.
+```tsx
+<ItemGroup aria-label="Sites">
+  <Item asChild><a href="/s/report">
+    <ItemMedia><Globe /></ItemMedia>
+    <ItemContent><ItemTitle>Report <Tag size="sm">Live</Tag></ItemTitle><ItemMeta>Updated 2h ago</ItemMeta></ItemContent>
+  </a></Item>
+</ItemGroup>
+```
+
 ### Attachment & Link — `@gofive/attachment`
 `import { Dropzone, FileItem, LinkCard, RichLinkCard, MediaThumb, kindFromName, formatBytes } from "@/components/ui/gofive/attachment"`
 File dropzone, uploaded-file rows (type icon, size, progress, remove), and link preview cards.

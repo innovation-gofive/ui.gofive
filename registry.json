@@ -1396,6 +1396,23 @@
       ]
     },
     {
+      "name": "item",
+      "type": "registry:ui",
+      "title": "Item",
+      "description": "A list row with optional leading icon or avatar, a truncating title (with badges), description, repeatable meta lines and trailing actions, plus ItemGroup: a divided ul/li list that sits flush inside a Card. Rows can render as links via asChild, with hover and focus ring.",
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/item.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/item.tsx"
+        }
+      ]
+    },
+    {
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
