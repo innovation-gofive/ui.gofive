@@ -39,6 +39,13 @@ Props: `value` (read-only, copied verbatim), `label` (or `aria-label`), `inputSi
 <CopyField label="Site link" value={url} labels={{ copy: "คัดลอก", copied: "คัดลอกแล้ว" }} />
 ```
 
+### Code Block — `@gofive/code-block`  (depends on `@gofive/copy-button`)
+`import { CodeBlock } from "@/components/ui/gofive/code-block"`
+Props: `code` (rendered and copied verbatim), `label?`, `language?` (caption only, no highlighting), `copyable` (default true), `wrap` (default false = horizontal scroll), `maxHeight`, `labels?: { copy, copied, code }`, `onCopy(code)`. The scroll area is a focusable region.
+```tsx
+<CodeBlock label="Example request" language="bash" code={command} />
+```
+
 ### Textarea — `@gofive/textarea`
 `import { Textarea } from "@/components/ui/gofive/textarea"`
 Props: `state?: "error" | "success"`, `maxLength` (shows counter), `autoResize`.

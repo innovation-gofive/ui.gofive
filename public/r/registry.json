@@ -595,6 +595,22 @@
       ]
     },
     {
+      "name": "code-block",
+      "type": "registry:ui",
+      "title": "Code Block",
+      "description": "A monospace block for commands and snippets: scrolls horizontally (or wraps) instead of truncating, keyboard-focusable scroll region, optional label and language caption, max-height, and a copy button that copies exactly the code and confirms only on success.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/copy-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/code-block.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/code-block.tsx"
+        }
+      ]
+    },
+    {
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
