@@ -588,7 +588,7 @@ Props: `notices` (`{ id, title, text?, badge?, tone?, action? }[]`), `onDismiss`
 
 ### Profile Menu — `@gofive/profile-menu`
 `import { ProfileMenu } from "@/components/ui/gofive/profile-menu"`
-Props: `name`, `email`, `role`, `avatarSrc`/`avatar`, `items` (items or `{ label?, items }` groups: `label`, `icon`, `badge`, `shortcut`, `destructive`, `disabled`, `onSelect(event)`), `setup: { done, total, next?, onContinue? }`, `labels: { account, setupTitle, nextStep }`, `locale`, `open`/`defaultOpen`/`onOpenChange`, `side`, `align`, `compact`, `panelClassName`.
+Props: `name`, `email`, `role`, `avatarSrc`/`avatar`, `items` (items or `{ label?, value?, onValueChange?, items }` groups; a group with `value` is a single-choice radio group keyed by item `id` — no check icons; items: `label`, `icon`, `badge`, `shortcut`, `destructive`, `disabled`, `onSelect(event)`), `setup: { done, total, next?, onContinue? }`, `labels: { account, setupTitle, nextStep }`, `locale`, `open`/`defaultOpen`/`onOpenChange`, `side`, `align`, `compact`, `panelClassName`.
 ```tsx
 <ProfileMenu name="Nattaya" email="n@gofive.co.th" role="Admin"
   setup={{ done: 3, total: 5, next: "Add a photo" }}

@@ -1015,7 +1015,7 @@
       "name": "profile-menu",
       "type": "registry:ui",
       "title": "Profile Menu",
-      "description": "Account trigger (avatar + name) that opens a portalled menu with a user header, profile-setup progress row with next-step CTA, grouped actions with icons, badges and shortcut hints, and a destructive sign-out item.",
+      "description": "Account trigger (avatar + name) that opens a portalled menu with a user header, profile-setup progress row with next-step CTA, grouped actions with icons, badges and shortcut hints, single-choice radio groups (language, theme), and a destructive sign-out item.",
       "registryDependencies": [
         "https://ui.go5.online/r/avatar.json",
         "https://ui.go5.online/r/dropdown-menu.json",
