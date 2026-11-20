@@ -52,14 +52,14 @@ function useCopy({ resetAfter = 2000, onCopy }: UseCopyOptions = {}) {
   const copy = React.useCallback(
     async (text: string) => {
       const ok = await copyText(text)
-      if (!ok) return false
-      onCopy?.(text)
+      if (ok) onCopy?.(text)
       if (alive.current) {
-        setCopied(true)
+        // A failed retry must not keep showing the previous success.
         clearTimeout(timer.current)
-        timer.current = setTimeout(() => setCopied(false), resetAfter)
+        setCopied(ok)
+        if (ok) timer.current = setTimeout(() => setCopied(false), resetAfter)
       }
-      return true
+      return ok
     },
     [resetAfter, onCopy],
   )
