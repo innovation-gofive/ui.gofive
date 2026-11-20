@@ -11,6 +11,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
@@ -39,6 +41,13 @@ export interface ProfileMenuGroup {
   id?: string
   /** Optional small heading for the group. */
   label?: string
+  /**
+   * Makes the group a single choice (language, theme): items render as
+   * `menuitemradio`, the one whose `id` equals `value` is checked and shows the
+   * indicator in place of its icon. Items need unique ids; ones without are dropped.
+   */
+  value?: string
+  onValueChange?: (value: string) => void
   items: ProfileMenuItem[]
 }
 
@@ -97,7 +106,10 @@ export interface ProfileMenuProps
 const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null
 
-type NormalGroup = { key: string; label?: string; items: ProfileMenuItem[] }
+type NormalGroup = Pick<ProfileMenuGroup, "label" | "value" | "onValueChange"> & {
+  key: string
+  items: ProfileMenuItem[]
+}
 
 // Lenient on purpose: bad entries are dropped, consecutive bare items share a
 // group, empty groups vanish so no stray separators are left behind.
@@ -110,8 +122,18 @@ function normalize(entries: ProfileMenuProps["items"]): NormalGroup[] {
     if (Array.isArray((entry as ProfileMenuGroup).items)) {
       loose = null
       const g = entry as ProfileMenuGroup
-      const items = g.items.filter(isObject)
-      if (items.length) out.push({ key: g.id ?? `g${i}`, label: g.label, items })
+      // A choice item's id is its radio value, so it is required there.
+      const items = g.items.filter(
+        (it) => isObject(it) && (g.value === undefined || typeof it.id === "string"),
+      )
+      if (items.length)
+        out.push({
+          key: g.id ?? `g${i}`,
+          label: g.label,
+          value: g.value,
+          onValueChange: g.onValueChange,
+          items,
+        })
       return
     }
     if (!loose) {
@@ -287,8 +309,6 @@ function Setup({
 
 // ── Action row ──────────────────────────────────────────────────────
 function Row({ item }: { item: ProfileMenuItem }) {
-  const label = clean(item.label)
-  const badge = clean(item.badge)
   return (
     <DropdownMenuItem
       data-slot="profile-menu-item"
@@ -304,6 +324,32 @@ function Row({ item }: { item: ProfileMenuItem }) {
       >
         {item.icon}
       </span>
+      <RowText item={item} />
+    </DropdownMenuItem>
+  )
+}
+
+// Choice row: the radio indicator sits in the icon column (pl-8.5 lines the
+// label up with icon rows), so `item.icon` is not shown.
+function RadioRow({ item, value }: { item: ProfileMenuItem; value: string }) {
+  return (
+    <DropdownMenuRadioItem
+      data-slot="profile-menu-item"
+      value={value}
+      disabled={item.disabled}
+      onSelect={(e) => item.onSelect?.(e)}
+      className="gap-2.5 pl-8.5 pointer-coarse:min-h-10"
+    >
+      <RowText item={item} />
+    </DropdownMenuRadioItem>
+  )
+}
+
+function RowText({ item }: { item: ProfileMenuItem }) {
+  const label = clean(item.label)
+  const badge = clean(item.badge)
+  return (
+    <>
       <span dir="auto" title={label} className="min-w-0 flex-1 truncate">
         {label}
       </span>
@@ -323,17 +369,20 @@ function Row({ item }: { item: ProfileMenuItem }) {
           {item.shortcut}
         </DropdownMenuShortcut>
       )}
-    </DropdownMenuItem>
+    </>
   )
 }
 
 // ── Group (optional heading) ────────────────────────────────────────
 function Group({ group }: { group: NormalGroup }) {
   const headingId = React.useId()
+  const choice = group.value !== undefined
+  const Root = choice ? DropdownMenuRadioGroup : DropdownMenuGroup
   return (
-    <DropdownMenuGroup
+    <Root
       data-slot="profile-menu-group"
       aria-labelledby={group.label ? headingId : undefined}
+      {...(choice && { value: group.value, onValueChange: group.onValueChange })}
     >
       {group.label && (
         <DropdownMenuLabel
@@ -344,10 +393,18 @@ function Group({ group }: { group: NormalGroup }) {
           {group.label}
         </DropdownMenuLabel>
       )}
-      {group.items.map((item, i) => (
-        <Row key={`${item.id ?? "item"}-${i}`} item={item} />
-      ))}
-    </DropdownMenuGroup>
+      {group.items.map((item, i) =>
+        choice ? (
+          <RadioRow
+            key={`${item.id ?? "item"}-${i}`}
+            item={item}
+            value={item.id as string}
+          />
+        ) : (
+          <Row key={`${item.id ?? "item"}-${i}`} item={item} />
+        ),
+      )}
+    </Root>
   )
 }
 

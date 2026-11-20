@@ -8,6 +8,21 @@ Common semantic colors across components: `success | warning | danger | info | n
 
 ## Inputs & Forms
 
+### Button — `@gofive/button`
+`import { Button } from "@/components/ui/gofive/button"`
+Props: `variant?: "default" | "secondary" | "outline" | "ghost" | "destructive" | "link"`, `size?: "sm" | "default" | "lg" | "icon" | "inline"`, `asChild`, `loading`. `size="inline"` drops height and padding so a link sits in running text.
+```tsx
+<Button loading={saving}>Save</Button>
+<Button variant="link" size="inline" asChild><a href={url}><ExternalLink /> {url}</a></Button>
+```
+
+### Copy Button — `@gofive/copy-button`
+`import { CopyButton, useCopy } from "@/components/ui/gofive/copy-button"`
+Props: `text` (copied verbatim), `labels?: { copy, copied }`, `showLabel` (icon-only by default), `resetAfter` (ms, default 2000), `onCopy(text)` (success only), plus Button props. `useCopy({ resetAfter, onCopy })` → `{ copied, copy(text): Promise<boolean> }` for custom triggers. Falls back when the Clipboard API is unavailable; never shows "Copied" for a failed write.
+```tsx
+<CopyButton text={token} labels={{ copy: "คัดลอก", copied: "คัดลอกแล้ว" }} />
+```
+
 ### Input — `@gofive/input`
 `import { Input, PasswordInput, NumberInput } from "@/components/ui/gofive/input"`
 Props: `variant?: "filled" | "underline"`, `inputSize?: "xs" | "sm" | "md" | "lg"`, `state?: "error" | "success"`, `leading`/`trailing` icons, `prefix`/`suffix`, `clearable`.
@@ -15,6 +30,20 @@ Props: `variant?: "filled" | "underline"`, `inputSize?: "xs" | "sm" | "md" | "lg
 <Input placeholder="Email" leading={<Mail />} clearable />
 <PasswordInput placeholder="Password" />
 <NumberInput defaultValue={1} min={0} max={10} />
+```
+
+### Copy Field — `@gofive/copy-field`  (depends on `@gofive/copy-button`)
+`import { CopyField } from "@/components/ui/gofive/copy-field"`
+Props: `value` (read-only, copied verbatim), `label` (or `aria-label`), `inputSize?: "xs" | "sm" | "md" | "lg"`, `labels?: { copy, copied }`, `onCopy(value)`, `resetAfter`, `iconOnly`. Ref goes to the input. Use for URLs, tokens, IDs; use Code Block for commands.
+```tsx
+<CopyField label="Site link" value={url} labels={{ copy: "คัดลอก", copied: "คัดลอกแล้ว" }} />
+```
+
+### Code Block — `@gofive/code-block`  (depends on `@gofive/copy-button`)
+`import { CodeBlock } from "@/components/ui/gofive/code-block"`
+Props: `code` (rendered and copied verbatim), `label?`, `language?` (caption only, no highlighting), `copyable` (default true), `wrap` (default false = horizontal scroll), `maxHeight`, `labels?: { copy, copied, code }`, `onCopy(code)`. The scroll area is a focusable region.
+```tsx
+<CodeBlock label="Example request" language="bash" code={command} />
 ```
 
 ### Textarea — `@gofive/textarea`
@@ -381,6 +410,18 @@ Props: `size?: "xs" | "sm" | "md" | "lg" | "xl"`, `status?: "online" | "away" | 
 <AvatarGroup max={3}>{/* avatars */}</AvatarGroup>
 ```
 
+### Item — `@gofive/item`
+`import { Item, ItemGroup, ItemMedia, ItemContent, ItemTitle, ItemDescription, ItemMeta, ItemActions } from "@/components/ui/gofive/item"`
+Props: `ItemGroup` → `<ul role="list">`, `divided` (default true), flush first/last rows for Cards. `Item` → `size?: "sm" | "md"`, `asChild` (row as `<a>` with hover/focus; still wrapped in `<li>` inside a group). `ItemMedia variant?: "icon" | "avatar"`. `ItemTitle` truncates bare text, badges keep size; `ItemMeta` repeatable; `ItemActions` never shrink. Use instead of hand-rolled `ul.divide-y` rows.
+```tsx
+<ItemGroup aria-label="Sites">
+  <Item asChild><a href="/s/report">
+    <ItemMedia><Globe /></ItemMedia>
+    <ItemContent><ItemTitle>Report <Tag size="sm">Live</Tag></ItemTitle><ItemMeta>Updated 2h ago</ItemMeta></ItemContent>
+  </a></Item>
+</ItemGroup>
+```
+
 ### Attachment & Link — `@gofive/attachment`
 `import { Dropzone, FileItem, LinkCard, RichLinkCard, MediaThumb, kindFromName, formatBytes } from "@/components/ui/gofive/attachment"`
 File dropzone, uploaded-file rows (type icon, size, progress, remove), and link preview cards.
@@ -547,7 +588,7 @@ Props: `notices` (`{ id, title, text?, badge?, tone?, action? }[]`), `onDismiss`
 
 ### Profile Menu — `@gofive/profile-menu`
 `import { ProfileMenu } from "@/components/ui/gofive/profile-menu"`
-Props: `name`, `email`, `role`, `avatarSrc`/`avatar`, `items` (items or `{ label?, items }` groups: `label`, `icon`, `badge`, `shortcut`, `destructive`, `disabled`, `onSelect(event)`), `setup: { done, total, next?, onContinue? }`, `labels: { account, setupTitle, nextStep }`, `locale`, `open`/`defaultOpen`/`onOpenChange`, `side`, `align`, `compact`, `panelClassName`.
+Props: `name`, `email`, `role`, `avatarSrc`/`avatar`, `items` (items or `{ label?, value?, onValueChange?, items }` groups; a group with `value` is a single-choice radio group keyed by item `id` — no check icons; items: `label`, `icon`, `badge`, `shortcut`, `destructive`, `disabled`, `onSelect(event)`), `setup: { done, total, next?, onContinue? }`, `labels: { account, setupTitle, nextStep }`, `locale`, `open`/`defaultOpen`/`onOpenChange`, `side`, `align`, `compact`, `panelClassName`.
 ```tsx
 <ProfileMenu name="Nattaya" email="n@gofive.co.th" role="Admin"
   setup={{ done: 3, total: 5, next: "Add a photo" }}

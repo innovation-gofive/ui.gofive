@@ -89,7 +89,11 @@
     "https://ui.go5.online/r/thinking-steps.json",
     "https://ui.go5.online/r/ai-answer.json",
     "https://ui.go5.online/r/chat-composer.json",
-    "https://ui.go5.online/r/assistant-chat.json"
+    "https://ui.go5.online/r/assistant-chat.json",
+    "https://ui.go5.online/r/copy-button.json",
+    "https://ui.go5.online/r/copy-field.json",
+    "https://ui.go5.online/r/code-block.json",
+    "https://ui.go5.online/r/item.json"
   ],
   "files": [],
   "type": "registry:ui"
