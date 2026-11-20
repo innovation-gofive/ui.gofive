@@ -1313,7 +1313,7 @@
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "The base button every other Gofive component leans on — default/secondary/ghost/outline/destructive/link variants, sm/default/lg/icon sizes, asChild composition, and a loading state that swaps in a spinner and blocks interaction.",
+      "description": "The base button every other Gofive component leans on — default/secondary/ghost/outline/destructive/link variants, sm/default/lg/icon sizes plus an inline size for text links (variant=\"link\" size=\"inline\"), asChild composition, and a loading state that swaps in a spinner and blocks interaction.",
       "dependencies": [
         "class-variance-authority",
         "@radix-ui/react-slot",

@@ -8,6 +8,14 @@ Common semantic colors across components: `success | warning | danger | info | n
 
 ## Inputs & Forms
 
+### Button — `@gofive/button`
+`import { Button } from "@/components/ui/gofive/button"`
+Props: `variant?: "default" | "secondary" | "outline" | "ghost" | "destructive" | "link"`, `size?: "sm" | "default" | "lg" | "icon" | "inline"`, `asChild`, `loading`. `size="inline"` drops height and padding so a link sits in running text.
+```tsx
+<Button loading={saving}>Save</Button>
+<Button variant="link" size="inline" asChild><a href={url}><ExternalLink /> {url}</a></Button>
+```
+
 ### Input — `@gofive/input`
 `import { Input, PasswordInput, NumberInput } from "@/components/ui/gofive/input"`
 Props: `variant?: "filled" | "underline"`, `inputSize?: "xs" | "sm" | "md" | "lg"`, `state?: "error" | "success"`, `leading`/`trailing` icons, `prefix`/`suffix`, `clearable`.
