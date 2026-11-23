@@ -1305,7 +1305,12 @@
         "https://ui.go5.online/r/thinking-steps.json",
         "https://ui.go5.online/r/ai-answer.json",
         "https://ui.go5.online/r/chat-composer.json",
-        "https://ui.go5.online/r/assistant-chat.json"
+        "https://ui.go5.online/r/assistant-chat.json",
+        "https://ui.go5.online/r/scrollable-tabs.json",
+        "https://ui.go5.online/r/responsive-dialog.json",
+        "https://ui.go5.online/r/toggle-group.json",
+        "https://ui.go5.online/r/chart.json",
+        "https://ui.go5.online/r/data-table.json"
       ],
       "files": []
     },
