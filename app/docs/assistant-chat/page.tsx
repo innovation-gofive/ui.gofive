@@ -63,7 +63,7 @@ export default function AssistantChatPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { AssistantChat } from "@/components/ui/assistant-chat"
+        code={`import { AssistantChat } from "@/components/ui/gofive/assistant-chat"
 
 <AssistantChat
   name="HR Assistant"

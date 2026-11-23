@@ -52,7 +52,7 @@ export default function SheetPage() {
   SheetDescription,
   SheetClose,
   SheetBody,
-} from "@/components/ui/sheet"`}
+} from "@/components/ui/gofive/sheet"`}
       />
       <CodeBlock
         className="mt-4"

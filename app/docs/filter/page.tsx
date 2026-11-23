@@ -72,7 +72,7 @@ export default function FilterPage() {
   SavedViews,
   SavedView,
   AppliedSummary,
-} from "@/components/ui/filter"`}
+} from "@/components/ui/gofive/filter"`}
       />
       <UsageExample />
 

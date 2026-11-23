@@ -38,7 +38,7 @@ export default function NumberTickerPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { NumberTicker } from "@/components/ui/number-ticker"
+        code={`import { NumberTicker } from "@/components/ui/gofive/number-ticker"
 
 <NumberTicker value={12840} className="text-4xl font-semibold" />`}
       />

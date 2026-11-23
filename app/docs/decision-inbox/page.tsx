@@ -110,7 +110,7 @@ export default function DecisionInboxPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { DecisionInbox } from "@/components/ui/decision-inbox"
+        code={`import { DecisionInbox } from "@/components/ui/gofive/decision-inbox"
 
 <DecisionInbox
   decisions={[

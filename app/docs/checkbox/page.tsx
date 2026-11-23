@@ -33,7 +33,7 @@ export default function CheckboxPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Checkbox } from "@/components/ui/checkbox"`}
+        code={`import { Checkbox } from "@/components/ui/gofive/checkbox"`}
       />
       <ComponentPreview
         className="min-h-[100px]"

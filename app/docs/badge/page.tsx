@@ -35,7 +35,7 @@ export default function BadgePage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Tag, TagDot, TagIcon, TypingTag, BadgeCount, AvatarChip } from "@/components/ui/tag-badge"`}
+        code={`import { Tag, TagDot, TagIcon, TypingTag, BadgeCount, AvatarChip } from "@/components/ui/gofive/tag-badge"`}
       />
       <ComponentPreview
         className="min-h-[100px]"

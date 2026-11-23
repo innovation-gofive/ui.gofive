@@ -32,7 +32,7 @@ export default function SliderPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Slider } from "@/components/ui/slider"`}
+        code={`import { Slider } from "@/components/ui/gofive/slider"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <div className="w-full max-w-md">

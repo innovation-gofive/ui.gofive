@@ -61,7 +61,7 @@ export default function CommentThreadPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { CommentThread } from "@/components/ui/comment-thread"
+        code={`import { CommentThread } from "@/components/ui/gofive/comment-thread"
 
 <CommentThread
   comment={{

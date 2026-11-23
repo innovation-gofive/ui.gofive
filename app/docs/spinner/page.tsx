@@ -33,7 +33,7 @@ export default function SpinnerPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Spinner } from "@/components/ui/spinner"`}
+        code={`import { Spinner } from "@/components/ui/gofive/spinner"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <Spinner />

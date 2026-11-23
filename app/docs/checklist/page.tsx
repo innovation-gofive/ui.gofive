@@ -67,7 +67,7 @@ export default function ChecklistPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Checklist } from "@/components/ui/checklist"
+        code={`import { Checklist } from "@/components/ui/gofive/checklist"
 
 const [done, setDone] = useState<string[]>([])
 

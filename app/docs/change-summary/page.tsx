@@ -53,7 +53,7 @@ export default function ChangeSummaryPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ChangeSummary } from "@/components/ui/change-summary"
+        code={`import { ChangeSummary } from "@/components/ui/gofive/change-summary"
 
 <ChangeSummary
   title="Since your last visit"

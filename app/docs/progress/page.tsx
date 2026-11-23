@@ -33,7 +33,7 @@ export default function ProgressPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Progress } from "@/components/ui/progress"`}
+        code={`import { Progress } from "@/components/ui/gofive/progress"`}
       />
       <ComponentPreview
         className="min-h-[100px]"

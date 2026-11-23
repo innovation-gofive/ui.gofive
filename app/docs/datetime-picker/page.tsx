@@ -44,7 +44,7 @@ export default function DateTimePickerPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { DatePicker, TimePicker, DateTimePicker } from "@/components/ui/datetime-picker"`}
+        code={`import { DatePicker, TimePicker, DateTimePicker } from "@/components/ui/gofive/datetime-picker"`}
       />
       <DateExample />
 

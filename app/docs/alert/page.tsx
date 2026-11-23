@@ -33,7 +33,7 @@ export default function AlertPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Alert } from "@/components/ui/alert"`}
+        code={`import { Alert } from "@/components/ui/gofive/alert"`}
       />
       <ComponentPreview>
         <div className="w-full max-w-xl mx-auto flex flex-col gap-2.5">

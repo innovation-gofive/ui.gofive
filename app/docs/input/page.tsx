@@ -37,7 +37,7 @@ export default function InputPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Input, PasswordInput, NumberInput } from "@/components/ui/input"`}
+        code={`import { Input, PasswordInput, NumberInput } from "@/components/ui/gofive/input"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <div className="w-full max-w-sm">

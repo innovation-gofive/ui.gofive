@@ -31,7 +31,7 @@ export default function ScalePage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { NPSScale, CSATScale } from "@/components/ui/scale"`}
+        code={`import { NPSScale, CSATScale } from "@/components/ui/gofive/scale"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <NPSScale defaultValue={8} />

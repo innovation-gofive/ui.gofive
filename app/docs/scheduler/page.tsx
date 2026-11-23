@@ -82,7 +82,7 @@ export default function SchedulerPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Scheduler } from "@/components/ui/scheduler"`}
+        code={`import { Scheduler } from "@/components/ui/gofive/scheduler"`}
       />
       <ViewsExample />
 
@@ -184,7 +184,7 @@ function ThaiExample() {
   return (
     <ComponentPreview
       className="min-h-[560px]"
-      code={`import { CalendarConfigProvider } from "@/components/ui/calendar"
+      code={`import { CalendarConfigProvider } from "@/components/ui/gofive/calendar"
 
 <CalendarConfigProvider locale="th">
   <Scheduler events={events} defaultView="week" />

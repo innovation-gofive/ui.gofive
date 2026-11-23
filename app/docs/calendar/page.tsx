@@ -36,7 +36,7 @@ export default function CalendarPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Calendar } from "@/components/ui/calendar"`}
+        code={`import { Calendar } from "@/components/ui/gofive/calendar"`}
       />
       <SingleExample />
 

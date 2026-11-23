@@ -32,7 +32,7 @@ export default function EmptyStatePage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { EmptyState } from "@/components/ui/empty-state"`}
+        code={`import { EmptyState } from "@/components/ui/gofive/empty-state"`}
       />
       <ComponentPreview>
         <EmptyState

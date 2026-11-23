@@ -36,7 +36,7 @@ export default function TextRevealPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { TextReveal } from "@/components/ui/text-reveal"`}
+        code={`import { TextReveal } from "@/components/ui/gofive/text-reveal"`}
       />
       <ComponentPreview
         className="min-h-[120px]"

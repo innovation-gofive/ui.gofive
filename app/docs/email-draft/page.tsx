@@ -52,7 +52,7 @@ export default function EmailDraftPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { EmailDraft } from "@/components/ui/email-draft"
+        code={`import { EmailDraft } from "@/components/ui/gofive/email-draft"
 
 <EmailDraft
   agent="Billing agent"

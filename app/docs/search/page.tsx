@@ -111,7 +111,7 @@ export default function SearchPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { SearchInput, CommandPalette } from "@/components/ui/search"`}
+        code={`import { SearchInput, CommandPalette } from "@/components/ui/gofive/search"`}
       />
       <ComponentPreview className="min-h-[120px]">
         <SearchInput containerClassName="w-full max-w-[420px]" placeholder="Search people, documents, tasks…" />

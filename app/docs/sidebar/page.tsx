@@ -142,7 +142,7 @@ export default function SidebarDocPage() {
   SidebarItem,
   SidebarSub,
   SidebarSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/gofive/sidebar"
 
 <Sidebar>
   <SidebarBrand logo="E">empeo</SidebarBrand>

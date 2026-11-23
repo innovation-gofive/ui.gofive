@@ -35,7 +35,7 @@ export default function SwitchPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Switch } from "@/components/ui/switch"`}
+        code={`import { Switch } from "@/components/ui/gofive/switch"`}
       />
       <ComponentPreview
         className="min-h-[100px]"

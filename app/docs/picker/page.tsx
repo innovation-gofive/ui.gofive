@@ -41,7 +41,7 @@ export default function PickerPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ColorPicker, EmojiPicker, IconPicker } from "@/components/ui/picker"`}
+        code={`import { ColorPicker, EmojiPicker, IconPicker } from "@/components/ui/gofive/picker"`}
       />
       <UsageExample />
 

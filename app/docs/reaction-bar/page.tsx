@@ -40,7 +40,7 @@ export default function ReactionBarPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ReactionBar } from "@/components/ui/reaction-bar"
+        code={`import { ReactionBar } from "@/components/ui/gofive/reaction-bar"
 
 <ReactionBar
   defaultReactions={{ like: { count: 24, active: true }, comment: { count: 5 } }}

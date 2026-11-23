@@ -77,7 +77,7 @@ export default function NavbarPage() {
   NavbarSpacer,
   NavbarActions,
   NavbarIconButton,
-} from "@/components/ui/navbar"
+} from "@/components/ui/gofive/navbar"
 
 <Navbar>
   <NavbarBrand>Gofive</NavbarBrand>

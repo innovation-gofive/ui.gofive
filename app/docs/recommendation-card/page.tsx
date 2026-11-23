@@ -50,7 +50,7 @@ const plans: RecommendationOption[] = [
   },
 ]
 
-const usageCode = `import { RecommendationCard } from "@/components/ui/recommendation-card"
+const usageCode = `import { RecommendationCard } from "@/components/ui/gofive/recommendation-card"
 
 <RecommendationCard
   title="Suggested plan"

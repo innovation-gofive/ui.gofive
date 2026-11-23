@@ -49,7 +49,7 @@ export default function MessageActionsPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { MessageActions } from "@/components/ui/message-actions"
+        code={`import { MessageActions } from "@/components/ui/gofive/message-actions"
 
 <div className="group/message">
   <p>{answer}</p>

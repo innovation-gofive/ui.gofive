@@ -36,7 +36,7 @@ export default function MediaPickerPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { MediaPicker } from "@/components/ui/media-picker"`}
+        code={`import { MediaPicker } from "@/components/ui/gofive/media-picker"`}
       />
       <UsageExample />
 

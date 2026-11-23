@@ -204,8 +204,8 @@ export default function TraceWaterfallPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { TraceWaterfall } from "@/components/ui/trace-waterfall"
-import type { TraceSpan } from "@/components/ui/trace-waterfall"
+        code={`import { TraceWaterfall } from "@/components/ui/gofive/trace-waterfall"
+import type { TraceSpan } from "@/components/ui/gofive/trace-waterfall"
 
 const spans: TraceSpan[] = [{
   id: "run", name: "Agent", kind: "agent", status: "done", start: 0, end: 4200,

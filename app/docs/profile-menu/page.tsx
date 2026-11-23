@@ -70,7 +70,7 @@ export default function ProfileMenuPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ProfileMenu } from "@/components/ui/profile-menu"
+        code={`import { ProfileMenu } from "@/components/ui/gofive/profile-menu"
 
 <ProfileMenu
   name="Nattaya Suwan"

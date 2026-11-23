@@ -65,7 +65,7 @@ Things worth knowing:
 
 const followUps = ["How do I request leave?", "Does leave carry over?", "What about sick leave?"]
 
-const usage = `import { AIAnswer } from "@/components/ui/ai-answer"
+const usage = `import { AIAnswer } from "@/components/ui/gofive/ai-answer"
 
 <AIAnswer
   question="How much annual leave do I get?"

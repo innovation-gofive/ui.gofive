@@ -42,7 +42,7 @@ export default function ToastPage() {
       <CodeBlock
         className="mt-4"
         code={`// app/layout.tsx
-import { Toaster } from "@/components/ui/toast"
+import { Toaster } from "@/components/ui/gofive/toast"
 
 export default function RootLayout({ children }) {
   return (
@@ -57,7 +57,7 @@ export default function RootLayout({ children }) {
       />
       <CodeBlock
         className="mt-4"
-        code={`import { toast } from "@/components/ui/toast"
+        code={`import { toast } from "@/components/ui/gofive/toast"
 
 toast({
   status: "success",

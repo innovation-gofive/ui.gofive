@@ -37,7 +37,7 @@ export default function AvatarPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "@/components/ui/avatar"`}
+        code={`import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "@/components/ui/gofive/avatar"`}
       />
       <ComponentPreview
         className="min-h-[100px]"

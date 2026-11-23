@@ -104,8 +104,8 @@ export default function AgentTreePage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { AgentTree } from "@/components/ui/agent-tree"
-import type { AgentNode } from "@/components/ui/agent-tree"
+        code={`import { AgentTree } from "@/components/ui/gofive/agent-tree"
+import type { AgentNode } from "@/components/ui/gofive/agent-tree"
 
 const root: AgentNode = {
   id: "root",

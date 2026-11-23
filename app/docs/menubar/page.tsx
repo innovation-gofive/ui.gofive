@@ -55,7 +55,7 @@ export default function MenubarPage() {
   MenubarItem,
   MenubarSeparator,
   MenubarShortcut,
-} from "@/components/ui/menubar"`}
+} from "@/components/ui/gofive/menubar"`}
       />
       <ComponentPreview
         className="min-h-[120px] items-start"

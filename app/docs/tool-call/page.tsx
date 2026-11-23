@@ -49,7 +49,7 @@ export default function ToolCallPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ToolCall, ToolCallGroup } from "@/components/ui/tool-call"`}
+        code={`import { ToolCall, ToolCallGroup } from "@/components/ui/gofive/tool-call"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <div className="w-full max-w-xl">

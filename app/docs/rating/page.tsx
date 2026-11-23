@@ -33,7 +33,7 @@ export default function RatingPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Rating } from "@/components/ui/rating"`}
+        code={`import { Rating } from "@/components/ui/gofive/rating"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <Rating defaultValue={3} />

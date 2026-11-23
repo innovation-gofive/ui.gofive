@@ -32,7 +32,7 @@ export default function TextareaPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Textarea } from "@/components/ui/textarea"`}
+        code={`import { Textarea } from "@/components/ui/gofive/textarea"`}
       />
       <ComponentPreview className="min-h-[140px]">
         <div className="w-full max-w-md">

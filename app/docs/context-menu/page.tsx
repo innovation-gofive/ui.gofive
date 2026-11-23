@@ -70,7 +70,7 @@ export default function ContextMenuPage() {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuShortcut,
-} from "@/components/ui/context-menu"`}
+} from "@/components/ui/gofive/context-menu"`}
       />
       <ComponentPreview
         code={`<ContextMenu>

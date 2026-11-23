@@ -30,7 +30,7 @@ export default function ValidationPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ValidationMessage, RuleList, Rule } from "@/components/ui/validation"`}
+        code={`import { ValidationMessage, RuleList, Rule } from "@/components/ui/gofive/validation"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <ValidationMessage status="error">This email is already registered.</ValidationMessage>

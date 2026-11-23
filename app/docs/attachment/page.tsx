@@ -42,7 +42,7 @@ export default function AttachmentPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Dropzone, FileItem, LinkCard } from "@/components/ui/attachment"`}
+        code={`import { Dropzone, FileItem, LinkCard } from "@/components/ui/gofive/attachment"`}
       />
       <ComponentPreview
         className="min-h-[140px]"

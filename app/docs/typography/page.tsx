@@ -46,7 +46,7 @@ export default function TypographyPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Typography } from "@/components/ui/typography"`}
+        code={`import { Typography } from "@/components/ui/gofive/typography"`}
       />
       <ComponentPreview className="min-h-[120px]">
         <div className="flex flex-col gap-2">

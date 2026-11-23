@@ -101,7 +101,7 @@ export default function PersonPickerPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { PersonPicker, PersonMultiPicker, ReviewerStack } from "@/components/ui/person-picker"`}
+        code={`import { PersonPicker, PersonMultiPicker, ReviewerStack } from "@/components/ui/gofive/person-picker"`}
       />
       <ComponentPreview className="min-h-[120px]">
         <div className="w-full max-w-sm">

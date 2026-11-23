@@ -31,7 +31,7 @@ export default function OTPInputPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { OTPInput } from "@/components/ui/otp-input"`}
+        code={`import { OTPInput } from "@/components/ui/gofive/otp-input"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <OTPInput defaultValue="429" />

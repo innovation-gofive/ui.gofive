@@ -40,7 +40,7 @@ export default function TooltipPage() {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"`}
+} from "@/components/ui/gofive/tooltip"`}
       />
       <ComponentPreview
         className="min-h-[120px]"

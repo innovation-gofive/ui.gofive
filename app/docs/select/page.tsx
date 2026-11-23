@@ -95,7 +95,7 @@ export default function SelectPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Select, MultiSelect, type SelectOption } from "@/components/ui/select"
+        code={`import { Select, MultiSelect, type SelectOption } from "@/components/ui/gofive/select"
 
 const options: SelectOption[] = [
   { value: "bangkok", label: "Bangkok" },

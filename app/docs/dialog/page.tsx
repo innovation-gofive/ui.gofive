@@ -64,7 +64,7 @@ export default function DialogPage() {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from "@/components/ui/dialog"`}
+} from "@/components/ui/gofive/dialog"`}
       />
       <CodeBlock
         className="mt-4"

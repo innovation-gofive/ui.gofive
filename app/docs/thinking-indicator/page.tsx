@@ -40,7 +40,7 @@ export default function ThinkingIndicatorPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ThinkingIndicator } from "@/components/ui/thinking-indicator"
+        code={`import { ThinkingIndicator } from "@/components/ui/gofive/thinking-indicator"
 
 <ThinkingIndicator />`}
       />

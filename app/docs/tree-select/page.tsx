@@ -78,8 +78,8 @@ const departments: TreeNode[] = [
   },
 ]
 
-const usageCode = `import { TreeSelect, TreeMultiSelect } from "@/components/ui/tree-select"
-import type { TreeNode } from "@/components/ui/tree-select"
+const usageCode = `import { TreeSelect, TreeMultiSelect } from "@/components/ui/gofive/tree-select"
+import type { TreeNode } from "@/components/ui/gofive/tree-select"
 
 const data: TreeNode[] = [
   {

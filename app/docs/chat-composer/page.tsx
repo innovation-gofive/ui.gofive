@@ -66,7 +66,7 @@ export default function ChatComposerPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ChatComposer } from "@/components/ui/chat-composer"`}
+        code={`import { ChatComposer } from "@/components/ui/gofive/chat-composer"`}
       />
       <CodeBlock
         className="mt-4"

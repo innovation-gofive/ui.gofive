@@ -48,7 +48,7 @@ export default function GridBackgroundPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { GridBackground } from "@/components/ui/grid-background"`}
+        code={`import { GridBackground } from "@/components/ui/gofive/grid-background"`}
       />
       <ComponentPreview className="p-0">
         <GridBackground className="w-full rounded-xl py-16">

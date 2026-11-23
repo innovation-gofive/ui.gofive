@@ -32,7 +32,7 @@ export default function TabsPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+        code={`import { Tabs, TabsList, TabsTrigger } from "@/components/ui/gofive/tabs"
 
 <Tabs defaultValue="overview">
   <TabsList>

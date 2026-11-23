@@ -31,7 +31,7 @@ export default function BottomNavPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { BottomNav, BottomNavItem } from "@/components/ui/bottom-nav"
+        code={`import { BottomNav, BottomNavItem } from "@/components/ui/gofive/bottom-nav"
 
 <BottomNav>
   <BottomNavItem icon={<House />} label="Home" active />

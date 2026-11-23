@@ -31,7 +31,7 @@ export default function TagInputPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { TagInput } from "@/components/ui/tag-input"`}
+        code={`import { TagInput } from "@/components/ui/gofive/tag-input"`}
       />
       <ComponentPreview className="min-h-[100px]">
         <div className="w-full max-w-md">

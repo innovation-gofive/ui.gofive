@@ -49,7 +49,7 @@ export default function DrawerPage() {
   DrawerDescription,
   DrawerFooter,
   DrawerClose,
-} from "@/components/ui/drawer"`}
+} from "@/components/ui/gofive/drawer"`}
       />
       <CodeBlock
         className="mt-4"

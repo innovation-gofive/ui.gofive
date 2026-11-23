@@ -32,7 +32,7 @@ export default function RadioGroupPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"`}
+        code={`import { RadioGroup, RadioGroupItem } from "@/components/ui/gofive/radio-group"`}
       />
       <ComponentPreview
         className="min-h-[120px]"

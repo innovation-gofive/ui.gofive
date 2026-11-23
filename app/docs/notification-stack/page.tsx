@@ -73,7 +73,7 @@ export default function NotificationStackPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { NotificationStack } from "@/components/ui/notification-stack"`}
+        code={`import { NotificationStack } from "@/components/ui/gofive/notification-stack"`}
       />
       <p className="mt-2 text-sm text-muted-foreground">
         Cards layer behind one another with a scale and offset. Hover the stack, tab into it, or click it to expand

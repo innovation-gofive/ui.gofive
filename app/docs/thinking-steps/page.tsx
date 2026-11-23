@@ -53,7 +53,7 @@ export default function ThinkingStepsPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { ThinkingSteps } from "@/components/ui/thinking-steps"
+        code={`import { ThinkingSteps } from "@/components/ui/gofive/thinking-steps"
 
 <ThinkingSteps steps={steps} done={finished} onDone={(s) => log(s)} />`}
       />

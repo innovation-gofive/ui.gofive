@@ -34,7 +34,7 @@ export default function SegmentedPage() {
       <DocH2 id="usage">Usage</DocH2>
       <CodeBlock
         className="mt-4"
-        code={`import { Segmented, SegmentedItem } from "@/components/ui/segmented"
+        code={`import { Segmented, SegmentedItem } from "@/components/ui/gofive/segmented"
 
 <Segmented defaultValue="week">
   <SegmentedItem value="day">Day</SegmentedItem>
