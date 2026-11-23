@@ -76,7 +76,7 @@ export const blocks: BlockMeta[] = [
     code: `import {
   Sidebar, SidebarBrand, SidebarItem,
   SidebarLabel, SidebarSub, SidebarSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/gofive/sidebar"
 
 <Sidebar className="m-3 h-[calc(100vh-1.5rem)] w-60">
   <SidebarBrand logo="E">empeo</SidebarBrand>
