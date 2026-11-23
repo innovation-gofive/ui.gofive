@@ -16,6 +16,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./collapsible"
+import { useCopy } from "./copy-button"
 import { Spinner } from "./spinner"
 
 // ── Animation CSS (React 19 style hoisting deduplicates via href) ──
@@ -197,27 +198,6 @@ function colorize(text: string): React.ReactNode[] {
   return out
 }
 
-async function copyText(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text)
-    return true
-  } catch {
-    try {
-      const ta = document.createElement("textarea")
-      ta.value = text
-      ta.setAttribute("readonly", "")
-      ta.style.cssText = "position:fixed;top:0;left:0;opacity:0"
-      document.body.appendChild(ta)
-      ta.select()
-      const ok = document.execCommand("copy")
-      ta.remove()
-      return ok
-    } catch {
-      return false
-    }
-  }
-}
-
 const SMALL_BTN =
   "inline-flex h-7 items-center gap-1 rounded-md px-1.5 text-xs font-medium text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
 
@@ -232,16 +212,7 @@ function CopyButton({
   name: string
   copiedName: string
 }) {
-  const [copied, setCopied] = React.useState(false)
-  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  const alive = React.useRef(true)
-  React.useEffect(() => {
-    alive.current = true
-    return () => {
-      alive.current = false
-      clearTimeout(timer.current)
-    }
-  }, [])
+  const { copied, copy } = useCopy({ resetAfter: 1400 })
 
   const label = copied ? copiedName : name
   return (
@@ -255,12 +226,7 @@ function CopyButton({
       aria-label={label}
       title={label}
       className={cn(SMALL_BTN, "size-7 justify-center px-0", copied && "text-success")}
-      onClick={async () => {
-        if (!(await copyText(text)) || !alive.current) return
-        setCopied(true)
-        clearTimeout(timer.current)
-        timer.current = setTimeout(() => setCopied(false), 1400)
-      }}
+      onClick={() => void copy(text)}
     >
       {copied ? (
         <Check key="ok" aria-hidden className="gf-tool-call-pop size-3.5" />

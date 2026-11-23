@@ -577,6 +577,40 @@
       ]
     },
     {
+      "name": "copy-field",
+      "type": "registry:ui",
+      "title": "Copy Field",
+      "description": "A labelled, read-only field with a copy button for URLs, tokens and IDs: selects on focus, falls back on non-secure origins, confirms (and announces) only a copy that succeeded, xs–lg sizes, icon-only option and localizable labels.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/input.json",
+        "https://ui.go5.online/r/label.json",
+        "https://ui.go5.online/r/copy-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/copy-field.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/copy-field.tsx"
+        }
+      ]
+    },
+    {
+      "name": "code-block",
+      "type": "registry:ui",
+      "title": "Code Block",
+      "description": "A monospace block for commands and snippets: scrolls horizontally (or wraps) instead of truncating, keyboard-focusable scroll region, optional label and language caption, max-height, and a copy button that copies exactly the code and confirms only on success.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/copy-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/code-block.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/code-block.tsx"
+        }
+      ]
+    },
+    {
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
@@ -795,7 +829,8 @@
       "description": "A collapsible AI-agent tool-invocation row with live timer, status, pretty-printed arguments and result, copy, retry, and a ToolCallGroup that folds several calls into one line.",
       "registryDependencies": [
         "https://ui.go5.online/r/collapsible.json",
-        "https://ui.go5.online/r/spinner.json"
+        "https://ui.go5.online/r/spinner.json",
+        "https://ui.go5.online/r/copy-button.json"
       ],
       "dependencies": [
         "lucide-react"
@@ -828,7 +863,8 @@
       "description": "The quiet icon toolbar under an AI answer: copy with confirmation, regenerate with busy state and version pager, thumbs up/down with a portalled reasons popover, and read-aloud toggle, with every label localizable.",
       "registryDependencies": [
         "https://ui.go5.online/r/popover.json",
-        "https://ui.go5.online/r/tooltip.json"
+        "https://ui.go5.online/r/tooltip.json",
+        "https://ui.go5.online/r/copy-button.json"
       ],
       "dependencies": [
         "lucide-react"
@@ -979,7 +1015,7 @@
       "name": "profile-menu",
       "type": "registry:ui",
       "title": "Profile Menu",
-      "description": "Account trigger (avatar + name) that opens a portalled menu with a user header, profile-setup progress row with next-step CTA, grouped actions with icons, badges and shortcut hints, and a destructive sign-out item.",
+      "description": "Account trigger (avatar + name) that opens a portalled menu with a user header, profile-setup progress row with next-step CTA, grouped actions with icons, badges and shortcut hints, single-choice radio groups (language, theme), and a destructive sign-out item.",
       "registryDependencies": [
         "https://ui.go5.online/r/avatar.json",
         "https://ui.go5.online/r/dropdown-menu.json",
@@ -1305,7 +1341,11 @@
         "https://ui.go5.online/r/thinking-steps.json",
         "https://ui.go5.online/r/ai-answer.json",
         "https://ui.go5.online/r/chat-composer.json",
-        "https://ui.go5.online/r/assistant-chat.json"
+        "https://ui.go5.online/r/assistant-chat.json",
+        "https://ui.go5.online/r/copy-button.json",
+        "https://ui.go5.online/r/copy-field.json",
+        "https://ui.go5.online/r/code-block.json",
+        "https://ui.go5.online/r/item.json"
       ],
       "files": []
     },
@@ -1313,7 +1353,7 @@
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "The base button every other Gofive component leans on — default/secondary/ghost/outline/destructive/link variants, sm/default/lg/icon sizes, asChild composition, and a loading state that swaps in a spinner and blocks interaction.",
+      "description": "The base button every other Gofive component leans on — default/secondary/ghost/outline/destructive/link variants, sm/default/lg/icon sizes plus an inline size for text links (variant=\"link\" size=\"inline\"), asChild composition, and a loading state that swaps in a spinner and blocks interaction.",
       "dependencies": [
         "class-variance-authority",
         "@radix-ui/react-slot",
@@ -1328,6 +1368,25 @@
       ]
     },
     {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "Copy Button",
+      "description": "A copy-to-clipboard button and useCopy() hook: Clipboard API with a fallback for non-secure origins, a Copy→Check swap and polite live-region announcement shown only when the copy succeeded, and a timer that cleans up after itself.",
+      "registryDependencies": [
+        "https://ui.go5.online/r/button.json"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/copy-button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/copy-button.tsx"
+        }
+      ]
+    },
+    {
       "name": "card",
       "type": "registry:ui",
       "title": "Card",
@@ -1337,6 +1396,23 @@
           "path": "registry/new-york/ui/card.tsx",
           "type": "registry:ui",
           "target": "@ui/gofive/card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "item",
+      "type": "registry:ui",
+      "title": "Item",
+      "description": "A list row with optional leading icon or avatar, a truncating title (with badges), description, repeatable meta lines and trailing actions, plus ItemGroup: a divided ul/li list that sits flush inside a Card. Rows can render as links via asChild, with hover and focus ring.",
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/ui/item.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gofive/item.tsx"
         }
       ]
     },

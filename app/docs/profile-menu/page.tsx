@@ -26,6 +26,7 @@ const toc = [
   { title: "Setup progress", href: "#setup-progress", depth: 1 },
   { title: "Groups and states", href: "#groups", depth: 1 },
   { title: "Controlled", href: "#controlled", depth: 1 },
+  { title: "Single choice", href: "#single-choice", depth: 1 },
   { title: "Compact trigger", href: "#compact", depth: 1 },
   { title: "Localized labels", href: "#labels", depth: 1 },
   { title: "Many items", href: "#many-items", depth: 1 },
@@ -143,6 +144,14 @@ export default function ProfileMenuPage() {
       </p>
       <ControlledExample />
 
+      <DocH3 id="single-choice">Single choice</DocH3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Give a group <code>value</code> and <code>onValueChange</code> and its items become radio items
+        (<code>menuitemradio</code> with <code>aria-checked</code>); each item&apos;s <code>id</code> is its
+        value (required and unique; items without one are dropped). The checked one shows the indicator, so don&apos;t pass a check icon.
+      </p>
+      <ChoiceExample />
+
       <DocH3 id="compact">Compact trigger</DocH3>
       <p className="mt-2 text-sm text-muted-foreground">
         <code>compact</code> shows only the avatar, for toolbars. The accessible name still includes
@@ -240,6 +249,8 @@ export default function ProfileMenuPage() {
         { prop: "id", type: "string", default: "—", desc: "Optional stable key for the group" },
         { prop: "label", type: "string", default: "—", desc: "Small muted heading; also labels the group for assistive tech" },
         { prop: "items", type: "ProfileMenuItem[]", default: "—", desc: "Rows in the group" },
+        { prop: "value", type: "string", default: "—", desc: "Makes the group a single choice: items render as menuitemradio and the one whose id matches is checked. Items need unique ids (ones without are dropped); icons are not shown" },
+        { prop: "onValueChange", type: "(value: string) => void", default: "—", desc: "Called with the chosen item's id" },
       ]} />
 
       <DocH3 id="api-profile-menu-setup">ProfileMenuSetup</DocH3>
@@ -289,6 +300,32 @@ function ControlledExample() {
         >
           Open from outside
         </button>
+      </div>
+    </ComponentPreview>
+  )
+}
+
+function ChoiceExample() {
+  const [lang, setLang] = useState("th")
+  const items: ProfileMenuGroup[] = [
+    {
+      id: "lang",
+      label: "Language",
+      value: lang,
+      onValueChange: setLang,
+      items: [
+        { id: "th", label: "ไทย (TH)" },
+        { id: "en", label: "English (EN)" },
+      ],
+    },
+    { items: [{ id: "settings", label: "Settings", icon: <Settings /> }] },
+    { items: [{ id: "out", label: "Sign out", icon: <LogOut />, destructive: true }] },
+  ]
+  return (
+    <ComponentPreview className="min-h-[120px]">
+      <div className="flex flex-col items-center gap-3">
+        <ProfileMenu {...user} items={items} />
+        <p className="text-sm text-muted-foreground">Language: {lang}</p>
       </div>
     </ComponentPreview>
   )

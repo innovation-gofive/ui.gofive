@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { useCopy } from "./copy-button"
 import { Popover, PopoverAnchor, PopoverContent } from "./popover"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
 
@@ -312,19 +313,13 @@ function MessageActions({
   }
 
   // ── copy ──
-  const [copied, setCopied] = React.useState(false)
-  const copyTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const { copied, copy } = useCopy({ resetAfter: 1600 })
 
-  function handleCopy() {
-    try {
-      // The Clipboard API may be missing (insecure context) or reject — the confirmation still shows.
-      if (text !== undefined) navigator.clipboard?.writeText(text)?.catch(() => {})
-    } catch {}
+  async function handleCopy() {
+    // Confirm only a write that succeeded; without `text` the host copies in onCopy.
+    const ok = text !== undefined && (await copy(text))
     onCopy?.(text)
-    setCopied(true)
-    announce(L.copied)
-    clearTimeout(copyTimer.current)
-    copyTimer.current = setTimeout(() => setCopied(false), 1600)
+    if (ok) announce(L.copied)
   }
 
   // ── regenerate ──
@@ -436,7 +431,6 @@ function MessageActions({
 
   React.useEffect(
     () => () => {
-      clearTimeout(copyTimer.current)
       clearTimeout(closeTimer.current)
     },
     [],
