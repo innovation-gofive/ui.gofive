@@ -1,0 +1,108 @@
+name: Issue to PR
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Existing issue number to process
+        required: true
+        type: number
+
+concurrency:
+  group: issue-to-pr-${{ github.event.issue.number || inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  propose:
+    # Public issue text is untrusted. A repository writer can also run this
+    # workflow manually for an issue opened by an outside contributor.
+    if: github.event_name == 'workflow_dispatch' || contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Prepare issue context
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}" > "$RUNNER_TEMP/issue.json"
+          node .github/scripts/prepare-issue.mjs "$RUNNER_TEMP/issue.json" .codex-issue.md
+      - name: Implement issue
+        uses: openai/codex-action@54e817e77767f274e7e9ceb9da755fb5c62ce25d # v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: .github/codex/prompts/issue-to-pr.md
+          sandbox: workspace-write
+          safety-strategy: drop-sudo
+      - name: Verify and export patch
+        run: |
+          git add -N -- . ':!.codex-issue.md'
+          if git diff --name-only -- registry registry.json | grep -q .; then
+            npm run registry:build
+          fi
+          npm run lint
+          npm run build
+          git add -N -- . ':!.codex-issue.md'
+          git diff --binary -- . ':!.codex-issue.md' > "$RUNNER_TEMP/issue.patch"
+          test -s "$RUNNER_TEMP/issue.patch"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: issue-patch
+          path: ${{ runner.temp }}/issue.patch
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: propose
+    if: needs.propose.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: issue-patch
+          path: ${{ runner.temp }}/issue-patch
+      - name: Apply checked patch
+        env:
+          ISSUE_PATCH: ${{ runner.temp }}/issue-patch/issue.patch
+        run: |
+          git apply --check --index "$ISSUE_PATCH"
+          git apply --index "$ISSUE_PATCH"
+          node .github/scripts/check-issue-changes.mjs
+          git diff --cached --check
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8
+        with:
+          token: ${{ github.token }}
+          branch: codex/issue-${{ github.event.issue.number || inputs.issue_number }}
+          base: main
+          commit-message: 'fix: address issue #${{ github.event.issue.number || inputs.issue_number }}'
+          title: 'Fix issue #${{ github.event.issue.number || inputs.issue_number }}'
+          body: |
+            Automated fix for #${{ github.event.issue.number || inputs.issue_number }}.
+
+            The proposed changes passed `npm run lint` and `npm run build` in the generation job. Please review the implementation before merging.
+          delete-branch: false

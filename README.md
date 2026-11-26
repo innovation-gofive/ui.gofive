@@ -368,3 +368,11 @@ npx shadcn build
 ```
 
 This regenerates the static files under `public/r/`.
+
+### Issue to PR automation
+
+The [Issue to PR workflow](.github/workflows/issue-to-pr.yml) proposes a PR when an Owner, Member, or Collaborator opens an issue. It runs Codex in a read-only-token job, checks lint and build, then applies the generated patch in a separate job with PR write access. Changes to workflow and agent instruction files are rejected. A maintainer must review the PR before merging.
+
+To enable it, add `OPENAI_API_KEY` to the repository's **Settings → Secrets and variables → Actions**. The workflow must be merged into the default branch before new issues trigger it. Check **Settings → Actions → General** and allow GitHub Actions to create pull requests if the publisher job reports a permission error.
+
+To process an issue that already exists, open **Actions → Issue to PR → Run workflow** and enter its issue number. A repository writer can use this path for an outside contributor's issue after reviewing it.
